@@ -44,8 +44,8 @@ STAGING_ARG=""; [ "$STAGING" != "0" ] && STAGING_ARG="--staging"
 echo "### Requesting the Let's Encrypt certificate"
 docker run --rm \
   -v "$(pwd)/${CONF_DIR}:/etc/letsencrypt" \
-  -v "$(pwd)/${WWW_DIR}:/var/www/certbot" \
-  certbot/certbot certonly --webroot -w /var/www/certbot \
+  -v "$(pwd)/${WWW_DIR}:/var/certbot" \
+  certbot/certbot certonly --webroot -w /var/certbot \
     $STAGING_ARG \
     --cert-name "$CERT_NAME" \
     $DOMAIN_ARGS \
