@@ -91,11 +91,75 @@ watch(
   { immediate: true },
 )
 
+const carDescription = computed(() => {
+  const c = car.value
+  if (!c) {
+    return 'Détail du véhicule, galerie, caractéristiques et formulaire de réservation.'
+  }
+  const transmission = c.transmission === 'auto' ? 'boîte automatique' : 'boîte manuelle'
+  const fuel = (fuelLabels[c.fuel] ?? c.fuel).toLowerCase()
+  return `Louez la ${c.brand} ${c.name} (${c.year}) à Marrakech : ${c.seats} places, ${c.doors} portes, ${transmission}, ${fuel}${c.climatisation ? ', climatisation' : ''}${c.gps ? ', GPS' : ''}. À partir de ${formatCurrency(c.base_price_per_day, 'MAD', 'fr-MA')} / jour. Réservation simple chez ChannaCar.`
+})
+
 useSeoMeta(() => ({
   title: car.value ? `${car.value.brand} ${car.value.name} | ChanaaCar` : 'Détail véhicule | ChanaaCar',
-  description:
-    'Détail du véhicule, galerie, caractéristiques et formulaire de réservation.',
+  description: carDescription.value,
+  ogImage: heroImage.value,
 }))
+
+// Per-car structured data: a Car/Product with a per-day rental Offer, plus a
+// breadcrumb trail. Powers product rich results and gives AI engines (GEO)
+// concrete, citeable facts (model, year, specs, price).
+useSchemaOrg(() =>
+  car.value
+    ? [
+        defineProduct({
+          '@type': ['Product', 'Car'],
+          name: `${car.value.brand} ${car.value.name}`,
+          description: carDescription.value,
+          image: heroImage.value,
+          brand: { '@type': 'Brand', name: car.value.brand },
+          model: car.value.name,
+          vehicleModelDate: String(car.value.year),
+          vehicleTransmission:
+            car.value.transmission === 'auto' ? 'AutomaticTransmission' : 'ManualTransmission',
+          fuelType: fuelLabels[car.value.fuel] ?? car.value.fuel,
+          vehicleSeatingCapacity: car.value.seats,
+          numberOfDoors: car.value.doors,
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: 'MAD',
+            price: Number(car.value.base_price_per_day),
+            availability:
+              car.value.status === 'available'
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              priceCurrency: 'MAD',
+              price: Number(car.value.base_price_per_day),
+              unitCode: 'DAY',
+              referenceQuantity: {
+                '@type': 'QuantitativeValue',
+                value: 1,
+                unitCode: 'DAY',
+              },
+            },
+          },
+        }),
+        defineBreadcrumb({
+          itemListElement: [
+            { name: 'Accueil', item: '/' },
+            { name: 'Nos véhicules', item: '/cars' },
+            {
+              name: `${car.value.brand} ${car.value.name}`,
+              item: `/cars/${car.value.slug ?? route.params.slug}`,
+            },
+          ],
+        }),
+      ]
+    : [],
+)
 </script>
 
 <template>

@@ -4,7 +4,21 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-06-23',
   css: ['~/assets/css/main.css'],
   components: [{ path: '~/components', pathPrefix: false }],
-  modules: ['@nuxtjs/i18n'],
+  modules: ['@nuxtjs/i18n', '@nuxtjs/seo'],
+  site: {
+    url: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://chanaacar.com',
+    name: 'ChannaCar',
+    defaultLocale: 'fr',
+  },
+  sitemap: {
+    // Dynamic car detail pages are supplied by the server route below;
+    // static routes are auto-discovered. The admin SPA is excluded.
+    sources: ['/api/__sitemap__/urls'],
+    exclude: ['/admin/**', '/reservation/success'],
+  },
+  robots: {
+    disallow: ['/admin', '/admin/**', '/reservation/success'],
+  },
   runtimeConfig: {
     backendOrigin: process.env.NUXT_BACKEND_ORIGIN ?? 'http://127.0.0.1:8000',
     public: {
@@ -14,13 +28,17 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
-      title: 'ChannaCar',
       meta: [
         {
           name: 'description',
           content:
-            'Ridex-inspired car rental landing page built with reusable Nuxt 4 and Tailwind components.',
+            'ChannaCar — agence de location de voiture à Marrakech : aéroport Ménara, longue durée, large flotte. Réservation simple et tarifs transparents.',
         },
+        // Social share defaults; per-page useSeoMeta() overrides these.
+        { property: 'og:type', content: 'website' },
+        { property: 'og:image', content: '/images/hero-banner.jpg' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:image', content: '/images/hero-banner.jpg' },
       ],
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
@@ -34,8 +52,10 @@ export default defineNuxtConfig({
   i18n: {
     defaultLocale: 'fr',
     baseUrl: process.env.NUXT_PUBLIC_SITE_URL ?? 'https://chanaacar.com',
-    // No locale prefix in the URL — the active language is persisted in a cookie.
-    strategy: 'no_prefix',
+    // Default locale (fr) served at `/`; other locales prefixed (`/en/`, `/es/`, `/ar/`).
+    // This exposes each language as a distinct URL so search engines can index them,
+    // and lets @nuxtjs/i18n emit hreflang alternates automatically.
+    strategy: 'prefix_except_default',
     detectBrowserLanguage: {
       useCookie: true,
       cookieKey: 'channacar.locale',

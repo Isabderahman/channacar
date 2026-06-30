@@ -9,6 +9,15 @@ useSeoMeta({
   description:
     'Questions fréquentes sur les documents, la caution, l’assurance, les annulations et la récupération du véhicule.',
 })
+
+// FAQPage structured data — eligible for FAQ rich results and heavily mined by
+// AI answer engines (GEO). Sourced from the same faqContent shown on the page.
+useSchemaOrg([
+  defineWebPage({ '@type': 'FAQPage' }),
+  ...faqContent.items.map((item) =>
+    defineQuestion({ name: item.question, acceptedAnswer: item.answer }),
+  ),
+])
 </script>
 
 <template>

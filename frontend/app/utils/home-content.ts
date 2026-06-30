@@ -306,9 +306,8 @@ export const footerLinkGroupDefs = [
 ] satisfies FooterLinkGroupDef[]
 
 export const socialLinkDefs = [
-  { key: 'facebook', href: '#footer', icon: 'facebook' },
-  { key: 'instagram', href: '#footer', icon: 'instagram' },
-  { key: 'twitter', href: '#footer', icon: 'twitter' },
-  { key: 'linkedin', href: '#footer', icon: 'linkedin' },
+  { key: 'facebook', href: 'https://www.facebook.com/profile.php?id=61578329224592', icon: 'facebook' },
+  { key: 'instagram', href: 'https://www.instagram.com/chanaa_car/', icon: 'instagram' },
+  { key: 'linkedin', href: 'https://www.linkedin.com/company/chan%C3%A2a-car/', icon: 'linkedin' },
   { key: 'mail', href: 'mailto:contact@chanaacar.com', icon: 'mail' },
 ] satisfies SocialLinkBase[]

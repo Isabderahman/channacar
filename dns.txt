@@ -1,0 +1,33 @@
+$TTL 3600
+
+; ============================================================
+;  ChannaCar DNS zone  (fully-qualified names for HostGator import)
+;  Web  -> Docker server (Nuxt frontend + Laravel API) @ 187.77.85.209
+;  Mail -> Titan Email
+; ============================================================
+
+; --- Nameservers (DNS hosted at HostGator) ---
+chanaacar.com.                  IN  NS     hgns1.hostgator.com.
+chanaacar.com.                  IN  NS     hgns2.hostgator.com.
+
+; --- Web (all three hostnames served by the Docker stack) ---
+chanaacar.com.                  IN  A      187.77.85.209
+www.chanaacar.com.              IN  CNAME  chanaacar.com.
+api.chanaacar.com.              IN  A      187.77.85.209
+
+; --- Email (Titan) ---
+chanaacar.com.                  IN  MX  0  mx1.titan.email.
+chanaacar.com.                  IN  MX  0  mx2.titan.email.
+mail.chanaacar.com.             IN  CNAME  hostgator.titan.email.
+
+; SPF
+chanaacar.com.                  IN  TXT    "v=spf1 include:spf.titan.email ~all"
+
+; DKIM
+titan1._domainkey.chanaacar.com.  IN  TXT  "v=DKIM1; k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWHQyapSZu39E+GOUEjo5kDV00SYZ8MxPzbOHZRFN2y/vkZzcNu/1M19zjoKx9LXUHt8BbXMOEIKvfT3oQQMk42NOShuP3OTFqQtXF/ApF2T1fFdEPxTxydBoUJnofafKgC20ASHXAfoIu4h7MwQjiPzHMQZMXVVJe79uxHu6BZQIDAQAB"
+
+; DMARC
+_dmarc.chanaacar.com.           IN  TXT    "v=DMARC1; p=none; sp=none; adkim=r; aspf=r; pct=100"
+
+; Domain verification
+chanaacar.com.                  IN  TXT    "trustpilot-one-time-verification-id=497c13ef-c8c7-4182-bdda-1447c8010724"

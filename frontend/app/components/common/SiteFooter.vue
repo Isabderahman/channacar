@@ -78,6 +78,8 @@ const resolvedFooterLinkGroups = computed(() =>
             <a
               :href="social.href"
               :aria-label="social.label"
+              :target="social.href.startsWith('http') ? '_blank' : undefined"
+              :rel="social.href.startsWith('http') ? 'noopener noreferrer' : undefined"
               class="text-[20px] transition duration-500 ease-out hover:text-[var(--carolina-blue)] focus-visible:text-[var(--carolina-blue)]"
             >
               <BaseIcon :name="social.icon" :size="20" />
