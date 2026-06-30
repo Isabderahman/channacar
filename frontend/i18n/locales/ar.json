@@ -1,0 +1,67 @@
+{
+  "common": {
+    "brand": { "name": "ChanaaCar", "tagline": "كراء السيارات · مراكش" },
+    "actions": { "exploreCars": "سياراتنا", "rentNow": "احجز الآن", "search": "بحث", "viewVehicles": "عرض السيارات" },
+    "languageSwitcher": { "label": "اللغة" }
+  },
+  "seo": {
+    "home": {
+      "title": "ChanaaCar — كراء السيارات في مراكش | فخامة وراحة",
+      "description": "اكترِ سيارة في مراكش مع ChanaaCar: سيارات حديثة، توصيل مجاني إلى مطار مراكش المنارة، مساعدة على مدار 24/7، وأسعار تبدأ من 300 درهم/يوم. حجز سريع بدون رسوم خفية."
+    }
+  },
+  "header": {
+    "nav": { "home": "الرئيسية", "exploreCars": "سياراتنا", "aboutUs": "من نحن", "howItWorks": "كيف يعمل" },
+    "contact": { "availability": "متاح على مدار 24/7" },
+    "profileAria": "الملف الشخصي", "toggleMenuAria": "تبديل القائمة"
+  },
+  "hero": {
+    "title": "كراء السيارات في مراكش — فخامة وراحة",
+    "description": "اختر مكان الاستلام والتواريخ، ثم احجز سيارة حديثة في دقائق — تُسلَّم إلى مطار مراكش المنارة، أو فندقك، أو أي مكان في المدينة.",
+    "fields": {
+      "pickupLocation": { "label": "مكان الاستلام" },
+      "dropoffLocation": { "label": "مكان التسليم" },
+      "pickupDateTime": { "label": "تاريخ ووقت الاستلام" },
+      "dropoffDateTime": { "label": "تاريخ ووقت التسليم" }
+    },
+    "options": {
+      "marrakechAirport": "مطار مراكش المنارة",
+      "marrakechCityCenter": "وسط مدينة مراكش",
+      "gueliz": "كليز", "medina": "المدينة القديمة", "hotelDelivery": "التوصيل إلى الفندق"
+    }
+  },
+  "sections": {
+    "featuredCars": { "title": "السيارات المميزة", "actionLabel": "عرض المزيد" },
+    "steps": { "title": "احجز في 4 خطوات بسيطة" }
+  },
+  "cars": {
+    "priceSuffix": "/ يوم",
+    "favoriteAria": "أضف {name} إلى المفضلة",
+    "items": {
+      "toyotaRav4": { "name": "Toyota RAV4", "alt": "Toyota RAV4 2021", "specs": { "capacity": "5 مقاعد", "fuel": "هجين", "efficiency": "تكييف الهواء", "transmission": "أوتوماتيكي" } },
+      "bmw3Series": { "name": "Renault Clio 5", "alt": "Renault Clio 5", "specs": { "capacity": "5 مقاعد", "fuel": "ديزل", "efficiency": "تكييف الهواء", "transmission": "يدوي" } },
+      "volkswagenTCross": { "name": "Volkswagen T-Cross", "alt": "Volkswagen T-Cross 2020", "specs": { "capacity": "5 مقاعد", "fuel": "بنزين", "efficiency": "تكييف الهواء", "transmission": "أوتوماتيكي" } },
+      "cadillacEscalade": { "name": "Range Rover Evoque", "alt": "Range Rover Evoque", "specs": { "capacity": "5 مقاعد", "fuel": "ديزل", "efficiency": "GPS مضمَّن", "transmission": "أوتوماتيكي" } },
+      "bmw4SeriesGti": { "name": "Mercedes A-Class", "alt": "Mercedes A-Class", "specs": { "capacity": "5 مقاعد", "fuel": "بنزين", "efficiency": "GPS مضمَّن", "transmission": "أوتوماتيكي" } },
+      "bmw4Series": { "name": "Audi Q3", "alt": "Audi Q3", "specs": { "capacity": "5 مقاعد", "fuel": "ديزل", "efficiency": "GPS مضمَّن", "transmission": "أوتوماتيكي" } }
+    }
+  },
+  "steps": {
+    "cards": {
+      "createProfile": { "title": "اختر المكان والتواريخ", "description": "أخبرنا بمكان الاستلام والتواريخ ووقت رحلتك لترى السيارات المتاحة لرحلتك.", "linkLabel": "ابدأ الآن" },
+      "chooseCar": { "title": "اختر سيارتك", "description": "قارن بين سياراتنا الاقتصادية والعائلية والفاخرة، ثم اختر ما يناسب رحلتك وميزانيتك." },
+      "matchSeller": { "title": "أكِّد حجزك", "description": "أضف خياراتك (GPS، مقعد للأطفال، سائق إضافي) وأكِّد عبر الإنترنت أو مباشرة عبر واتساب." },
+      "makeDeal": { "title": "انطلق في الطريق", "description": "استلم سيارتك في المطار، أو فندقك، أو وكالتنا، واكتشف مراكش والمغرب بحرية تامة." }
+    }
+  },
+  "footer": {
+    "description": "ChanaaCar هي وكالتك لكراء السيارات في مراكش وعبر المغرب. سيارات حديثة ومُصانة جيداً، توصيل مجاني إلى مطار مراكش المنارة، مساعدة على مدار 24/7، وأسعار شفافة.",
+    "groups": {
+      "company": { "title": "الشركة", "links": { "aboutUs": "من نحن", "pricingPlans": "أسعارنا", "ourProcess": "كيف يعمل", "contacts": "اتصل بنا" } },
+      "support": { "title": "الدعم", "links": { "helpCenter": "مركز المساعدة", "askQuestion": "اطرح سؤالاً", "privacyPolicy": "سياسة الخصوصية", "termsAndConditions": "الشروط والأحكام" } },
+      "locations": { "title": "مناطق الخدمة", "links": { "airportMenara": "مطار مراكش المنارة", "gueliz": "كليز", "medina": "المدينة القديمة", "palmeraie": "النخيل", "hivernage": "حي الشتاء", "casablanca": "الدار البيضاء", "agadir": "أكادير", "essaouira": "الصويرة" } }
+    },
+    "social": { "facebook": "فيسبوك", "instagram": "إنستغرام", "twitter": "تويتر", "linkedin": "لينكد إن", "mail": "البريد الإلكتروني" },
+    "copyright": "جميع الحقوق محفوظة"
+  }
+}

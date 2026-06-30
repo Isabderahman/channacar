@@ -1,0 +1,67 @@
+{
+  "common": {
+    "brand": { "name": "ChanaaCar", "tagline": "Alquiler de coches · Marrakech" },
+    "actions": { "exploreCars": "Nuestros vehículos", "rentNow": "Reservar ahora", "search": "Buscar", "viewVehicles": "Ver vehículos" },
+    "languageSwitcher": { "label": "Idioma" }
+  },
+  "seo": {
+    "home": {
+      "title": "ChanaaCar — Alquiler de coches en Marrakech | Lujo y confort",
+      "description": "Alquila un coche en Marrakech con ChanaaCar: vehículos recientes, entrega gratuita en el Aeropuerto de Marrakech Menara, asistencia 24/7 y tarifas desde 300 MAD/día. Reserva rápida y sin costes ocultos."
+    }
+  },
+  "header": {
+    "nav": { "home": "Inicio", "exploreCars": "Nuestros vehículos", "aboutUs": "Sobre nosotros", "howItWorks": "Cómo funciona" },
+    "contact": { "availability": "Disponible 24/7" },
+    "profileAria": "Perfil", "toggleMenuAria": "Abrir menú"
+  },
+  "hero": {
+    "title": "Alquiler de coches en Marrakech — lujo y confort",
+    "description": "Elige tu punto de recogida y tus fechas, y reserva un vehículo reciente en pocos minutos — con entrega en el Aeropuerto de Marrakech Menara, tu hotel o cualquier lugar de la ciudad.",
+    "fields": {
+      "pickupLocation": { "label": "Lugar de recogida" },
+      "dropoffLocation": { "label": "Lugar de devolución" },
+      "pickupDateTime": { "label": "Fecha y hora de recogida" },
+      "dropoffDateTime": { "label": "Fecha y hora de devolución" }
+    },
+    "options": {
+      "marrakechAirport": "Aeropuerto de Marrakech Menara",
+      "marrakechCityCenter": "Centro de Marrakech",
+      "gueliz": "Gueliz", "medina": "Medina", "hotelDelivery": "Entrega en el hotel"
+    }
+  },
+  "sections": {
+    "featuredCars": { "title": "Vehículos destacados", "actionLabel": "Ver más" },
+    "steps": { "title": "Reserva en 4 sencillos pasos" }
+  },
+  "cars": {
+    "priceSuffix": "/ día",
+    "favoriteAria": "Añadir {name} a favoritos",
+    "items": {
+      "toyotaRav4": { "name": "Toyota RAV4", "alt": "Toyota RAV4 2021", "specs": { "capacity": "5 plazas", "fuel": "Híbrido", "efficiency": "Aire acondicionado", "transmission": "Automático" } },
+      "bmw3Series": { "name": "Renault Clio 5", "alt": "Renault Clio 5", "specs": { "capacity": "5 plazas", "fuel": "Diésel", "efficiency": "Aire acondicionado", "transmission": "Manual" } },
+      "volkswagenTCross": { "name": "Volkswagen T-Cross", "alt": "Volkswagen T-Cross 2020", "specs": { "capacity": "5 plazas", "fuel": "Gasolina", "efficiency": "Aire acondicionado", "transmission": "Automático" } },
+      "cadillacEscalade": { "name": "Range Rover Evoque", "alt": "Range Rover Evoque", "specs": { "capacity": "5 plazas", "fuel": "Diésel", "efficiency": "GPS incluido", "transmission": "Automático" } },
+      "bmw4SeriesGti": { "name": "Mercedes A-Class", "alt": "Mercedes A-Class", "specs": { "capacity": "5 plazas", "fuel": "Gasolina", "efficiency": "GPS incluido", "transmission": "Automático" } },
+      "bmw4Series": { "name": "Audi Q3", "alt": "Audi Q3", "specs": { "capacity": "5 plazas", "fuel": "Diésel", "efficiency": "GPS incluido", "transmission": "Automático" } }
+    }
+  },
+  "steps": {
+    "cards": {
+      "createProfile": { "title": "Elige lugar y fechas", "description": "Indícanos tu lugar de recogida, tus fechas y la hora de tu vuelo para ver los vehículos disponibles para tu viaje.", "linkLabel": "Empezar" },
+      "chooseCar": { "title": "Elige tu coche", "description": "Compara nuestros vehículos económicos, familiares y premium, y elige el que mejor se adapte a tu viaje y a tu presupuesto." },
+      "matchSeller": { "title": "Confirma tu reserva", "description": "Añade tus opciones (GPS, silla infantil, conductor adicional) y confirma en línea o directamente por WhatsApp." },
+      "makeDeal": { "title": "Ponte en marcha", "description": "Recoge tu coche en el aeropuerto, en tu hotel o en nuestra agencia, y descubre Marrakech y Marruecos con total libertad." }
+    }
+  },
+  "footer": {
+    "description": "ChanaaCar es tu agencia de alquiler de coches en Marrakech y en todo Marruecos. Vehículos recientes y bien mantenidos, entrega gratuita en el Aeropuerto de Marrakech Menara, asistencia 24/7 y precios transparentes.",
+    "groups": {
+      "company": { "title": "Empresa", "links": { "aboutUs": "Sobre nosotros", "pricingPlans": "Nuestras tarifas", "ourProcess": "Cómo funciona", "contacts": "Contacto" } },
+      "support": { "title": "Asistencia", "links": { "helpCenter": "Centro de ayuda", "askQuestion": "Haz una pregunta", "privacyPolicy": "Política de privacidad", "termsAndConditions": "Términos y condiciones" } },
+      "locations": { "title": "Zonas de servicio", "links": { "airportMenara": "Aeropuerto de Marrakech Menara", "gueliz": "Gueliz", "medina": "Medina", "palmeraie": "Palmeraie", "hivernage": "Hivernage", "casablanca": "Casablanca", "agadir": "Agadir", "essaouira": "Essaouira" } }
+    },
+    "social": { "facebook": "Facebook", "instagram": "Instagram", "twitter": "Twitter", "linkedin": "LinkedIn", "mail": "Correo electrónico" },
+    "copyright": "Todos los derechos reservados"
+  }
+}

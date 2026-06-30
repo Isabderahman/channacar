@@ -1,0 +1,201 @@
+{
+  "common": {
+    "brand": {
+      "name": "ChanaaCar",
+      "tagline": "Location de voiture · Marrakech"
+    },
+    "actions": {
+      "exploreCars": "Nos véhicules",
+      "rentNow": "Réserver",
+      "search": "Rechercher",
+      "viewVehicles": "Voir les véhicules"
+    },
+    "languageSwitcher": {
+      "label": "Langue"
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "ChanaaCar — Location de voiture à Marrakech | Luxe & Confort",
+      "description": "Louez une voiture à Marrakech avec ChanaaCar : véhicules récents, livraison à l'aéroport Marrakech Menara, assistance 24h/24 et tarifs à partir de 300 DH/jour. Réservation rapide et sans frais cachés."
+    }
+  },
+  "header": {
+    "nav": {
+      "home": "Accueil",
+      "exploreCars": "Nos véhicules",
+      "aboutUs": "À propos",
+      "howItWorks": "Comment ça marche"
+    },
+    "contact": {
+      "availability": "Disponible 24h/24 · 7j/7"
+    },
+    "profileAria": "Profil",
+    "toggleMenuAria": "Ouvrir le menu"
+  },
+  "hero": {
+    "title": "Location de voiture à Marrakech, luxe & confort",
+    "description": "Choisissez votre lieu de prise en charge et vos dates, puis réservez en quelques minutes un véhicule récent livré à l'aéroport Marrakech Menara, à votre hôtel ou en ville.",
+    "fields": {
+      "pickupLocation": {
+        "label": "Lieu de départ"
+      },
+      "dropoffLocation": {
+        "label": "Lieu de retour"
+      },
+      "pickupDateTime": {
+        "label": "Date et heure de départ"
+      },
+      "dropoffDateTime": {
+        "label": "Date et heure de retour"
+      }
+    },
+    "options": {
+      "marrakechAirport": "Aéroport Marrakech Menara",
+      "marrakechCityCenter": "Centre-ville de Marrakech",
+      "gueliz": "Guéliz",
+      "medina": "Médina",
+      "hotelDelivery": "Livraison à l'hôtel"
+    }
+  },
+  "sections": {
+    "featuredCars": {
+      "title": "Véhicules à la une",
+      "actionLabel": "Voir plus"
+    },
+    "steps": {
+      "title": "Réservez en 4 étapes simples"
+    }
+  },
+  "cars": {
+    "priceSuffix": "/ jour",
+    "favoriteAria": "Ajouter {name} aux favoris",
+    "items": {
+      "toyotaRav4": {
+        "name": "Toyota RAV4",
+        "alt": "Toyota RAV4 2021",
+        "specs": {
+          "capacity": "5 places",
+          "fuel": "Hybride",
+          "efficiency": "Climatisation",
+          "transmission": "Automatique"
+        }
+      },
+      "bmw3Series": {
+        "name": "Renault Clio 5",
+        "alt": "Renault Clio 5",
+        "specs": {
+          "capacity": "5 places",
+          "fuel": "Diesel",
+          "efficiency": "Climatisation",
+          "transmission": "Manuelle"
+        }
+      },
+      "volkswagenTCross": {
+        "name": "Volkswagen T-Cross",
+        "alt": "Volkswagen T-Cross 2020",
+        "specs": {
+          "capacity": "5 places",
+          "fuel": "Essence",
+          "efficiency": "Climatisation",
+          "transmission": "Automatique"
+        }
+      },
+      "cadillacEscalade": {
+        "name": "Range Rover Evoque",
+        "alt": "Range Rover Evoque",
+        "specs": {
+          "capacity": "5 places",
+          "fuel": "Diesel",
+          "efficiency": "GPS inclus",
+          "transmission": "Automatique"
+        }
+      },
+      "bmw4SeriesGti": {
+        "name": "Mercedes Classe A",
+        "alt": "Mercedes Classe A",
+        "specs": {
+          "capacity": "5 places",
+          "fuel": "Essence",
+          "efficiency": "GPS inclus",
+          "transmission": "Automatique"
+        }
+      },
+      "bmw4Series": {
+        "name": "Audi Q3",
+        "alt": "Audi Q3",
+        "specs": {
+          "capacity": "5 places",
+          "fuel": "Diesel",
+          "efficiency": "GPS inclus",
+          "transmission": "Automatique"
+        }
+      }
+    }
+  },
+  "steps": {
+    "cards": {
+      "createProfile": {
+        "title": "Choisissez le lieu et les dates",
+        "description": "Indiquez votre lieu de prise en charge, vos dates et l'heure de votre vol pour découvrir les véhicules disponibles.",
+        "linkLabel": "Commencer"
+      },
+      "chooseCar": {
+        "title": "Sélectionnez votre voiture",
+        "description": "Comparez nos véhicules économiques, familiaux et premium, puis choisissez celui qui correspond à votre voyage et à votre budget."
+      },
+      "matchSeller": {
+        "title": "Confirmez votre réservation",
+        "description": "Ajoutez vos options (GPS, siège enfant, conducteur supplémentaire) et confirmez en ligne ou directement via WhatsApp."
+      },
+      "makeDeal": {
+        "title": "Prenez la route",
+        "description": "Récupérez votre véhicule à l'aéroport, à votre hôtel ou à l'agence, et explorez Marrakech et le Maroc en toute liberté."
+      }
+    }
+  },
+  "footer": {
+    "description": "ChanaaCar, votre agence de location de voiture à Marrakech et partout au Maroc. Véhicules récents et entretenus, livraison à l'aéroport Marrakech Menara, assistance 24h/24 et tarifs transparents.",
+    "groups": {
+      "company": {
+        "title": "Entreprise",
+        "links": {
+          "aboutUs": "À propos",
+          "pricingPlans": "Nos tarifs",
+          "ourProcess": "Comment ça marche",
+          "contacts": "Contact"
+        }
+      },
+      "support": {
+        "title": "Support",
+        "links": {
+          "helpCenter": "Centre d'aide",
+          "askQuestion": "Poser une question",
+          "privacyPolicy": "Politique de confidentialité",
+          "termsAndConditions": "Conditions générales"
+        }
+      },
+      "locations": {
+        "title": "Nos zones de service",
+        "links": {
+          "airportMenara": "Aéroport Marrakech Menara",
+          "gueliz": "Guéliz",
+          "medina": "Médina",
+          "palmeraie": "Palmeraie",
+          "hivernage": "Hivernage",
+          "casablanca": "Casablanca",
+          "agadir": "Agadir",
+          "essaouira": "Essaouira"
+        }
+      }
+    },
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "mail": "E-mail"
+    },
+    "copyright": "Tous droits réservés"
+  }
+}

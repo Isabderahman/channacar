@@ -1,0 +1,201 @@
+{
+  "common": {
+    "brand": {
+      "name": "ChanaaCar",
+      "tagline": "Car rental · Marrakech"
+    },
+    "actions": {
+      "exploreCars": "Our vehicles",
+      "rentNow": "Book now",
+      "search": "Search",
+      "viewVehicles": "View vehicles"
+    },
+    "languageSwitcher": {
+      "label": "Language"
+    }
+  },
+  "seo": {
+    "home": {
+      "title": "ChanaaCar — Car Rental in Marrakech | Luxury & Comfort",
+      "description": "Rent a car in Marrakech with ChanaaCar: recent vehicles, free delivery to Marrakech Menara Airport, 24/7 assistance, and rates from 300 MAD/day. Fast booking with no hidden fees."
+    }
+  },
+  "header": {
+    "nav": {
+      "home": "Home",
+      "exploreCars": "Our vehicles",
+      "aboutUs": "About us",
+      "howItWorks": "How it works"
+    },
+    "contact": {
+      "availability": "Available 24/7"
+    },
+    "profileAria": "Profile",
+    "toggleMenuAria": "Toggle menu"
+  },
+  "hero": {
+    "title": "Car rental in Marrakech — luxury & comfort",
+    "description": "Choose your pickup point and dates, then book a recent vehicle in minutes — delivered to Marrakech Menara Airport, your hotel, or anywhere in the city.",
+    "fields": {
+      "pickupLocation": {
+        "label": "Pickup location"
+      },
+      "dropoffLocation": {
+        "label": "Dropoff location"
+      },
+      "pickupDateTime": {
+        "label": "Pickup date and time"
+      },
+      "dropoffDateTime": {
+        "label": "Dropoff date and time"
+      }
+    },
+    "options": {
+      "marrakechAirport": "Marrakech Menara Airport",
+      "marrakechCityCenter": "Marrakech City Center",
+      "gueliz": "Gueliz",
+      "medina": "Medina",
+      "hotelDelivery": "Hotel Delivery"
+    }
+  },
+  "sections": {
+    "featuredCars": {
+      "title": "Featured vehicles",
+      "actionLabel": "View more"
+    },
+    "steps": {
+      "title": "Book in 4 simple steps"
+    }
+  },
+  "cars": {
+    "priceSuffix": "/ day",
+    "favoriteAria": "Add {name} to favourites",
+    "items": {
+      "toyotaRav4": {
+        "name": "Toyota RAV4",
+        "alt": "Toyota RAV4 2021",
+        "specs": {
+          "capacity": "5 seats",
+          "fuel": "Hybrid",
+          "efficiency": "Air conditioning",
+          "transmission": "Automatic"
+        }
+      },
+      "bmw3Series": {
+        "name": "Renault Clio 5",
+        "alt": "Renault Clio 5",
+        "specs": {
+          "capacity": "5 seats",
+          "fuel": "Diesel",
+          "efficiency": "Air conditioning",
+          "transmission": "Manual"
+        }
+      },
+      "volkswagenTCross": {
+        "name": "Volkswagen T-Cross",
+        "alt": "Volkswagen T-Cross 2020",
+        "specs": {
+          "capacity": "5 seats",
+          "fuel": "Gasoline",
+          "efficiency": "Air conditioning",
+          "transmission": "Automatic"
+        }
+      },
+      "cadillacEscalade": {
+        "name": "Range Rover Evoque",
+        "alt": "Range Rover Evoque",
+        "specs": {
+          "capacity": "5 seats",
+          "fuel": "Diesel",
+          "efficiency": "GPS included",
+          "transmission": "Automatic"
+        }
+      },
+      "bmw4SeriesGti": {
+        "name": "Mercedes A-Class",
+        "alt": "Mercedes A-Class",
+        "specs": {
+          "capacity": "5 seats",
+          "fuel": "Gasoline",
+          "efficiency": "GPS included",
+          "transmission": "Automatic"
+        }
+      },
+      "bmw4Series": {
+        "name": "Audi Q3",
+        "alt": "Audi Q3",
+        "specs": {
+          "capacity": "5 seats",
+          "fuel": "Diesel",
+          "efficiency": "GPS included",
+          "transmission": "Automatic"
+        }
+      }
+    }
+  },
+  "steps": {
+    "cards": {
+      "createProfile": {
+        "title": "Choose location and dates",
+        "description": "Tell us your pickup location, dates, and flight time to see the vehicles available for your trip.",
+        "linkLabel": "Get started"
+      },
+      "chooseCar": {
+        "title": "Pick your car",
+        "description": "Compare our economy, family, and premium vehicles, then choose the one that fits your trip and budget."
+      },
+      "matchSeller": {
+        "title": "Confirm your booking",
+        "description": "Add your options (GPS, child seat, additional driver) and confirm online or directly over WhatsApp."
+      },
+      "makeDeal": {
+        "title": "Hit the road",
+        "description": "Collect your car at the airport, your hotel, or our agency, and explore Marrakech and Morocco in complete freedom."
+      }
+    }
+  },
+  "footer": {
+    "description": "ChanaaCar is your car rental agency in Marrakech and across Morocco. Recent, well-maintained vehicles, free delivery to Marrakech Menara Airport, 24/7 assistance, and transparent pricing.",
+    "groups": {
+      "company": {
+        "title": "Company",
+        "links": {
+          "aboutUs": "About us",
+          "pricingPlans": "Our rates",
+          "ourProcess": "How it works",
+          "contacts": "Contact"
+        }
+      },
+      "support": {
+        "title": "Support",
+        "links": {
+          "helpCenter": "Help center",
+          "askQuestion": "Ask a question",
+          "privacyPolicy": "Privacy policy",
+          "termsAndConditions": "Terms & conditions"
+        }
+      },
+      "locations": {
+        "title": "Service areas",
+        "links": {
+          "airportMenara": "Marrakech Menara Airport",
+          "gueliz": "Gueliz",
+          "medina": "Medina",
+          "palmeraie": "Palmeraie",
+          "hivernage": "Hivernage",
+          "casablanca": "Casablanca",
+          "agadir": "Agadir",
+          "essaouira": "Essaouira"
+        }
+      }
+    },
+    "social": {
+      "facebook": "Facebook",
+      "instagram": "Instagram",
+      "twitter": "Twitter",
+      "linkedin": "LinkedIn",
+      "mail": "Email"
+    },
+    "copyright": "All Rights Reserved"
+  }
+}

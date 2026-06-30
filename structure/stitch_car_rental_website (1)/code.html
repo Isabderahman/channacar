@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Velocity Drive | Vehicle Details</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed": "#6bff8f",
+                    "on-tertiary": "#ffffff",
+                    "secondary-fixed-dim": "#bec6e0",
+                    "primary-container": "#e11d48",
+                    "error": "#ba1a1a",
+                    "on-primary-fixed": "#40000c",
+                    "on-secondary-container": "#5c647a",
+                    "text-description": "#64748B",
+                    "on-background": "#281718",
+                    "inverse-surface": "#3f2b2c",
+                    "on-secondary": "#ffffff",
+                    "surface-container-highest": "#fbdbdb",
+                    "inverse-on-surface": "#ffedec",
+                    "surface-tint": "#be0037",
+                    "error-container": "#ffdad6",
+                    "on-error": "#ffffff",
+                    "surface-container-low": "#fff0f0",
+                    "surface-variant": "#fbdbdb",
+                    "secondary-fixed": "#dae2fd",
+                    "border-subtle": "#E2E8F0",
+                    "on-surface": "#281718",
+                    "secondary": "#565e74",
+                    "secondary-container": "#dae2fd",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-container": "#00863b",
+                    "inverse-primary": "#ffb3b6",
+                    "primary-fixed-dim": "#ffb3b6",
+                    "background": "#fff8f7",
+                    "tertiary": "#006a2d",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-container": "#f2ffef",
+                    "surface": "#fff8f7",
+                    "on-error-container": "#93000a",
+                    "tertiary-fixed-dim": "#4ae176",
+                    "primary": "#b80035",
+                    "surface-muted": "#F8FAFC",
+                    "on-secondary-fixed-variant": "#3f465c",
+                    "outline-variant": "#e5bdbe",
+                    "primary-fixed": "#ffdada",
+                    "on-primary-container": "#fffaf9",
+                    "surface-bright": "#fff8f7",
+                    "on-tertiary-fixed-variant": "#005321",
+                    "on-surface-variant": "#5c3f40",
+                    "surface-container": "#ffe9e9",
+                    "whatsapp-green": "#25D366",
+                    "on-primary-fixed-variant": "#920028",
+                    "on-tertiary-fixed": "#002109",
+                    "surface-container-high": "#ffe1e1",
+                    "on-secondary-fixed": "#131b2e",
+                    "surface-dim": "#f2d3d3",
+                    "outline": "#906f70"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-mobile": "1rem",
+                    "gutter": "1.5rem",
+                    "section-padding": "5rem",
+                    "stack-md": "1rem",
+                    "container-max": "1280px",
+                    "stack-sm": "0.5rem",
+                    "stack-lg": "2rem"
+            },
+            "fontFamily": {
+                    "headline-lg-mobile": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "display-lg": ["Inter"],
+                    "label-xs": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "body-sm": ["Inter"],
+                    "label-bold": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg-mobile": ["20px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "headline-lg": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "label-xs": ["12px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "headline-xl": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "label-bold": ["14px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .filled-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md">
+<!-- Top Navigation Anchor -->
+<header class="flex justify-between items-center px-margin-mobile h-16 w-full fixed top-0 z-50 bg-surface dark:bg-surface-dim shadow-sm">
+<div class="flex items-center gap-4">
+<button class="text-primary hover:bg-surface-container-high transition-colors p-2 rounded-lg">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<h1 class="font-display-lg text-headline-lg-mobile font-black text-primary dark:text-primary-fixed-dim tracking-tighter">Velocity Drive</h1>
+</div>
+<div class="flex items-center gap-6">
+<nav class="hidden md:flex gap-8">
+<a class="font-label-bold text-primary" href="#">Explore</a>
+<a class="font-label-bold text-on-surface-variant hover:text-primary transition-colors" href="#">Bookings</a>
+<a class="font-label-bold text-on-surface-variant hover:text-primary transition-colors" href="#">Support</a>
+</nav>
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young modern traveler, smiling warmly, captured in soft natural light. The background is a clean, minimalist studio setting with subtle red accents to match the brand identity. The photography style is high-definition, professional, and trustworthy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAfqCdxQQMVzofqeOZactMFq9MB_V6tNVrl-NnYdjS6UsbIz7WhTcd-87DSE4dQ7yvQ2d6X5I2UtLZMK4HeVBfBjKson5bA-eTfMTW-1UuvfHSPOp94-CmCy8zsI5_UZszK85VeTj0UQOfKrsUPpXnoQGyjDO_7-Olsi3PGJk6Mmx86VD6XxOx1IUPiRuwWNAlWvdqKPoXhtHrahZS_OJ1T7ljzV7qOqKSUE3Wyj6GSdZPFZ4TzCENrDwXLNDHBdxj8pbCQvKqwW2g"/>
+</div>
+</div>
+</header>
+<main class="pt-20 pb-24 max-w-container-max mx-auto px-4 md:px-6">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-6 text-on-surface-variant font-label-xs">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">SUVs</a>
+<span class="material-symbols-outlined text-[14px]">chevron_right</span>
+<span class="text-primary font-label-bold">Toyota Land Cruiser 250</span>
+</nav>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Media & Specs (8 Cols) -->
+<div class="lg:col-span-8 space-y-8">
+<!-- Main Gallery -->
+<div class="space-y-4">
+<div class="relative aspect-[16/9] w-full rounded-xl overflow-hidden bg-surface-container shadow-lg group">
+<img class="w-full h-full object-cover" data-alt="A luxurious 2024 Toyota Land Cruiser 250 in a sleek metallic charcoal gray finish. The vehicle is parked on a coastal road during the golden hour, with the warm sunset light reflecting off its polished body and rugged design. The image style is commercial automotive photography, high-contrast, and kinetic." id="main-image" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPLsAri9LkDZxMQd6bN-watD27T1oZZLM-9sb3YZlem-gLe2khuRRANGvTWYW17w6W8UQ8fEUP2AmE_jaYjLVSYiHHRVqJ7IFISZLIdhbt8LEACGy0X2VRbysCLIZd2Da7KhvMV98cUqokCVL6sxoxNhEJP50RD-T18lCUUiwFv00FkpwxSbZ4-rhZ7RXQKSgnmK_lYguvaARTh9LXKVROdwH6tUTQ881DagkcwqZmvG03GNlymD_BGsyAkYabx_OL5Swm3BO-MQ8"/>
+<div class="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-full font-label-bold shadow-md">Premium Tier</div>
+<button class="absolute top-4 right-4 bg-white/90 backdrop-blur-md p-2 rounded-full text-primary hover:scale-110 transition-transform">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+</div>
+<!-- Thumbnails -->
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-2">
+<div class="flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden border-2 border-primary ring-2 ring-primary/20 cursor-pointer">
+<img class="w-full h-full object-cover" data-alt="Close up of the front grille and iconic headlight design of the new Toyota Land Cruiser 250, showcasing its modern yet heritage-inspired aesthetic. High detail, commercial photography style with clean studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuFggaGg2rdigCN-xtKAM4OajK4I6DJuW1pv1Fwecxfge7FmaZtLx8dxzChNSRaX34FmuFkJXBuvK5Zsa7kLRPnKvgqBTB8ZcA6v9P9o1hFMHZ_8FqCghEtPAV3RNAp6wZ9IGzLdi_rOoEGf1MM87Y6frfCF-TK1V7I4OHx1ESW-L0otO60lMI80StDM-90_DMLqK3VKkrI6QXtH1TIoIyfTx7f6tD4POxO6wJuifKY_vY-7IplsBHxSyQF4mP77fjBYdac1AhI5s"/>
+</div>
+<div class="flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden border border-border-subtle hover:border-primary transition-colors cursor-pointer opacity-80 hover:opacity-100">
+<img class="w-full h-full object-cover" data-alt="Interior view of the Land Cruiser 250 cockpit, featuring premium leather seats, a wide digital dashboard, and sophisticated control panel. The lighting is soft and ambient, emphasizing the luxury and comfort of the cabin." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZe9q2OXzOrEkZS-SP2d_vdjz6SAa_EsdbU8P5blblC68vqHQxuHImEyKSXBeUslMziwNZCw4Quq6GH5dP9RYHcRplrZ-dKcoZIobWaNKxJ6aw8grdwWiLuLBkM311b6Z9cc8JkuPPQ2uQSS43TyWDmxv79M1prALeilNhdt6QMlrhi35Q0Cr8JN-X5bB2i5HerIesLqvIbzQUW22WBpof4URoWyTNRLcic5ZHk133WY87hslRV0d5c_tp0_EYMffMvUjAFLzi3vo"/>
+</div>
+<div class="flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden border border-border-subtle hover:border-primary transition-colors cursor-pointer opacity-80 hover:opacity-100">
+<img class="w-full h-full object-cover" data-alt="Rear view of the Land Cruiser 250 parked near a high-end mountain resort. The vehicle looks powerful and ready for adventure. Professional automotive photography with cool blue tones and sharp crisp details." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJIQlhekipfDR6kTF2D8YcNqLzkYFC0ujo4zMAqenwxYdTpfpEU-XYrP3yApQLXe30rp3y6Y9JcuuTomDE3-Czt2J2u2dwrDiIqdH0s_X0g9uIDxb2iGEi9IUByEk0Vnxig3bY5k4U6ktcvcnd3ODWyonzBx0wwQA0t0tYSx2CORaH822IVElNrChUfIdyrVqVPRuX5GATCdSqqW7gvr-H4JTjYs4qOr7M1-XjdWiAH0VBJV36Wr9pbZnSFVHEgbXtoZryIoA7mPo"/>
+</div>
+<div class="flex-shrink-0 w-32 aspect-video rounded-lg overflow-hidden border border-border-subtle hover:border-primary transition-colors cursor-pointer opacity-80 hover:opacity-100">
+<img class="w-full h-full object-cover" data-alt="Side profile showing the rugged all-terrain wheels and high ground clearance of the Toyota Land Cruiser. The vehicle is positioned on a desert dune with a clear blue sky, emphasizing its off-road capability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBlYaozuvcLMwWmVZeGhTT0ahRT9mcyq6LeDo8bZRd8tceOtlZiHX5Fv8tm-WPB6yUf2T-hHETxaC34VeWrpxxmT6uFaNEk-_0HL8hF9C_3EIWc6Qc5G1O_Axxqc0cK9OX5FfechfUcfESsiCXadJuQDt62dtQs8hkueS4WxnG3E9QswiVTqAz3HxP2kRsoj5RtI-5ge4k3Yp_Q5Yb8eNXFVMBwBsf2KZXW68xMWz1Cp0pjujWzbpyXbhZ81kQefZ_kmE-SL0X9hYA"/>
+</div>
+</div>
+</div>
+<!-- Bento Info Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="bg-surface-container-low p-6 rounded-xl border border-border-subtle flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-primary text-3xl">airline_seat_recline_extra</span>
+<h4 class="font-label-bold text-on-surface">7 Seats</h4>
+<p class="text-label-xs text-on-surface-variant">Full capacity for large families</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-border-subtle flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-primary text-3xl">settings_input_component</span>
+<h4 class="font-label-bold text-on-surface">Automatic</h4>
+<p class="text-label-xs text-on-surface-variant">Smooth 8-speed transmission</p>
+</div>
+<div class="bg-surface-container-low p-6 rounded-xl border border-border-subtle flex flex-col items-center text-center space-y-2">
+<span class="material-symbols-outlined text-primary text-3xl">local_gas_station</span>
+<h4 class="font-label-bold text-on-surface">Diesel Hybrid</h4>
+<p class="text-label-xs text-on-surface-variant">Efficient for long distances</p>
+</div>
+</div>
+<!-- Features & Description -->
+<div class="space-y-6">
+<h2 class="font-headline-xl text-on-surface">Vehicle Features</h2>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">Apple CarPlay</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">Parking Sensors</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">Heated Seats</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">GPS Navigation</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">Sunroof</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">4WD System</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">Backup Camera</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-whatsapp-green">check_circle</span>
+<span class="font-body-sm text-on-surface">Climate Control</span>
+</div>
+</div>
+<p class="text-body-md text-on-surface-variant leading-relaxed">
+                        Experience the pinnacle of off-road luxury with the Toyota Land Cruiser 250. Engineered for both city streets and rugged terrain, this vehicle offers unmatched reliability and comfort. Whether you're planning a family expedition or a business trip, the spacious interior and advanced safety features ensure a premium driving experience.
+                    </p>
+</div>
+<!-- Pickup Location Map -->
+<div class="space-y-4">
+<div class="flex justify-between items-end">
+<h2 class="font-headline-lg text-on-surface">Pickup Location</h2>
+<p class="text-label-xs text-primary font-bold">Marrakech Airport (RAK)</p>
+</div>
+<div class="h-64 rounded-xl overflow-hidden bg-surface-container relative">
+<img class="w-full h-full object-cover opacity-80" data-location="Marrakech Airport" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtFNnNDBgs1aVpOnYhe9P8RtAykOv53IaTNY680E0q2cfzjNvGuxSw5qyHckFwm9fvjGqvsT4f2ItWM9rsK22EFSJFtldzTpgAD0fouHEz9f7wYZYXYk4mQoj6wJn9baTG9QAUdlv65fAe_ybKLmemwkQtekeRkKpYmXHvMOePRXuwsoKMR5xYfcihqGNRV8uGhZcGDmipgoBAtICvOjs1TtE3ApYOKIl6NUCxCj0CRWZNZR9UawqoZL5ubS-EdBKOaexSDnlNGZI"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-primary text-white p-2 rounded-full shadow-lg ring-4 ring-white">
+<span class="material-symbols-outlined">directions_car</span>
+</div>
+</div>
+<div class="absolute bottom-4 left-4 bg-white/90 backdrop-blur-md p-3 rounded-lg shadow-sm max-w-xs">
+<p class="font-label-bold text-xs">Terminal 1 Arrivals</p>
+<p class="text-[10px] text-on-surface-variant">Our representative will be waiting with a Velocity Drive sign.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Booking Card (4 Cols) -->
+<div class="lg:col-span-4">
+<div class="sticky top-24 bg-white rounded-2xl border border-border-subtle shadow-xl overflow-hidden">
+<div class="p-6 bg-surface-container-low border-b border-border-subtle">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-bold text-on-surface-variant">Rental Price</span>
+<span class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded text-[10px] font-bold">LIMITED TIME</span>
+</div>
+<div class="flex items-baseline gap-1">
+<span class="font-display-lg text-primary">190€</span>
+<span class="text-on-surface-variant font-label-bold">/ day</span>
+</div>
+<p class="text-label-xs text-on-surface-variant mt-1">Total for 7 days: <span class="font-bold text-on-surface">1,330€</span></p>
+</div>
+<div class="p-6 space-y-6">
+<!-- Dates Selection -->
+<div class="space-y-4">
+<div class="relative">
+<label class="text-[10px] uppercase tracking-wider font-black text-on-surface-variant absolute -top-2 left-3 bg-white px-1">Pickup</label>
+<div class="flex items-center gap-3 p-3 border border-border-subtle rounded-lg bg-surface-muted">
+<span class="material-symbols-outlined text-on-surface-variant">calendar_month</span>
+<span class="font-label-bold text-sm">Oct 12, 2024 - 10:00 AM</span>
+</div>
+</div>
+<div class="relative">
+<label class="text-[10px] uppercase tracking-wider font-black text-on-surface-variant absolute -top-2 left-3 bg-white px-1">Return</label>
+<div class="flex items-center gap-3 p-3 border border-border-subtle rounded-lg bg-surface-muted">
+<span class="material-symbols-outlined text-on-surface-variant">calendar_month</span>
+<span class="font-label-bold text-sm">Oct 19, 2024 - 10:00 AM</span>
+</div>
+</div>
+</div>
+<!-- Protection Plan -->
+<div class="space-y-3">
+<h4 class="font-label-bold text-sm">Protection Plan</h4>
+<label class="flex items-center justify-between p-3 border-2 border-primary rounded-lg bg-primary/5 cursor-pointer">
+<div class="flex items-center gap-3">
+<input checked="" class="text-primary focus:ring-primary h-4 w-4" name="protection" type="radio"/>
+<div>
+<p class="font-label-bold text-sm">Premium Insurance</p>
+<p class="text-[10px] text-on-surface-variant">0€ Deductible • Roadside assist</p>
+</div>
+</div>
+<span class="font-label-bold text-xs">+15€/day</span>
+</label>
+<label class="flex items-center justify-between p-3 border border-border-subtle rounded-lg hover:bg-surface-muted cursor-pointer transition-colors">
+<div class="flex items-center gap-3">
+<input class="text-primary focus:ring-primary h-4 w-4" name="protection" type="radio"/>
+<div>
+<p class="font-label-bold text-sm">Standard Cover</p>
+<p class="text-[10px] text-on-surface-variant">500€ Deductible</p>
+</div>
+</div>
+<span class="font-label-bold text-xs">Included</span>
+</label>
+</div>
+<!-- Action Buttons -->
+<div class="space-y-3">
+<button class="w-full bg-primary hover:bg-primary/90 text-white font-label-bold py-4 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
+                                Book This Car Now
+                            </button>
+<button class="w-full flex items-center justify-center gap-2 border border-whatsapp-green text-whatsapp-green hover:bg-whatsapp-green hover:text-white font-label-bold py-3 rounded-xl transition-all">
+<span class="material-symbols-outlined filled-icon">chat</span>
+                                Chat via WhatsApp
+                            </button>
+</div>
+<p class="text-center text-[11px] text-on-surface-variant px-4">
+                            By clicking book, you agree to our <a class="underline" href="#">Terms of Service</a> and <a class="underline" href="#">Cancellation Policy</a>.
+                        </p>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Success Floating Badge (Contextual Interaction) -->
+<div class="fixed bottom-24 right-6 bg-tertiary-container text-on-tertiary-container px-4 py-2 rounded-full shadow-xl font-label-bold flex items-center gap-2 transform translate-y-20 opacity-0 transition-all duration-500" id="booking-badge">
+<span class="material-symbols-outlined">check_circle</span>
+        Car is available!
+    </div>
+<!-- Bottom Nav Shell (Mobile View) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center bg-surface dark:bg-surface-dim py-2 px-margin-mobile pb-safe shadow-lg rounded-t-xl border-t border-border-subtle">
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim font-label-bold">
+<span class="material-symbols-outlined">directions_car</span>
+<span class="text-[10px]">Explore</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined">calendar_month</span>
+<span class="text-[10px]">Bookings</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined">favorite</span>
+<span class="text-[10px]">Saved</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-secondary-container dark:text-on-secondary-fixed-variant">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px]">Profile</span>
+</div>
+</nav>
+<script>
+        // Micro-interactions
+        window.addEventListener('DOMContentLoaded', () => {
+            const badge = document.getElementById('booking-badge');
+            setTimeout(() => {
+                badge.classList.remove('translate-y-20', 'opacity-0');
+            }, 1000);
+
+            // Thumbnail Switching Simulation
+            const thumbnails = document.querySelectorAll('.flex-shrink-0.w-32');
+            const mainImg = document.getElementById('main-image');
+
+            thumbnails.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    // Update active state
+                    thumbnails.forEach(t => {
+                        t.classList.remove('border-primary', 'ring-2', 'ring-primary/20', 'opacity-100');
+                        t.classList.add('border-border-subtle', 'opacity-80');
+                    });
+                    thumb.classList.add('border-primary', 'ring-2', 'ring-primary/20', 'opacity-100');
+                    thumb.classList.remove('border-border-subtle', 'opacity-80');
+                    
+                    // Simulation of image update (in real app, swap SRC)
+                    mainImg.style.opacity = '0.5';
+                    setTimeout(() => {
+                        mainImg.style.opacity = '1';
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body></html>

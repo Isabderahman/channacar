@@ -1,0 +1,99 @@
+# ChannaCar — production stack
+#   chanaacar.com       -> Nuxt SSR (frontend)
+#   api.chanaacar.com   -> Laravel API (backend, PHP-FPM)
+#
+# First run:   cp .env.example .env  &&  edit it  &&  ./init-letsencrypt.sh  &&  ./deploy.sh
+# Updates:     ./deploy.sh
+
+services:
+  db:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+    networks: [app]
+
+  backend:
+    build:
+      context: ./Backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      APP_NAME: ChannaCar
+      APP_ENV: production
+      APP_DEBUG: "false"
+      APP_KEY: ${APP_KEY}
+      APP_URL: https://api.chanaacar.com
+      LOG_CHANNEL: stderr
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: "3306"
+      DB_DATABASE: ${MYSQL_DATABASE}
+      DB_USERNAME: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+      ADMIN_USER_EMAIL: ${ADMIN_USER_EMAIL}
+      ADMIN_USER_PASSWORD: ${ADMIN_USER_PASSWORD}
+    volumes:
+      # Bind-mount the code so `git pull` + ./deploy.sh updates it; storage/uploads persist on the host.
+      - ./Backend:/var/www
+    networks: [app]
+
+  frontend:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    depends_on: [backend]
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: "3000"
+      # The Nuxt server proxies /_backend/* to this origin (internal HTTP API served by nginx:8080).
+      NUXT_BACKEND_ORIGIN: http://nginx:8080
+      NUXT_PUBLIC_API_BASE: /_backend/api
+      NUXT_PUBLIC_STORAGE_BASE: /_backend/storage
+    networks: [app]
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    depends_on: [frontend, backend]
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./Backend:/var/www:ro                       # serve Laravel public/ + storage for api.chanaacar.com
+      - ./docker/certbot/conf:/etc/letsencrypt:ro    # TLS certificates
+      - ./docker/certbot/www:/var/www/certbot:ro     # ACME http-01 challenge
+    # Reload every 6h so renewed certificates are picked up.
+    command: /bin/sh -c "while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g 'daemon off;'"
+    networks: [app]
+
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./docker/certbot/conf:/etc/letsencrypt
+      - ./docker/certbot/www:/var/www/certbot
+    # Try to renew twice a day.
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot; sleep 12h & wait $${!}; done"
+    networks: [app]
+
+volumes:
+  db_data:
+
+networks:
+  app:
+    driver: bridge

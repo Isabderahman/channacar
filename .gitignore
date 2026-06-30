@@ -1,0 +1,7 @@
+# Secrets & deploy state (do not commit)
+.env
+.env.bak
+
+# Let's Encrypt certificates / ACME challenge data
+docker/certbot/conf/
+docker/certbot/www/
