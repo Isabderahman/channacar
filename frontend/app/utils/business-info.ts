@@ -20,6 +20,8 @@ export const businessInfo = {
   // E.164 format for the primary line; the second line is a backup.
   telephone: '+212666623645',
   secondaryTelephone: '+212661232902',
+  // WhatsApp line (E.164). Used by the floating WhatsApp button and contact info.
+  whatsapp: '+212615933936',
 
   logo: '/images/chanaa-car-logo.png',
   image: '/images/hero-banner.jpg',

@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import WhatsAppFloat from '~/components/common/WhatsAppFloat.vue'
 import { businessInfo } from '~/utils/business-info'
+
+// Floating WhatsApp button on all public pages; hidden across the admin back-office.
+const route = useRoute()
+const showWhatsApp = computed(() => !route.path.includes('/admin'))
 
 // Site-wide structured data (JSON-LD). Lives in app.vue (not a layout) so it
 // also covers the homepage, which opts out of the default layout. Establishes
@@ -82,4 +87,5 @@ useHead(() => ({
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+  <WhatsAppFloat v-if="showWhatsApp" />
 </template>

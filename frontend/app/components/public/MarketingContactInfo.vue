@@ -29,11 +29,13 @@ defineProps<{
             :name="
               group.label === 'Téléphone'
                 ? 'phone'
-                : group.label === 'Email'
-                  ? 'mail'
-                  : group.label === 'Adresse'
-                    ? 'map-pin'
-                    : 'clock'
+                : group.label === 'WhatsApp'
+                  ? 'whatsapp'
+                  : group.label === 'Email'
+                    ? 'mail'
+                    : group.label === 'Adresse'
+                      ? 'map-pin'
+                      : 'clock'
             "
             :size="18"
             class="text-[var(--primary)]"
@@ -47,6 +49,15 @@ defineProps<{
             <a
               v-if="group.label === 'Email'"
               :href="`mailto:${value}`"
+              class="transition duration-300 hover:text-[var(--primary)]"
+            >
+              {{ value }}
+            </a>
+            <a
+              v-else-if="group.label === 'WhatsApp'"
+              :href="`https://wa.me/${value.replace(/\D/g, '')}`"
+              target="_blank"
+              rel="noopener"
               class="transition duration-300 hover:text-[var(--primary)]"
             >
               {{ value }}

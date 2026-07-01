@@ -279,6 +279,10 @@ export const contactContent = {
       values: ['+212 6 66 62 36 45', '+212 6 61 23 29 02'],
     },
     {
+      label: 'WhatsApp',
+      values: ['+212 6 15 93 39 36'],
+    },
+    {
       label: 'Email',
       values: ['contact@chanaacar.com'],
     },
