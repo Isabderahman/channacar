@@ -38,6 +38,7 @@ export interface Car {
   gps: boolean
   base_price_per_day: NumericValue
   insurance_price_per_day?: NumericValue | null
+  caution?: NumericValue | null
   status: CarStatus
   registration_number: string
   is_active: boolean

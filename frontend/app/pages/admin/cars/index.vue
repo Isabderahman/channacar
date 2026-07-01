@@ -18,6 +18,7 @@ const categories = ref<Category[]>([])
 const createFormState = () => ({
   base_price_per_day: '',
   insurance_price_per_day: '',
+  caution: '',
   brand: '',
   category_id: '',
   climatisation: true,
@@ -136,6 +137,7 @@ const submit = async () => {
       base_price_per_day: Number(form.base_price_per_day),
       insurance_price_per_day:
         form.insurance_price_per_day === '' ? null : Number(form.insurance_price_per_day),
+      caution: form.caution === '' ? null : Number(form.caution),
       category_id: typeof form.category_id === 'number' ? form.category_id : Number(form.category_id),
       doors: Number(form.doors),
       luggage: Number(form.luggage),
@@ -262,6 +264,7 @@ onMounted(() => {
           <FormSelect v-model="form.category_id" name="category_id" label="Category" :options="categoryOptions" />
           <FormField v-model="form.base_price_per_day" name="base_price_per_day" label="Base price / day" type="number" min="0" />
           <FormField v-model="form.insurance_price_per_day" name="insurance_price_per_day" label="Insurance / day (optional)" type="number" min="0" />
+          <FormField v-model="form.caution" name="caution" label="Caution / deposit (optional)" type="number" min="0" />
           <FormField v-model="form.doors" name="doors" label="Doors" type="number" min="1" />
           <FormField v-model="form.seats" name="seats" label="Seats" type="number" min="1" />
           <FormField v-model="form.luggage" name="luggage" label="Luggage" type="number" min="0" />

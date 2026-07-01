@@ -118,6 +118,7 @@ class CarController extends Controller
             'gps' => [$required, 'boolean'],
             'base_price_per_day' => [$required, 'numeric', 'min:0'],
             'insurance_price_per_day' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'caution' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'status' => [$required, Rule::in($this->enumValues(CarStatus::class))],
             'registration_number' => [
                 $required,

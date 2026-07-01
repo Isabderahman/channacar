@@ -89,6 +89,9 @@ const heroSpecs = computed(() => {
 
   return [
     { icon: 'payment', label: 'Prix / jour', value: formatCurrency(c.base_price_per_day, 'MAD', 'fr-MA') },
+    ...(c.caution != null && Number(c.caution) > 0
+      ? [{ icon: 'shield', label: 'Caution', value: formatCurrency(c.caution, 'MAD', 'fr-MA') }]
+      : []),
     { icon: 'car', label: 'Catégorie', value: c.category?.name ?? 'N/A' },
     { icon: 'people', label: 'Places', value: `${c.seats}` },
     { icon: 'door', label: 'Portes', value: `${c.doors}` },

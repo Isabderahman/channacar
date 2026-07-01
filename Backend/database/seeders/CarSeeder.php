@@ -53,6 +53,15 @@ class CarSeeder extends Seeder
             'Premium' => 200,
         ];
 
+        // Refundable security deposit (caution, MAD) by category — scales with car value.
+        $cautionByCategory = [
+            'Citadines' => 3000,
+            'Économique' => 3000,
+            'Familiale' => 5000,
+            'SUV' => 8000,
+            'Premium' => 15000,
+        ];
+
         $categoryIds = [];
 
         foreach ($cars as $car) {
@@ -78,6 +87,7 @@ class CarSeeder extends Seeder
                     'gps' => $car['gps'],
                     'base_price_per_day' => $car['price'],
                     'insurance_price_per_day' => $insuranceByCategory[$categoryName] ?? 80,
+                    'caution' => $cautionByCategory[$categoryName] ?? 5000,
                     'status' => 'available',
                     'is_active' => true,
                 ],
