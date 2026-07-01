@@ -61,7 +61,7 @@
       "support": { "title": "Asistencia", "links": { "helpCenter": "Centro de ayuda", "askQuestion": "Haz una pregunta", "privacyPolicy": "Política de privacidad", "termsAndConditions": "Términos y condiciones" } },
       "locations": { "title": "Zonas de servicio", "links": { "airportMenara": "Aeropuerto de Marrakech Menara", "gueliz": "Gueliz", "medina": "Medina", "palmeraie": "Palmeraie", "hivernage": "Hivernage", "casablanca": "Casablanca", "agadir": "Agadir", "essaouira": "Essaouira" } }
     },
-    "social": { "facebook": "Facebook", "instagram": "Instagram", "twitter": "Twitter", "linkedin": "LinkedIn", "mail": "Correo electrónico" },
+    "social": { "facebook": "Facebook", "instagram": "Instagram", "snapchat": "Snapchat", "twitter": "Twitter", "linkedin": "LinkedIn", "mail": "Correo electrónico" },
     "copyright": "Todos los derechos reservados"
   }
 }

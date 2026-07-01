@@ -80,15 +80,6 @@ html[data-theme='light'] {
   --shadow-2: 0 16px 40px rgb(255 143 42 / 0.18);
 }
 
-/*
- * The brand logo PNG is white text + orange accent on transparent — perfect on
- * dark surfaces but invisible on light ones. In light mode render it as a solid
- * dark monochrome so the wordmark stays legible.
- */
-html[data-theme='light'] .brand-logo {
-  filter: brightness(0) saturate(100%);
-}
-
 @theme inline {
   --font-heading: var(--ff-nunito);
   --font-body: var(--ff-open-sans);

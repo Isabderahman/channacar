@@ -61,7 +61,7 @@
       "support": { "title": "الدعم", "links": { "helpCenter": "مركز المساعدة", "askQuestion": "اطرح سؤالاً", "privacyPolicy": "سياسة الخصوصية", "termsAndConditions": "الشروط والأحكام" } },
       "locations": { "title": "مناطق الخدمة", "links": { "airportMenara": "مطار مراكش المنارة", "gueliz": "كليز", "medina": "المدينة القديمة", "palmeraie": "النخيل", "hivernage": "حي الشتاء", "casablanca": "الدار البيضاء", "agadir": "أكادير", "essaouira": "الصويرة" } }
     },
-    "social": { "facebook": "فيسبوك", "instagram": "إنستغرام", "twitter": "تويتر", "linkedin": "لينكد إن", "mail": "البريد الإلكتروني" },
+    "social": { "facebook": "فيسبوك", "instagram": "إنستغرام", "snapchat": "سناب شات", "twitter": "تويتر", "linkedin": "لينكد إن", "mail": "البريد الإلكتروني" },
     "copyright": "جميع الحقوق محفوظة"
   }
 }

@@ -22,7 +22,7 @@ export type FeaturedCarId =
 export type StepIcon = 'profile-add' | 'car' | 'person' | 'payment'
 export type StepId = 'createProfile' | 'chooseCar' | 'matchSeller' | 'makeDeal'
 export type StepTone = 'pink' | 'blue' | 'green' | 'purple'
-export type SocialIcon = 'facebook' | 'instagram' | 'linkedin' | 'mail' | 'twitter'
+export type SocialIcon = 'facebook' | 'instagram' | 'linkedin' | 'mail' | 'snapchat' | 'twitter'
 export type LocaleDirection = 'ltr' | 'rtl'
 
 export interface HeroSearchOptionBase {
@@ -308,6 +308,7 @@ export const footerLinkGroupDefs = [
 export const socialLinkDefs = [
   { key: 'facebook', href: 'https://www.facebook.com/profile.php?id=61578329224592', icon: 'facebook' },
   { key: 'instagram', href: 'https://www.instagram.com/chanaa_car/', icon: 'instagram' },
+  { key: 'snapchat', href: 'https://www.snapchat.com/add/abde_999', icon: 'snapchat' },
   { key: 'linkedin', href: 'https://www.linkedin.com/company/chan%C3%A2a-car/', icon: 'linkedin' },
   { key: 'mail', href: 'mailto:contact@chanaacar.com', icon: 'mail' },
 ] satisfies SocialLinkBase[]

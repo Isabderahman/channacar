@@ -64,6 +64,7 @@ export const businessInfo = {
   sameAs: [
     'https://www.facebook.com/profile.php?id=61578329224592',
     'https://www.instagram.com/chanaa_car/',
+    'https://www.snapchat.com/add/abde_999',
     'https://www.linkedin.com/company/chan%C3%A2a-car/',
   ],
 } as const
