@@ -155,9 +155,8 @@ const removeImage = async (imageId: number) => {
           class="block w-full rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.95rem] text-[var(--text-strong)]"
           @change="onFileChange"
         >
-        <p v-if="files.length" class="mt-2 text-[0.82rem] text-[var(--text-subtle)]">
-          {{ files.length }} image{{ files.length > 1 ? 's' : '' }} selected. The thumbnail flag
-          applies to the first one.
+        <p class="mt-2 text-[0.82rem] text-[var(--text-subtle)]">
+          {{ files.length > 0 ? `${files.length} image${files.length > 1 ? 's' : ''} selected. The thumbnail flag applies to the first one.` : 'Max 50 MB per image.' }}
         </p>
       </div>
 

@@ -17,7 +17,7 @@ class CarImageController extends Controller
     public function store(Request $request, Car $car): JsonResponse
     {
         $validated = $request->validate([
-            'image' => ['required', 'image', 'max:8192'],
+            'image' => ['required', 'image', 'max:51200'],
             'is_thumbnail' => ['nullable', 'boolean'],
             'sort_order' => ['nullable', 'integer', 'min:0'],
         ]);

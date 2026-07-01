@@ -291,7 +291,7 @@ onMounted(() => {
             @change="onImagesSelected"
           >
           <p class="mt-2 text-[0.82rem] leading-5 text-[var(--text-subtle)]">
-            Optional. The first image becomes the thumbnail. Uploaded after the car is created (max 5&nbsp;MB each).
+            Optional. The first image becomes the thumbnail. Uploaded after the car is created (max 50&nbsp;MB each).
           </p>
 
           <div v-if="pendingImages.length" class="mt-4 grid gap-3 sm:grid-cols-3 md:grid-cols-4">
