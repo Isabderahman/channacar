@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import PublicCarWhatsAppButton from '~/components/public/PublicCarWhatsAppButton.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { Car } from '~/types/entities'
@@ -63,8 +62,6 @@ const { mediaUrl } = useApi()
           </strong>
           / day
         </p>
-
-        <PublicCarWhatsAppButton :car="car" size="icon" />
 
         <BaseButton :to="`/cars/${car.slug ?? car.id}`">
           <BaseIcon name="arrow-right" :size="18" />
