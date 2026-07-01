@@ -15,6 +15,7 @@ const props = defineProps<{
 }>()
 
 const route = useRoute()
+const router = useRouter()
 const { publicApi } = useApi()
 
 const pending = ref(false)
@@ -126,6 +127,7 @@ const submit = async () => {
   errorMessage.value = ''
   successMessage.value = ''
 
+  let reservation: Reservation
   try {
     const response = await publicApi<ResourceResponse<Reservation>>('/public/reservations', {
       method: 'POST',
@@ -149,22 +151,39 @@ const submit = async () => {
         },
       },
     })
-
-    successMessage.value = `Réservation ${response.data.reservation_number} créée avec succès.`
-
-    await navigateTo({
-      path: '/reservation/success',
-      query: {
-        car: carName.value,
-        reservation: response.data.reservation_number,
-        from: route.fullPath,
-      },
-    })
+    reservation = response.data
   } catch (error) {
+    // ofetch (FetchError) exposes the parsed JSON body on `error.data`; Laravel
+    // validation errors carry the human-readable reason in `message`.
+    const apiMessage = (error as { data?: { message?: string } })?.data?.message
     errorMessage.value =
-      error instanceof Error
-        ? error.message
-        : 'La réservation n’a pas pu être envoyée. Vérifiez les dates et les options sélectionnées.'
+      apiMessage ||
+      'La réservation n’a pas pu être envoyée. Vérifiez les dates et les options sélectionnées.'
+    pending.value = false
+    return
+  }
+
+  // The reservation is created at this point. Any failure below is only about
+  // reaching the confirmation page — never surface it as a booking failure,
+  // or the user may retry and create a duplicate reservation.
+  successMessage.value = `Réservation ${reservation.reservation_number} créée avec succès.`
+
+  const target = {
+    path: '/reservation/success',
+    query: {
+      car: carName.value,
+      reservation: reservation.reservation_number,
+      from: route.fullPath,
+    },
+  }
+
+  try {
+    await navigateTo(target)
+  } catch {
+    // Client-side navigation needs the success page's JS chunk, which may be
+    // missing after a new deploy ("Failed to fetch dynamically imported
+    // module"). Fall back to a full page load so fresh assets are fetched.
+    window.location.assign(router.resolve(target).href)
   } finally {
     pending.value = false
   }

@@ -9,8 +9,18 @@ export const useApi = () => {
     return `${normalizedBase}${normalizedPath}`
   }
 
+  // Force `Accept: application/json` so Laravel renders validation/auth errors
+  // as JSON (422/401) instead of a 302 redirect. Without it, $fetch silently
+  // follows the redirect and resolves with a non-JSON body, hiding the real
+  // error (e.g. "car not available") behind an undefined response.
   const publicApi = <T>(path: string, options?: Parameters<typeof $fetch<T>>[1]) =>
-    $fetch<T>(endpoint(path), options)
+    $fetch<T>(endpoint(path), {
+      ...options,
+      headers: {
+        Accept: 'application/json',
+        ...(options?.headers ?? {}),
+      },
+    })
 
   const adminApi = <T>(path: string, options?: Parameters<typeof $fetch<T>>[1]) => {
     if (!token.value) {
@@ -20,6 +30,7 @@ export const useApi = () => {
     return $fetch<T>(endpoint(path), {
       ...options,
       headers: {
+        Accept: 'application/json',
         ...(options?.headers ?? {}),
         Authorization: `Bearer ${token.value}`,
       },

@@ -2,6 +2,11 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineNuxtConfig({
   compatibilityDate: '2026-06-23',
+  // Chunk errors after a redeploy are handled by app/plugins/chunk-reload.client.ts,
+  // which reloads into the intended route with fresh assets.
+  experimental: {
+    emitRouteChunkError: 'manual',
+  },
   css: ['~/assets/css/main.css'],
   components: [{ path: '~/components', pathPrefix: false }],
   modules: ['@nuxtjs/i18n', '@nuxtjs/seo'],
