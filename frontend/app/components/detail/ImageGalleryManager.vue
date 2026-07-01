@@ -18,7 +18,7 @@ const emit = defineEmits<{
 
 const { adminApi, mediaUrl } = useApi()
 
-const file = ref<File | null>(null)
+const files = ref<File[]>([])
 const form = reactive({
   isThumbnail: false,
   sortOrder: '',
@@ -27,44 +27,61 @@ const errorMessage = ref('')
 const pending = ref(false)
 
 const onFileChange = (event: Event) => {
-  const nextFile = (event.target as HTMLInputElement).files?.[0] ?? null
-  file.value = nextFile
+  files.value = Array.from((event.target as HTMLInputElement).files ?? [])
 }
 
 const resetForm = () => {
-  file.value = null
+  files.value = []
   form.isThumbnail = false
   form.sortOrder = ''
 }
 
 const submit = async () => {
-  if (!file.value) {
-    errorMessage.value = 'Select an image before uploading.'
+  if (files.value.length === 0) {
+    errorMessage.value = 'Select at least one image before uploading.'
     return
   }
 
   pending.value = true
   errorMessage.value = ''
 
+  // The backend accepts one image per request, so upload the selection
+  // sequentially. Only the first file honours the "set as thumbnail" flag, and
+  // an explicit sort order is incremented per file so the batch keeps its order.
+  const baseSortOrder = form.sortOrder !== '' ? Number(form.sortOrder) : null
+  let uploaded = 0
+
   try {
-    const body = new FormData()
-    body.append('image', file.value)
-    body.append('is_thumbnail', form.isThumbnail ? '1' : '0')
+    for (const [index, file] of files.value.entries()) {
+      const body = new FormData()
+      body.append('image', file)
+      body.append('is_thumbnail', index === 0 && form.isThumbnail ? '1' : '0')
 
-    if (form.sortOrder !== '') {
-      body.append('sort_order', form.sortOrder)
+      if (baseSortOrder !== null) {
+        body.append('sort_order', String(baseSortOrder + index))
+      }
+
+      await adminApi<ResourceResponse<CarImage>>(`/cars/${props.carId}/images`, {
+        method: 'POST',
+        body,
+      })
+
+      uploaded += 1
     }
-
-    await adminApi<ResourceResponse<CarImage>>(`/cars/${props.carId}/images`, {
-      method: 'POST',
-      body,
-    })
 
     resetForm()
     emit('changed')
   } catch (error) {
+    const detail =
+      error instanceof Error ? error.message : 'Check the selected files and try again.'
     errorMessage.value =
-      error instanceof Error ? error.message : 'The image upload failed. Check the selected file.'
+      uploaded > 0
+        ? `Uploaded ${uploaded} of ${files.value.length} images before failing. ${detail}`
+        : `The image upload failed. ${detail}`
+
+    if (uploaded > 0) {
+      emit('changed')
+    }
   } finally {
     pending.value = false
   }
@@ -129,14 +146,19 @@ const removeImage = async (imageId: number) => {
     <form class="mt-6 space-y-4" @submit.prevent="submit">
       <div>
         <span class="mb-2 block text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
-          Image file
+          Image files
         </span>
         <input
           type="file"
           accept="image/*"
+          multiple
           class="block w-full rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.95rem] text-[var(--text-strong)]"
           @change="onFileChange"
         >
+        <p v-if="files.length" class="mt-2 text-[0.82rem] text-[var(--text-subtle)]">
+          {{ files.length }} image{{ files.length > 1 ? 's' : '' }} selected. The thumbnail flag
+          applies to the first one.
+        </p>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
@@ -165,7 +187,7 @@ const removeImage = async (imageId: number) => {
 
       <BaseButton type="submit" :disabled="pending">
         <BaseIcon name="plus" :size="18" />
-        <span>{{ pending ? 'Working...' : 'Upload image' }}</span>
+        <span>{{ pending ? 'Working...' : files.length > 1 ? `Upload ${files.length} images` : 'Upload image' }}</span>
       </BaseButton>
     </form>
   </AppPanel>
