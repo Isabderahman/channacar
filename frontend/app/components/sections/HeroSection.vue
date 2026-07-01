@@ -63,6 +63,17 @@ const handleSearch = (payload: Record<string, string>) => {
           </p>
         </div>
 
+        <div
+          data-intro
+          class="relative z-10 mb-6 overflow-hidden rounded-[24px] border border-[var(--surface-border)] shadow-[var(--shadow-1)] lg:hidden"
+        >
+          <img
+            :src="image"
+            alt="ChannaCar"
+            class="h-[220px] w-full object-cover object-center sm:h-[300px]"
+          >
+        </div>
+
         <div data-intro class="relative z-20">
           <HeroSearchBar
             :fields="fields"

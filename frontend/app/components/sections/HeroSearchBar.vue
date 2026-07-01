@@ -67,40 +67,41 @@ const form = reactive<Record<string, string>>(
 const getFieldColumnClass = (field: HeroSearchField) =>
   field.type === 'select' ? 'lg:col-span-3' : 'lg:col-span-2'
 
-const getDateIconName = (field: HeroSearchField) =>
-  field.name === 'dropoffDateTime' ? 'calendar' : 'calendar'
-
 const handleSubmit = () => {
   emit('search', { ...form })
 }
 </script>
 
 <template>
-  <form class="ridex-surface mt-8 w-full lg:mt-10" @submit.prevent="handleSubmit">
-    <div class="p-2 sm:p-3">
-      <div class="grid grid-cols-1 items-end gap-3 sm:grid-cols-2 lg:grid-cols-12">
+  <form
+    class="ridex-surface mt-8 w-full overflow-hidden lg:mt-10"
+    @submit.prevent="handleSubmit"
+  >
+    <div
+      class="h-1 w-full bg-[linear-gradient(to_right,var(--primary),color-mix(in_srgb,var(--primary)_35%,transparent))]"
+    />
+
+    <div class="p-3 sm:p-4">
+      <div class="grid grid-cols-1 items-end gap-x-3 gap-y-4 sm:grid-cols-2 lg:grid-cols-12">
         <div
           v-for="field in fields"
           :key="field.name"
+          class="flex flex-col gap-1.5"
           :class="getFieldColumnClass(field)"
         >
-          <label :for="field.name" class="sr-only">
+          <label
+            :for="field.name"
+            :title="field.label"
+            class="truncate ps-1 text-[0.68rem] font-semibold uppercase tracking-[0.16em] text-[var(--text-subtle)]"
+          >
             {{ field.label }}
           </label>
 
           <div class="relative">
             <BaseIcon
-              v-if="field.type === 'select'"
-              name="map-pin"
+              :name="field.type === 'select' ? 'map-pin' : 'calendar'"
               :size="16"
-              class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-black/50"
-            />
-
-            <BaseIcon
-              v-else
-              :name="getDateIconName(field)"
-              :size="16"
-              class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-black/50"
+              class="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 text-[var(--primary)]"
             />
 
             <select
@@ -108,7 +109,7 @@ const handleSubmit = () => {
               :id="field.name"
               v-model="form[field.name]"
               :name="field.name"
-              class="h-11 w-full appearance-none rounded-[10px] border border-black/10 bg-[var(--white)] pe-10 ps-10 text-[0.875rem] text-[#241c22] outline-none transition duration-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_18%,transparent)]"
+              class="h-12 w-full cursor-pointer appearance-none rounded-[12px] border border-black/10 bg-[var(--white)] pe-10 ps-10 text-[0.9rem] font-medium text-[#241c22] shadow-sm outline-none transition duration-300 hover:border-[color-mix(in_srgb,var(--primary)_45%,var(--surface-border))] focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_20%,transparent)]"
             >
               <option
                 v-for="option in field.options"
@@ -125,21 +126,26 @@ const handleSubmit = () => {
               v-model="form[field.name]"
               :name="field.name"
               :type="field.type"
-              class="h-11 w-full rounded-[10px] border border-black/10 bg-[var(--white)] pe-4 ps-10 text-[0.875rem] text-[#241c22] outline-none transition duration-300 focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_18%,transparent)]"
+              class="h-12 w-full rounded-[12px] border border-black/10 bg-[var(--white)] pe-4 ps-10 text-[0.9rem] font-medium text-[#241c22] shadow-sm outline-none transition duration-300 hover:border-[color-mix(in_srgb,var(--primary)_45%,var(--surface-border))] focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_20%,transparent)]"
             >
 
             <BaseIcon
               v-if="field.type === 'select'"
               name="arrow-right"
               :size="16"
-              class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-black/50 opacity-60"
+              class="pointer-events-none absolute end-3 top-1/2 -translate-y-1/2 text-black/40"
               :class="isRtl ? '-rotate-90' : 'rotate-90'"
             />
           </div>
         </div>
 
         <div class="lg:col-span-2">
-          <BaseButton type="submit" full-width class="h-11 w-full rounded-[14px]">
+          <BaseButton
+            type="submit"
+            full-width
+            class="h-12 w-full rounded-[12px] shadow-[var(--shadow-2)]"
+          >
+            <BaseIcon name="search" :size="18" />
             <span>{{ actionLabel }}</span>
           </BaseButton>
         </div>
