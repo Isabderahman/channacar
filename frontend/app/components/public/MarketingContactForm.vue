@@ -5,6 +5,7 @@ import FormTextarea from '~/components/forms/FormTextarea.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 
+const route = useRoute()
 const submitted = ref(false)
 
 const form = reactive({
@@ -17,6 +18,23 @@ const form = reactive({
   nom_complet: '',
   telephone: '',
 })
+
+// When the visitor arrives from a car detail page (?vehicule=...), pre-fill the
+// message so their enquiry states which car it is about.
+const vehicule = computed(() => {
+  const value = route.query.vehicule
+  return (Array.isArray(value) ? value[0] : value)?.trim() || ''
+})
+
+watch(
+  vehicule,
+  (value) => {
+    if (value && !form.message) {
+      form.message = `Bonjour ChanaaCar, je souhaite des informations sur la ${value}. Est-elle disponible pour mes dates ?`
+    }
+  },
+  { immediate: true },
+)
 
 const submit = () => {
   submitted.value = true

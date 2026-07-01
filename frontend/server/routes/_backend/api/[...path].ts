@@ -1,4 +1,4 @@
-import { getRequestURL, getRouterParam, proxyRequest } from 'h3'
+import { getHeader, getRequestURL, getRouterParam, proxyRequest } from 'h3'
 
 import { buildBackendTarget } from '../../../utils/backendTarget'
 
@@ -6,9 +6,16 @@ export default defineEventHandler((event) => {
   const path = getRouterParam(event, 'path') ?? ''
   const target = buildBackendTarget(event, 'api', path, getRequestURL(event).search)
 
-  // NOTE: do not stream the request. Streaming forwards the body with chunked
-  // transfer-encoding, which PHP's built-in dev server (`php artisan serve`)
-  // cannot parse for multipart uploads — it resets the connection (proxy 502).
-  // Buffering sends a Content-Length, which the dev server handles correctly.
-  return proxyRequest(event, target)
+  // h3's proxyRequest drops the incoming `Accept` header (it's in h3's
+  // ignoredHeaders set), so Laravel stops treating the request as JSON. That
+  // silently breaks error handling: a failed `$request->validate()` (e.g. wrong
+  // login credentials) or an auth failure would render as a 302 redirect to the
+  // web `/` welcome page (proxy fetch follows it → 200 HTML) or a 500, instead
+  // of a 422/401 JSON body. Re-assert JSON so the backend keeps API semantics.
+  const accept = getHeader(event, 'accept')
+  return proxyRequest(event, target, {
+    headers: {
+      accept: accept && accept.includes('json') ? accept : 'application/json',
+    },
+  })
 })

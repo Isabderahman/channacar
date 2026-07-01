@@ -43,6 +43,17 @@ const loadCar = async () => {
   }
 }
 
+// Carry the car identity to the contact page so the message is pre-filled with
+// which car the visitor is enquiring about.
+const contactHref = computed(() => {
+  const c = car.value
+  if (!c) {
+    return '/contact'
+  }
+  const vehicule = `${c.brand} ${c.name} (${c.year})`
+  return `/contact?vehicule=${encodeURIComponent(vehicule)}`
+})
+
 const heroImage = computed(() => mediaUrl(pickCarImagePath(car.value)))
 const gallery = computed(() => car.value?.images ?? [])
 const mainImage = computed(() =>
@@ -230,7 +241,7 @@ useSchemaOrg(() =>
                   <span>Réserver</span>
                 </BaseButton>
                 <PublicCarWhatsAppButton :car="car" size="lg" label="WhatsApp" />
-                <BaseButton to="/contact" variant="ghost" size="lg">
+                <BaseButton :to="contactHref" variant="ghost" size="lg">
                   <BaseIcon name="mail" :size="18" />
                   <span>Contacter ChanaaCar</span>
                 </BaseButton>
