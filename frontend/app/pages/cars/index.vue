@@ -5,6 +5,7 @@ import FormField from '~/components/forms/FormField.vue'
 import FormSelect from '~/components/forms/FormSelect.vue'
 import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
 import PublicCarCard from '~/components/public/PublicCarCard.vue'
+import PublicCarCardSkeleton from '~/components/public/PublicCarCardSkeleton.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { Car, Category, PaginatedResponse, ResourceResponse } from '~/types/entities'
@@ -271,11 +272,12 @@ useSeoMeta({
         tone="error"
       />
 
-      <div v-else-if="pending" class="mt-6">
-        <StateNotice
-          title="Chargement des véhicules"
-          message="Récupération de la flotte et des résultats filtrés."
-        />
+      <div
+        v-else-if="pending"
+        class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
+        aria-busy="true"
+      >
+        <PublicCarCardSkeleton v-for="n in 6" :key="n" />
       </div>
 
       <div

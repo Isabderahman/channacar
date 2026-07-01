@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import AppPanel from '~/components/data/AppPanel.vue'
 import StateNotice from '~/components/feedback/StateNotice.vue'
+import CarDetailSkeleton from '~/components/public/CarDetailSkeleton.vue'
 import ReservationForm from '~/components/public/ReservationForm.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
@@ -178,12 +179,7 @@ useSchemaOrg(() =>
         tone="error"
       />
 
-      <div v-else class="mt-6">
-        <StateNotice
-          title="Chargement du véhicule"
-          message="Récupération du véhicule, de la galerie et des références de réservation."
-        />
-      </div>
+      <CarDetailSkeleton v-else class="mt-6" />
     </div>
 
     <template v-else-if="car">
