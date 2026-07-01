@@ -2,6 +2,7 @@
 import SectionHeading from '~/components/common/SectionHeading.vue'
 import SiteFooter from '~/components/common/SiteFooter.vue'
 import SiteHeader from '~/components/common/SiteHeader.vue'
+import WhatsAppFloat from '~/components/common/WhatsAppFloat.vue'
 import PublicCarCard from '~/components/public/PublicCarCard.vue'
 import StateNotice from '~/components/feedback/StateNotice.vue'
 import HeroSection from '~/components/sections/HeroSection.vue'
@@ -99,5 +100,6 @@ useSeoMeta(() => ({
     </main>
 
     <SiteFooter />
+    <WhatsAppFloat />
   </div>
 </template>
