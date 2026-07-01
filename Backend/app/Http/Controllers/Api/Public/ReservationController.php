@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
+use App\Mail\NewReservationNotification;
 use App\Services\ReservationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
-    public function __construct(private readonly ReservationService $reservationService)
-    {
-    }
+    public function __construct(private readonly ReservationService $reservationService) {}
 
     public function store(Request $request): JsonResponse
     {
@@ -38,6 +39,15 @@ class ReservationController extends Controller
         ]);
 
         $reservation = $this->reservationService->createPublic($validated);
+
+        try {
+            Mail::send(new NewReservationNotification($reservation));
+        } catch (\Throwable $e) {
+            Log::error('Failed to send new reservation notification', [
+                'reservation_id' => $reservation->id,
+                'error' => $e->getMessage(),
+            ]);
+        }
 
         return response()->json([
             'data' => $reservation,
