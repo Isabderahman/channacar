@@ -65,6 +65,8 @@ const fmt = (value: number) => formatCurrency(value, 'MAD', 'fr-MA')
 const basePerDay = computed(() => toNumber(props.car.base_price_per_day))
 const insurancePerDay = computed(() => toNumber(props.car.insurance_price_per_day))
 const hasInsurance = computed(() => insurancePerDay.value > 0)
+const caution = computed(() => toNumber(props.car.caution))
+const hasCaution = computed(() => caution.value > 0)
 
 const rentalDays = computed(() => {
   if (!form.pickup_date || !form.dropoff_date) {
@@ -358,8 +360,20 @@ const submit = async () => {
           <span class="font-heading text-[1.05rem] text-[var(--text-strong)]">Total</span>
           <span class="font-heading text-[1.5rem] text-[var(--primary)]">{{ fmt(grandTotal) }}</span>
         </div>
+
+        <div
+          v-if="hasCaution"
+          class="mt-3 flex items-center justify-between rounded-[12px] border border-[var(--surface-border)] bg-[var(--surface-3)] px-3 py-2.5 text-[0.86rem]"
+        >
+          <span class="flex items-center gap-1.5 text-[var(--text-muted)]">
+            <BaseIcon name="shield" :size="15" />
+            Caution (remboursable)
+          </span>
+          <span class="font-semibold text-[var(--text-strong)]">{{ fmt(caution) }}</span>
+        </div>
+
         <p class="mt-2 text-[0.74rem] leading-5 text-[var(--text-subtle)]">
-          Tarif indicatif — ajusté selon la saison et confirmé par notre équipe.
+          Tarif indicatif — ajusté selon la saison et confirmé par notre équipe.<template v-if="hasCaution"> La caution est une garantie remboursable, non incluse dans le total.</template>
         </p>
 
         <StateNotice
