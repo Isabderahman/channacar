@@ -12,9 +12,13 @@ import { formatCurrency, pickCarImagePath } from '~/utils/formatters'
 const route = useRoute()
 const { mediaUrl, publicApi } = useApi()
 
+const car = ref<Car | null>(null)
+
+// Make the floating WhatsApp button enquire about this specific car.
+useCarWhatsappFloat(car)
+
 const pending = ref(true)
 const errorMessage = ref('')
-const car = ref<Car | null>(null)
 const extras = ref<Extra[]>([])
 const locations = ref<PickupLocation[]>([])
 const activeImage = ref(0)

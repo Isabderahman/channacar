@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import BaseIcon from '~/components/ui/BaseIcon.vue'
+import { useWhatsappFloatMessage } from '~/composables/useWhatsappFloat'
 import { whatsappGeneralMessage, whatsappHref } from '~/utils/whatsapp'
 
 // Floating WhatsApp call-to-action, shown on every public page (see the default
-// layout + homepage). Uses the brand colours, not WhatsApp green.
-const href = whatsappHref(whatsappGeneralMessage)
+// layout + homepage). Uses the brand colours, not WhatsApp green. Pages can
+// override the prefilled message (car detail sets a car-specific one).
+const floatMessage = useWhatsappFloatMessage()
+const href = computed(() => whatsappHref(floatMessage.value || whatsappGeneralMessage))
 </script>
 
 <template>
