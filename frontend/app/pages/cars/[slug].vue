@@ -2,6 +2,7 @@
 import AppPanel from '~/components/data/AppPanel.vue'
 import StateNotice from '~/components/feedback/StateNotice.vue'
 import CarDetailSkeleton from '~/components/public/CarDetailSkeleton.vue'
+import PublicCarWhatsAppButton from '~/components/public/PublicCarWhatsAppButton.vue'
 import ReservationForm from '~/components/public/ReservationForm.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
@@ -228,6 +229,7 @@ useSchemaOrg(() =>
                   <BaseIcon name="check-circle" :size="18" />
                   <span>Réserver</span>
                 </BaseButton>
+                <PublicCarWhatsAppButton :car="car" size="lg" label="WhatsApp" />
                 <BaseButton to="/contact" variant="ghost" size="lg">
                   <BaseIcon name="mail" :size="18" />
                   <span>Contacter ChanaaCar</span>

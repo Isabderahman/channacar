@@ -1,14 +1,10 @@
 <script setup lang="ts">
 import BaseIcon from '~/components/ui/BaseIcon.vue'
-import { businessInfo } from '~/utils/business-info'
+import { whatsappGeneralMessage, whatsappHref } from '~/utils/whatsapp'
 
-// Floating WhatsApp call-to-action, shown on every public page (see app.vue).
-// Number lives in business-info.ts so it stays consistent everywhere.
-const phoneDigits = businessInfo.whatsapp.replace(/\D/g, '')
-
-const message = 'Bonjour ChanaaCar, je souhaite des informations sur la location d’une voiture.'
-
-const href = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`
+// Floating WhatsApp call-to-action, shown on every public page (see the default
+// layout + homepage). Uses the brand colours, not WhatsApp green.
+const href = whatsappHref(whatsappGeneralMessage)
 </script>
 
 <template>
@@ -17,10 +13,10 @@ const href = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(message)}`
     target="_blank"
     rel="noopener"
     aria-label="Contacter ChanaaCar sur WhatsApp"
-    class="group fixed bottom-5 end-5 z-50 grid size-14 place-items-center rounded-full bg-[#25D366] text-white shadow-[0_10px_30px_rgba(37,211,102,0.45)] outline-none transition duration-300 ease-out hover:scale-105 hover:bg-[#20bd5a] focus-visible:ring-4 focus-visible:ring-[rgba(37,211,102,0.35)] print:hidden sm:size-16"
+    class="group fixed bottom-5 end-5 z-50 grid size-14 place-items-center rounded-full bg-[var(--carolina-blue)] text-[var(--white)] shadow-[var(--shadow-2)] outline-none transition duration-300 ease-out hover:scale-105 focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--primary)_35%,transparent)] print:hidden sm:size-16"
   >
     <span
-      class="pointer-events-none absolute inset-0 rounded-full bg-[#25D366] opacity-60 motion-safe:animate-ping"
+      class="pointer-events-none absolute inset-0 rounded-full bg-[var(--carolina-blue)] opacity-50 motion-safe:animate-ping"
     />
     <BaseIcon name="whatsapp" :size="30" class="relative z-10" />
 
