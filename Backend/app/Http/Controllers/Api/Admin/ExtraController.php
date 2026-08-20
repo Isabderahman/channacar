@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Admin;
 
+use App\Enums\ExtraBillingType;
 use App\Http\Controllers\Controller;
 use App\Models\Extra;
 use Illuminate\Database\QueryException;
@@ -68,6 +69,7 @@ class ExtraController extends Controller
             ],
             'icon' => ['sometimes', 'nullable', 'string', 'max:255'],
             'price_per_day' => [$required, 'numeric', 'min:0'],
+            'billing_type' => ['sometimes', Rule::enum(ExtraBillingType::class)],
             'is_active' => [$required, 'boolean'],
         ];
     }

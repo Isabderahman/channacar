@@ -15,7 +15,7 @@ class CarController extends Controller
         $query = Car::query()
             ->with(['category', 'images'])
             ->where('is_active', true)
-            ->where('status', CarStatus::Available->value)
+            ->where('status', '!=', CarStatus::Maintenance->value)
             ->when($request->filled('search'), function ($builder) use ($request) {
                 $search = $request->string('search')->trim()->value();
 
@@ -42,7 +42,7 @@ class CarController extends Controller
             ->with(['category', 'images'])
             ->where('slug', $car)
             ->where('is_active', true)
-            ->where('status', CarStatus::Available->value)
+            ->where('status', '!=', CarStatus::Maintenance->value)
             ->firstOrFail();
 
         return response()->json([

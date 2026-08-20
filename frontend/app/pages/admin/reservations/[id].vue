@@ -13,7 +13,7 @@ import {
   RESERVATION_SOURCE_OPTIONS,
   RESERVATION_STATUS_OPTIONS,
 } from '~/utils/constants'
-import { formatCurrency } from '~/utils/formatters'
+import { formatCurrency, isExtraPerDay } from '~/utils/formatters'
 
 definePageMeta({
   layout: 'admin',
@@ -74,7 +74,7 @@ const locationOptions = computed(() =>
 
 const extraOptions = computed(() =>
   extras.value.map((extra) => ({
-    label: `${extra.name} (${formatCurrency(extra.price_per_day)}/day)`,
+    label: `${extra.name} (${formatCurrency(extra.price_per_day)}${isExtraPerDay(extra) ? '/day' : ' one-time'})`,
     value: extra.id,
   })),
 )
@@ -255,7 +255,7 @@ watch(
                   Reservation {{ reservation.reservation_number }}
                 </h3>
                 <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
-                  Keep operational fields aligned with the pricing and availability rules enforced by the backend.
+                  Keep operational fields aligned with the pricing rules enforced by the backend.
                 </p>
               </div>
               <StatusBadge :value="reservation.status" />

@@ -21,7 +21,7 @@ watch(
       <div class="min-h-screen lg:flex">
         <AdminSidebar :open="sidebarOpen" @close="sidebarOpen = false" />
 
-        <div class="min-h-screen flex-1 lg:pl-[18rem]">
+        <div class="min-h-screen min-w-0 flex-1 lg:pl-[18rem]">
           <AdminTopbar @toggle-sidebar="sidebarOpen = true" />
 
           <main class="px-4 pb-8 pt-24 md:px-6 xl:px-8">

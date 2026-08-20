@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\Admin\ContractController;
 use App\Http\Controllers\Api\Admin\DashboardController;
 use App\Http\Controllers\Api\Admin\ExtraController;
 use App\Http\Controllers\Api\Admin\LocationController;
+use App\Http\Controllers\Api\Admin\PlanningController;
 use App\Http\Controllers\Api\Admin\ReservationController as AdminReservationController;
 use App\Http\Controllers\Api\Admin\SeasonController;
 use App\Http\Controllers\Api\Admin\TestimonialController as AdminTestimonialController;
@@ -60,4 +61,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('testimonials', AdminTestimonialController::class);
     Route::patch('/testimonials/{testimonial}/visibility', [AdminTestimonialController::class, 'updateVisibility']);
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
+    Route::get('/planning', [PlanningController::class, 'index']);
 });

@@ -13,7 +13,7 @@ import {
   RESERVATION_SOURCE_OPTIONS,
   RESERVATION_STATUS_OPTIONS,
 } from '~/utils/constants'
-import { formatCurrency } from '~/utils/formatters'
+import { formatCurrency, isExtraPerDay } from '~/utils/formatters'
 
 definePageMeta({
   layout: 'admin',
@@ -72,7 +72,7 @@ const locationOptions = computed(() =>
 
 const extraOptions = computed(() =>
   extras.value.map((extra) => ({
-    label: `${extra.name} (${formatCurrency(extra.price_per_day)}/day)`,
+    label: `${extra.name} (${formatCurrency(extra.price_per_day)}${isExtraPerDay(extra) ? '/day' : ' one-time'})`,
     value: extra.id,
   })),
 )
@@ -187,7 +187,7 @@ onMounted(() => {
         <div>
           <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Reservation details</h3>
           <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
-            The same availability and pricing rules used by the public booking flow are enforced here.
+            The same pricing rules used by the public booking flow are applied here. A car can hold several reservations, even on overlapping dates.
           </p>
         </div>
         <BaseIcon name="plus" :size="18" class="text-[var(--primary)]" />

@@ -82,6 +82,6 @@ class Reservation extends Model
     {
         return $this->belongsToMany(Extra::class, 'reservation_extras')
             ->using(ReservationExtra::class)
-            ->withPivot('price_snapshot');
+            ->withPivot('price_snapshot', 'billing_type');
     }
 }

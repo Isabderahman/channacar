@@ -1,4 +1,4 @@
-import type { Car, NumericValue } from '~/types/entities'
+import type { Car, Extra, NumericValue } from '~/types/entities'
 
 export const toNumber = (value: NumericValue | null | undefined) => {
   if (typeof value === 'number') {
@@ -24,6 +24,13 @@ export const formatCurrency = (
     currency,
     maximumFractionDigits: 0,
   }).format(toNumber(value))
+
+export const isExtraPerDay = (extra: Pick<Extra, 'billing_type'>) =>
+  extra.billing_type !== 'one_time'
+
+/** Total charged for one extra over the rental: per-day extras scale with the days. */
+export const extraLineTotal = (extra: Pick<Extra, 'billing_type' | 'price_per_day'>, rentalDays: number) =>
+  toNumber(extra.price_per_day) * (isExtraPerDay(extra) ? rentalDays : 1)
 
 export const formatDate = (value: string | null | undefined, locale = 'en-US') => {
   if (!value) {

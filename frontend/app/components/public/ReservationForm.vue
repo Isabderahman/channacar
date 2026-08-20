@@ -6,7 +6,7 @@ import FormTextarea from '~/components/forms/FormTextarea.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { Car, Extra, PickupLocation, Reservation, ResourceResponse } from '~/types/entities'
-import { formatCurrency, toNumber } from '~/utils/formatters'
+import { extraLineTotal, formatCurrency, isExtraPerDay, toNumber } from '~/utils/formatters'
 
 const props = defineProps<{
   car: Car
@@ -104,8 +104,9 @@ const selectedExtras = computed(() =>
 )
 
 const baseTotal = computed(() => basePerDay.value * rentalDays.value)
-const extrasTotal = computed(
-  () => selectedExtras.value.reduce((sum, extra) => sum + toNumber(extra.price_per_day), 0) * rentalDays.value,
+// Per-day extras are billed for every rental day; one-time extras are billed once.
+const extrasTotal = computed(() =>
+  selectedExtras.value.reduce((sum, extra) => sum + extraLineTotal(extra, rentalDays.value), 0),
 )
 const insuranceTotal = computed(() =>
   form.apply_insurance && hasInsurance.value ? insurancePerDay.value * rentalDays.value : 0,
@@ -264,7 +265,7 @@ const submit = async () => {
               {{ extra.name }}
             </span>
             <span class="mt-0.5 text-[0.82rem] font-bold text-[var(--text-strong)]">
-              {{ fmt(toNumber(extra.price_per_day)) }}/j
+              {{ fmt(toNumber(extra.price_per_day)) }}{{ isExtraPerDay(extra) ? '/j' : '' }}
             </span>
             <span
               class="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.7rem] font-semibold"
@@ -341,8 +342,11 @@ const submit = async () => {
             :key="extra.id"
             class="flex items-center justify-between text-[var(--text-muted)]"
           >
-            <span class="truncate pr-2">{{ extra.name }}</span>
-            <span>{{ fmt(toNumber(extra.price_per_day) * rentalDays) }}</span>
+            <span class="truncate pr-2">
+              {{ extra.name }}
+              <span v-if="!isExtraPerDay(extra)" class="text-[0.75rem]">(une fois)</span>
+            </span>
+            <span>{{ fmt(extraLineTotal(extra, rentalDays)) }}</span>
           </div>
 
           <div v-if="insuranceTotal > 0" class="flex items-center justify-between text-[var(--text-muted)]">

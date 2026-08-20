@@ -97,10 +97,6 @@ class ReservationService
         $source = ReservationSource::from($attributes['source']);
         $car = Car::query()->findOrFail($attributes['car_id']);
 
-        if (! in_array($status, [ReservationStatus::Cancelled, ReservationStatus::Completed], true)) {
-            $this->ensureCarAvailability($car, $pickupAt, $dropoffAt, $reservation->id);
-        }
-
         $extraIds = $this->extractExtraIds($attributes);
         $applyInsurance = (bool) ($attributes['apply_insurance'] ?? false);
         $pricing = $this->calculatePricing(
@@ -171,41 +167,9 @@ class ReservationService
         }
     }
 
-    private function ensureCarAvailability(Car $car, Carbon $pickupAt, Carbon $dropoffAt, ?int $ignoreReservationId = null): void
-    {
-        $candidates = Reservation::query()
-            ->where('car_id', $car->id)
-            ->when($ignoreReservationId, fn ($query) => $query->whereKeyNot($ignoreReservationId))
-            ->whereIn('status', [
-                ReservationStatus::Pending->value,
-                ReservationStatus::Confirmed->value,
-                ReservationStatus::Ongoing->value,
-            ])
-            ->whereDate('pickup_date', '<=', $dropoffAt->toDateString())
-            ->whereDate('dropoff_date', '>=', $pickupAt->toDateString())
-            ->get();
-
-        foreach ($candidates as $candidate) {
-            $candidatePickup = $this->combineDateAndTime(
-                $candidate->pickup_date->toDateString(),
-                $candidate->pickup_time
-            );
-            $candidateDropoff = $this->combineDateAndTime(
-                $candidate->dropoff_date->toDateString(),
-                $candidate->dropoff_time
-            );
-
-            if ($pickupAt->lt($candidateDropoff) && $dropoffAt->gt($candidatePickup)) {
-                throw ValidationException::withMessages([
-                    'car_id' => ['The selected car is not available for the requested period.'],
-                ]);
-            }
-        }
-    }
-
     /**
      * @param  array<int, int|string>  $extraIds
-     * @return array{total_price:string, insurance_total:string, delivery_total:string, extras_sync:array<int, array{price_snapshot:string}>}
+     * @return array{total_price:string, insurance_total:string, delivery_total:string, extras_sync:array<int, array{price_snapshot:string, billing_type:string}>}
      */
     private function calculatePricing(
         Car $car,
@@ -271,11 +235,14 @@ class ReservationService
                 continue;
             }
 
+            // price_snapshot always stores the unit price. Per-day extras are
+            // multiplied by the rental days; one-time extras are billed once.
             $snapshot = (float) $extra->price_per_day;
             $extrasSync[$extra->id] = [
                 'price_snapshot' => number_format($snapshot, 2, '.', ''),
+                'billing_type' => $extra->billing_type->value,
             ];
-            $extrasTotal += $snapshot * $rentalDays;
+            $extrasTotal += $extra->isBilledPerDay() ? $snapshot * $rentalDays : $snapshot;
         }
 
         return [

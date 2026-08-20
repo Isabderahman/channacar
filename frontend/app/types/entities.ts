@@ -102,11 +102,15 @@ export interface PickupLocation {
   is_active: boolean
 }
 
+export type ExtraBillingType = 'per_day' | 'one_time'
+
 export interface Extra {
   id: number
   name: string
   icon?: string | null
+  /** Unit price: charged per rental day, or once, depending on billing_type. */
   price_per_day: NumericValue
+  billing_type: ExtraBillingType
   is_active: boolean
 }
 
@@ -234,4 +238,35 @@ export interface DashboardStats {
     pickups: number
     dropoffs: number
   }
+}
+
+export interface PlanningCar {
+  id: number
+  brand: string
+  name: string
+  registration_number: string
+  status: CarStatus
+  category?: string | null
+}
+
+export interface PlanningReservation {
+  id: number
+  reservation_number: string
+  car_id: number
+  client_name?: string | null
+  client_phone?: string | null
+  pickup_date: string
+  pickup_time: string
+  dropoff_date: string
+  dropoff_time: string
+  status: ReservationStatus
+  payment_status: PaymentStatus
+  total_price: NumericValue
+}
+
+export interface PlanningResponse {
+  from: string
+  to: string
+  cars: PlanningCar[]
+  reservations: PlanningReservation[]
 }

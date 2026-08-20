@@ -6,6 +6,7 @@ import FormField from '~/components/forms/FormField.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { CarImage, ResourceResponse } from '~/types/entities'
+import { MAX_IMAGE_UPLOAD_MB } from '~/utils/constants'
 
 const props = defineProps<{
   carId: number
@@ -18,6 +19,19 @@ const emit = defineEmits<{
 
 const { adminApi, mediaUrl } = useApi()
 
+// ofetch (FetchError) exposes the parsed JSON body on `error.data`; Laravel puts
+// the actionable reason in `message` / `errors`. Without this, a 422 surfaced as
+// the useless "[POST] /_backend/api/... 422 Unprocessable Content".
+const extractError = (error: unknown, fallback: string) => {
+  const e = error as {
+    data?: { message?: string; errors?: Record<string, string[]> }
+    message?: string
+  }
+  const fieldError = Object.values(e?.data?.errors ?? {})[0]?.[0]
+
+  return fieldError || e?.data?.message || e?.message || fallback
+}
+
 const files = ref<File[]>([])
 const form = reactive({
   isThumbnail: false,
@@ -27,7 +41,17 @@ const errorMessage = ref('')
 const pending = ref(false)
 
 const onFileChange = (event: Event) => {
-  files.value = Array.from((event.target as HTMLInputElement).files ?? [])
+  const selected = Array.from((event.target as HTMLInputElement).files ?? [])
+  // Catch oversized files here: past the server limit PHP discards the upload
+  // before Laravel runs, and the only clue is a bare 422.
+  const tooLarge = selected.filter((file) => file.size > MAX_IMAGE_UPLOAD_MB * 1024 * 1024)
+
+  errorMessage.value =
+    tooLarge.length > 0
+      ? `${tooLarge.map((file) => file.name).join(', ')} exceed${tooLarge.length > 1 ? '' : 's'} the ${MAX_IMAGE_UPLOAD_MB} MB limit. Resize before uploading.`
+      : ''
+
+  files.value = selected.filter((file) => !tooLarge.includes(file))
 }
 
 const resetForm = () => {
@@ -72,8 +96,7 @@ const submit = async () => {
     resetForm()
     emit('changed')
   } catch (error) {
-    const detail =
-      error instanceof Error ? error.message : 'Check the selected files and try again.'
+    const detail = extractError(error, 'Check the selected files and try again.')
     errorMessage.value =
       uploaded > 0
         ? `Uploaded ${uploaded} of ${files.value.length} images before failing. ${detail}`
@@ -98,8 +121,7 @@ const removeImage = async (imageId: number) => {
 
     emit('changed')
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The image could not be deleted right now.'
+    errorMessage.value = extractError(error, 'The image could not be deleted right now.')
   } finally {
     pending.value = false
   }
@@ -156,7 +178,7 @@ const removeImage = async (imageId: number) => {
           @change="onFileChange"
         >
         <p class="mt-2 text-[0.82rem] text-[var(--text-subtle)]">
-          {{ files.length > 0 ? `${files.length} image${files.length > 1 ? 's' : ''} selected. The thumbnail flag applies to the first one.` : 'Max 50 MB per image.' }}
+          {{ files.length > 0 ? `${files.length} image${files.length > 1 ? 's' : ''} selected. The thumbnail flag applies to the first one.` : `Max ${MAX_IMAGE_UPLOAD_MB} MB per image — JPEG, PNG or WebP.` }}
         </p>
       </div>
 

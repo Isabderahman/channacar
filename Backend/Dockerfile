@@ -16,6 +16,10 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
+# Raise the upload limits before anything else: the stock 2M upload_max_filesize
+# turns every real car photo into a 422 from the image endpoint.
+COPY docker/php.ini /usr/local/etc/php/conf.d/zz-channacar.ini
+
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 

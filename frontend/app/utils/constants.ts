@@ -1,3 +1,7 @@
+// Keep in sync with CarImageController::MAX_UPLOAD_KB and the PHP
+// upload_max_filesize in Backend/docker/php.ini — the smallest of the three wins.
+export const MAX_IMAGE_UPLOAD_MB = 50
+
 export const CATEGORY_OPTIONS = [
   'Citadines',
   'Économique',
@@ -54,6 +58,7 @@ export const ADMIN_NAV_ITEMS = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: 'dashboard' },
   { label: 'Cars', to: '/admin/cars', icon: 'car' },
   { label: 'Reservations', to: '/admin/reservations', icon: 'calendar' },
+  { label: 'Planning', to: '/admin/planning', icon: 'clock' },
   { label: 'Clients', to: '/admin/clients', icon: 'people' },
   { label: 'Seasons', to: '/admin/seasons', icon: 'clock' },
   { label: 'Locations', to: '/admin/locations', icon: 'map-pin' },

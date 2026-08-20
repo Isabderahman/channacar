@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import type { Extra, PaginatedResponse, ResourceResponse } from '~/types/entities'
-import { formatCurrency } from '~/utils/formatters'
+import type { Extra, ExtraBillingType, PaginatedResponse, ResourceResponse } from '~/types/entities'
+import { formatCurrency, isExtraPerDay } from '~/utils/formatters'
 
 definePageMeta({
   layout: 'admin',
@@ -21,6 +21,11 @@ const iconOptions = [
   { label: 'Plus', value: 'plus' },
 ]
 
+const billingTypeOptions = [
+  { label: 'Per rental day', value: 'per_day' },
+  { label: 'One-time charge', value: 'one_time' },
+]
+
 const safeIcon = (value?: string | null): any => value || 'plus'
 
 const extras = ref<Extra[]>([])
@@ -31,6 +36,7 @@ const errorMessage = ref('')
 const successMessage = ref('')
 
 const createFormState = () => ({
+  billing_type: 'per_day' as ExtraBillingType,
   icon: '',
   is_active: true,
   name: '',
@@ -45,11 +51,12 @@ const rows = computed(() =>
     id: extra.id,
     is_active: extra.is_active,
     name: extra.name,
-    price: formatCurrency(extra.price_per_day),
+    price: `${formatCurrency(extra.price_per_day)}${isExtraPerDay(extra) ? ' / day' : ' once'}`,
   })),
 )
 
 const fillForm = (extra: Extra) => {
+  form.billing_type = extra.billing_type ?? 'per_day'
   form.icon = extra.icon ?? ''
   form.is_active = extra.is_active
   form.name = extra.name
@@ -148,7 +155,7 @@ onMounted(() => {
           description="Select an extra to update pricing or availability."
           :columns="[
             { key: 'name', label: 'Extra' },
-            { key: 'price', label: 'Price / day' },
+            { key: 'price', label: 'Price' },
             { key: 'is_active', label: 'Live' },
           ]"
           :rows="rows"
@@ -176,7 +183,14 @@ onMounted(() => {
                 <BaseIcon :name="safeIcon(form.icon)" :size="20" />
               </span>
             </div>
-            <FormField v-model="form.price_per_day" name="price_per_day" label="Price per day" type="number" min="0" />
+            <FormField v-model="form.price_per_day" name="price_per_day" label="Price" type="number" min="0" />
+            <FormSelect
+              v-model="form.billing_type"
+              name="billing_type"
+              label="Billing"
+              :options="billingTypeOptions"
+              help="Per rental day multiplies the price by the number of days; one-time charges it once per reservation."
+            />
             <FormCheckbox v-model="form.is_active" name="is_active" label="Available for reservations" />
 
             <div class="flex flex-wrap gap-3">
