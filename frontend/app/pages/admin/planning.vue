@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import AdminReservationForm from '~/components/admin/AdminReservationForm.vue'
 import type {
   PlanningCar,
   PlanningReservation,
   PlanningResponse,
   ReservationStatus,
 } from '~/types/entities'
-import { formatCurrency, formatTime } from '~/utils/formatters'
+import { resolveApiErrorMessage } from '~/utils/api-error'
+import { formatCurrency, formatDate, formatTime } from '~/utils/formatters'
 
 definePageMeta({
   layout: 'admin',
@@ -97,6 +99,7 @@ const startOfMonth = (value: string) => `${value.slice(0, 7)}-01`
 const todayIso = toIso(new Date())
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const viewMode = ref<ViewMode>('month')
 const anchor = ref(startOfMonth(todayIso))
@@ -352,7 +355,10 @@ const loadPlanning = async () => {
     cars.value = response.cars
     reservations.value = response.reservations
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Planning could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'Planning could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -370,6 +376,40 @@ const shift = (direction: -1 | 1) => {
 
 const goToToday = () => {
   anchor.value = viewMode.value === 'month' ? startOfMonth(todayIso) : todayIso
+}
+
+// --- Booking straight from the board -------------------------------------
+// Clicking a free cell opens the reservation form pre-filled with that car and
+// that day, so the operator never loses the row/column they were looking at.
+const createOpen = ref(false)
+const createCarId = ref<number | null>(null)
+const createDate = ref<string | null>(null)
+
+const openCreate = (carId: number | null = null, date: string | null = null) => {
+  createCarId.value = carId
+  createDate.value = date
+  createOpen.value = true
+}
+
+const closeCreate = () => {
+  createOpen.value = false
+}
+
+const createContext = computed(() => {
+  const car = cars.value.find((entry) => entry.id === createCarId.value)
+
+  if (!car) {
+    return 'Pick the car, the client and the dates. The backend applies the seasonal rate.'
+  }
+
+  const day = createDate.value ? formatDate(createDate.value) : 'the selected day'
+
+  return `${car.brand} ${car.name} (${car.registration_number}) from ${day}. Adjust anything before saving.`
+})
+
+const onCreated = async () => {
+  closeCreate()
+  await loadPlanning()
 }
 
 const setViewMode = (mode: ViewMode) => {
@@ -405,7 +445,7 @@ onMounted(() => {
       description="One row per car, one column per day. Each coloured bar is a reservation, so gaps are the days the car is free to rent."
       eyebrow="Availability board"
     >
-      <BaseButton to="/admin/reservations/new">
+      <BaseButton type="button" @click="openCreate()">
         <BaseIcon name="plus" :size="18" />
         <span>New reservation</span>
       </BaseButton>
@@ -517,7 +557,7 @@ onMounted(() => {
         <div>
           <h2 class="font-heading text-[1.15rem] text-[var(--text-strong)]">Availability board</h2>
           <p class="mt-1 text-[0.88rem] text-[var(--text-subtle)]">
-            Click any bar to open the reservation. Hover to see client, times, and total.
+            Click any bar to open the reservation, or click a free day to book that car on the spot.
           </p>
         </div>
         <span v-if="pending" class="text-[0.85rem] text-[var(--text-subtle)]">Loading…</span>
@@ -609,6 +649,17 @@ onMounted(() => {
                 }"
               >
                 <button
+                  v-for="day in days"
+                  :key="`cell-${row.car.id}-${day.iso}`"
+                  type="button"
+                  class="absolute top-0 grid h-full place-items-center transition duration-200 after:grid after:size-6 after:place-items-center after:rounded-full after:bg-[var(--primary)] after:text-[0.95rem] after:font-bold after:leading-none after:text-[var(--white)] after:opacity-0 after:transition after:duration-200 after:content-['+'] hover:bg-[color-mix(in_srgb,var(--primary)_18%,transparent)] hover:after:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--primary)] focus-visible:after:opacity-100"
+                  :style="{ left: `${day.index * cellWidth}px`, width: `${cellWidth}px` }"
+                  :title="`New reservation · ${row.car.brand} ${row.car.name} · ${day.iso}`"
+                  :aria-label="`Book ${row.car.brand} ${row.car.name} on ${day.iso}`"
+                  @click="openCreate(row.car.id, day.iso)"
+                />
+
+                <button
                   v-for="bar in row.bars"
                   :key="bar.reservation.id"
                   type="button"
@@ -637,5 +688,21 @@ onMounted(() => {
         </div>
       </div>
     </AppPanel>
+
+    <AppModal
+      :open="createOpen"
+      size="xl"
+      title="New reservation"
+      :description="createContext"
+      @close="closeCreate"
+    >
+      <AdminReservationForm
+        :preset-car-id="createCarId"
+        :preset-pickup-date="createDate"
+        show-cancel
+        @cancel="closeCreate"
+        @created="onCreated"
+      />
+    </AppModal>
   </div>
 </template>

@@ -1,18 +1,19 @@
 <script setup lang="ts">
 import type { PaginatedResponse, ResourceResponse, Testimonial } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 
 definePageMeta({
   layout: 'admin',
 })
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const testimonials = ref<Testimonial[]>([])
 const pending = ref(true)
 const saving = ref(false)
 const selectedId = ref<number | null>(null)
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const createFormState = () => ({
   content: '',
@@ -45,7 +46,6 @@ const fillForm = (testimonial: Testimonial) => {
 const resetForm = () => {
   Object.assign(form, createFormState())
   selectedId.value = null
-  successMessage.value = ''
 }
 
 const loadTestimonials = async () => {
@@ -58,7 +58,10 @@ const loadTestimonials = async () => {
     })
     testimonials.value = response.data
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Testimonials could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'Testimonials could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -67,7 +70,6 @@ const loadTestimonials = async () => {
 const save = async () => {
   saving.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const endpoint = isEditing.value ? `/testimonials/${selectedId.value}` : '/testimonials'
@@ -81,14 +83,14 @@ const save = async () => {
       },
     })
 
-    successMessage.value = isEditing.value
-      ? 'Testimonial updated successfully.'
-      : 'Testimonial created successfully.'
+    toast.success(
+      isEditing.value ? 'Testimonial updated successfully.' : 'Testimonial created successfully.',
+      'Saved',
+    )
     resetForm()
     await loadTestimonials()
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The testimonial could not be saved.'
+    toast.apiError(error, 'The testimonial could not be saved.')
   } finally {
     saving.value = false
   }
@@ -103,11 +105,11 @@ const removeSelected = async () => {
 
   try {
     await adminApi(`/testimonials/${selectedId.value}`, { method: 'DELETE' })
+    toast.success('Testimonial deleted.', 'Deleted')
     resetForm()
     await loadTestimonials()
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The testimonial could not be deleted.'
+    toast.apiError(error, 'The testimonial could not be deleted.')
   } finally {
     saving.value = false
   }
@@ -126,8 +128,7 @@ onMounted(() => {
       eyebrow="Moderation panel"
     />
 
-    <StateNotice v-if="errorMessage" title="Testimonial action failed" :message="errorMessage" tone="error" />
-    <StateNotice v-else-if="successMessage" title="Saved" :message="successMessage" tone="success" />
+    <StateNotice v-if="errorMessage" title="Loading failed" :message="errorMessage" tone="error" />
 
     <AdminSplitLayout>
       <template #primary>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PaginatedResponse, PickupLocation, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { formatCurrency } from '~/utils/formatters'
 
 definePageMeta({
@@ -7,13 +8,13 @@ definePageMeta({
 })
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const locations = ref<PickupLocation[]>([])
 const pending = ref(true)
 const saving = ref(false)
 const selectedId = ref<number | null>(null)
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const createFormState = () => ({
   address: '',
@@ -46,7 +47,6 @@ const fillForm = (location: PickupLocation) => {
 const resetForm = () => {
   Object.assign(form, createFormState())
   selectedId.value = null
-  successMessage.value = ''
 }
 
 const loadLocations = async () => {
@@ -59,7 +59,10 @@ const loadLocations = async () => {
     })
     locations.value = response.data
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Locations could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'Locations could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -68,7 +71,6 @@ const loadLocations = async () => {
 const save = async () => {
   saving.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const endpoint = isEditing.value ? `/locations/${selectedId.value}` : '/locations'
@@ -79,11 +81,14 @@ const save = async () => {
       body: { ...form, delivery_fee: Number(form.delivery_fee) || 0 },
     })
 
-    successMessage.value = isEditing.value ? 'Location updated successfully.' : 'Location created successfully.'
+    toast.success(
+      isEditing.value ? 'Location updated successfully.' : 'Location created successfully.',
+      'Saved',
+    )
     resetForm()
     await loadLocations()
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'The location could not be saved.'
+    toast.apiError(error, 'The location could not be saved.')
   } finally {
     saving.value = false
   }
@@ -98,10 +103,11 @@ const removeSelected = async () => {
 
   try {
     await adminApi(`/locations/${selectedId.value}`, { method: 'DELETE' })
+    toast.success('Location deleted.', 'Deleted')
     resetForm()
     await loadLocations()
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'The location could not be deleted.'
+    toast.apiError(error, 'The location could not be deleted.')
   } finally {
     saving.value = false
   }
@@ -120,8 +126,7 @@ onMounted(() => {
       eyebrow="Pickup locations"
     />
 
-    <StateNotice v-if="errorMessage" title="Location action failed" :message="errorMessage" tone="error" />
-    <StateNotice v-else-if="successMessage" title="Saved" :message="successMessage" tone="success" />
+    <StateNotice v-if="errorMessage" title="Loading failed" :message="errorMessage" tone="error" />
 
     <AdminSplitLayout>
       <template #primary>

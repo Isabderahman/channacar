@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AdminExtrasPicker from '~/components/admin/AdminExtrasPicker.vue'
 import type {
   Car,
   Client,
@@ -8,12 +9,13 @@ import type {
   Reservation,
   ResourceResponse,
 } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import {
   PAYMENT_STATUS_OPTIONS,
   RESERVATION_SOURCE_OPTIONS,
   RESERVATION_STATUS_OPTIONS,
 } from '~/utils/constants'
-import { formatCurrency, isExtraPerDay } from '~/utils/formatters'
+import { formatCurrency, toNumber } from '~/utils/formatters'
 
 definePageMeta({
   layout: 'admin',
@@ -21,11 +23,11 @@ definePageMeta({
 
 const route = useRoute()
 const { adminApi } = useApi()
+const toast = useToast()
 
 const pending = ref(true)
 const saving = ref(false)
 const errorMessage = ref('')
-const successMessage = ref('')
 const reservation = ref<Reservation | null>(null)
 const showContractModal = ref(false)
 const cars = ref<Car[]>([])
@@ -72,12 +74,22 @@ const locationOptions = computed(() =>
   })),
 )
 
-const extraOptions = computed(() =>
-  extras.value.map((extra) => ({
-    label: `${extra.name} (${formatCurrency(extra.price_per_day)}${isExtraPerDay(extra) ? '/day' : ' one-time'})`,
-    value: extra.id,
-  })),
+const selectedCar = computed(
+  () => cars.value.find((car) => String(car.id) === String(form.car_id)) ?? null,
 )
+
+const insurancePerDay = computed(() => toNumber(selectedCar.value?.insurance_price_per_day))
+
+// Same rule as the public booking flow: a same-day return still bills one day.
+const rentalDays = computed(() => {
+  if (!form.pickup_date || !form.dropoff_date) {
+    return 0
+  }
+
+  const ms = new Date(form.dropoff_date).getTime() - new Date(form.pickup_date).getTime()
+
+  return ms <= 0 ? 1 : Math.max(1, Math.ceil(ms / 86_400_000))
+})
 
 const summaryItems = computed(() => {
   if (!reservation.value) {
@@ -113,7 +125,6 @@ const fillForm = (value: Reservation) => {
 const loadReservation = async () => {
   pending.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const reservationId = Number(route.params.id)
@@ -138,8 +149,10 @@ const loadReservation = async () => {
     extras.value = extrasResponse.data
     fillForm(reservationResponse.data)
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The reservation detail could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'The reservation detail could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -152,7 +165,6 @@ const save = async () => {
 
   saving.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const response = await adminApi<ResourceResponse<Reservation>>(
@@ -181,10 +193,9 @@ const save = async () => {
 
     reservation.value = response.data
     fillForm(response.data)
-    successMessage.value = 'Reservation updated successfully.'
+    toast.success('Reservation updated successfully.', 'Saved')
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The reservation could not be saved.'
+    toast.apiError(error, 'The reservation could not be saved.')
   } finally {
     saving.value = false
   }
@@ -227,15 +238,9 @@ watch(
 
     <StateNotice
       v-if="errorMessage"
-      title="Reservation error"
+      title="Loading failed"
       :message="errorMessage"
       tone="error"
-    />
-    <StateNotice
-      v-else-if="successMessage"
-      title="Saved"
-      :message="successMessage"
-      tone="success"
     />
 
     <StateNotice
@@ -298,20 +303,12 @@ watch(
                 />
               </div>
 
-              <FormSelect
+              <AdminExtrasPicker
                 v-model="form.extra_ids"
-                name="extra_ids"
-                label="Extras"
-                :options="extraOptions"
-                multiple
-                help="Use multi-select to keep optional extras attached to the reservation."
-              />
-
-              <FormCheckbox
-                v-model="form.apply_insurance"
-                name="apply_insurance"
-                label="Assurance complémentaire"
-                description="Bills the car's insurance fee per rental day when enabled."
+                v-model:insurance="form.apply_insurance"
+                :extras="extras"
+                :rental-days="rentalDays"
+                :insurance-per-day="insurancePerDay"
               />
 
               <FormTextarea

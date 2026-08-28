@@ -1,6 +1,9 @@
+import { isUnauthorizedError } from '~/utils/api-error'
+
 export const useApi = () => {
   const runtimeConfig = useRuntimeConfig()
-  const { token } = useAdminAuth()
+  const { clearSession, token } = useAdminAuth()
+  const toast = useToast()
 
   const endpoint = (path: string) => {
     const normalizedBase = runtimeConfig.public.apiBase.replace(/\/$/, '')
@@ -22,19 +25,31 @@ export const useApi = () => {
       },
     })
 
-  const adminApi = <T>(path: string, options?: Parameters<typeof $fetch<T>>[1]) => {
+  const adminApi = async <T>(path: string, options?: Parameters<typeof $fetch<T>>[1]) => {
     if (!token.value) {
-      throw new Error('Admin session is required.')
+      throw new Error('Admin session is required. Sign in again to continue.')
     }
 
-    return $fetch<T>(endpoint(path), {
-      ...options,
-      headers: {
-        Accept: 'application/json',
-        ...(options?.headers ?? {}),
-        Authorization: `Bearer ${token.value}`,
-      },
-    })
+    try {
+      return await $fetch<T>(endpoint(path), {
+        ...options,
+        headers: {
+          Accept: 'application/json',
+          ...(options?.headers ?? {}),
+          Authorization: `Bearer ${token.value}`,
+        },
+      })
+    } catch (error) {
+      // A revoked or expired Sanctum token fails every subsequent call. Drop the
+      // dead session once, here, so the auth gate takes over instead of each
+      // page reporting its own unrelated-looking failure.
+      if (isUnauthorizedError(error) && token.value) {
+        clearSession()
+        toast.warning('Your session has expired. Sign in again to continue.', 'Signed out')
+      }
+
+      throw error
+    }
   }
 
   const mediaUrl = (path?: string | null) => {

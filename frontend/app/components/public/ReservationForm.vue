@@ -6,6 +6,7 @@ import FormTextarea from '~/components/forms/FormTextarea.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { Car, Extra, PickupLocation, Reservation, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { extraLineTotal, formatCurrency, isExtraPerDay, toNumber } from '~/utils/formatters'
 
 const props = defineProps<{
@@ -17,10 +18,14 @@ const props = defineProps<{
 const route = useRoute()
 const router = useRouter()
 const { publicApi } = useApi()
+const toast = useToast({
+  locale: 'fr',
+  errorTitle: 'Réservation échouée',
+  successTitle: 'Réservation confirmée',
+})
 
 const pending = ref(false)
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const carName = computed(() => `${props.car.brand} ${props.car.name}`)
 
@@ -128,7 +133,6 @@ const grandTotal = computed(
 const submit = async () => {
   pending.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   let reservation: Reservation
   try {
@@ -156,12 +160,14 @@ const submit = async () => {
     })
     reservation = response.data
   } catch (error) {
-    // ofetch (FetchError) exposes the parsed JSON body on `error.data`; Laravel
-    // validation errors carry the human-readable reason in `message`.
-    const apiMessage = (error as { data?: { message?: string } })?.data?.message
-    errorMessage.value =
-      apiMessage ||
-      'La réservation n’a pas pu être envoyée. Vérifiez les dates et les options sélectionnées.'
+    // Kept inline next to the submit button as well: the visitor has a long form
+    // to correct, and the toast fades.
+    errorMessage.value = resolveApiErrorMessage(error, {
+      locale: 'fr',
+      fallback:
+        'La réservation n’a pas pu être envoyée. Vérifiez les dates et les options sélectionnées.',
+    })
+    toast.error(errorMessage.value)
     pending.value = false
     return
   }
@@ -169,7 +175,7 @@ const submit = async () => {
   // The reservation is created at this point. Any failure below is only about
   // reaching the confirmation page — never surface it as a booking failure,
   // or the user may retry and create a duplicate reservation.
-  successMessage.value = `Réservation ${reservation.reservation_number} créée avec succès.`
+  toast.success(`Réservation ${reservation.reservation_number} créée avec succès.`)
 
   const target = {
     path: '/reservation/success',

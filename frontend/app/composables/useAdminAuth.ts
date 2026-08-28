@@ -61,8 +61,11 @@ export const useAdminAuth = () => {
   }
 
   const login = async (email: string, password: string) => {
+    // `Accept: application/json` keeps Laravel rendering 401/422 as JSON so the
+    // reason reaches the UI instead of a redirect body.
     const response = await $fetch<LoginResponse>(endpoint('/login'), {
       method: 'POST',
+      headers: { Accept: 'application/json' },
       body: { email, password },
     })
 
@@ -79,6 +82,7 @@ export const useAdminAuth = () => {
         await $fetch(endpoint('/logout'), {
           method: 'POST',
           headers: {
+            Accept: 'application/json',
             Authorization: `Bearer ${token.value}`,
           },
         })

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Car, Category, PaginatedResponse, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { CAR_STATUS_OPTIONS, CATEGORY_OPTIONS, FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
 import { formatCurrency } from '~/utils/formatters'
 
@@ -8,6 +9,7 @@ definePageMeta({
 })
 
 const { adminApi, publicApi } = useApi()
+const toast = useToast()
 
 const pending = ref(true)
 const formPending = ref(false)
@@ -72,7 +74,6 @@ const removePendingImage = (index: number) => {
 const openCreateModal = () => {
   resetForm()
   clearPendingImages()
-  errorMessage.value = ''
   showCreateModal.value = true
 }
 
@@ -116,8 +117,10 @@ const loadCars = async () => {
     cars.value = carsResponse.data
     categories.value = categoryResponse.data
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The car list could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'The car list could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -173,8 +176,7 @@ const submit = async () => {
     await loadCars()
     await navigateTo(`/admin/cars/${newCarId}`)
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The car could not be created with the current data.'
+    toast.apiError(error, 'The car could not be created with the current data.')
   } finally {
     formPending.value = false
   }
@@ -205,8 +207,8 @@ onMounted(() => {
     </AdminPageIntro>
 
     <StateNotice
-      v-if="errorMessage && !showCreateModal"
-      title="Fleet action failed"
+      v-if="errorMessage"
+      title="Loading failed"
       :message="errorMessage"
       tone="error"
     />
@@ -247,14 +249,6 @@ onMounted(() => {
       size="xl"
       @close="showCreateModal = false"
     >
-      <StateNotice
-        v-if="errorMessage"
-        class="mb-5"
-        title="Fleet action failed"
-        :message="errorMessage"
-        tone="error"
-      />
-
       <form class="space-y-4" @submit.prevent="submit">
         <div class="grid gap-4 md:grid-cols-2">
           <FormField v-model="form.brand" name="brand" label="Brand" />

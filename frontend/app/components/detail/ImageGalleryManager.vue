@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import AppPanel from '~/components/data/AppPanel.vue'
-import StateNotice from '~/components/feedback/StateNotice.vue'
 import FormCheckbox from '~/components/forms/FormCheckbox.vue'
 import FormField from '~/components/forms/FormField.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { CarImage, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { MAX_IMAGE_UPLOAD_MB } from '~/utils/constants'
 
 const props = defineProps<{
@@ -18,26 +18,13 @@ const emit = defineEmits<{
 }>()
 
 const { adminApi, mediaUrl } = useApi()
-
-// ofetch (FetchError) exposes the parsed JSON body on `error.data`; Laravel puts
-// the actionable reason in `message` / `errors`. Without this, a 422 surfaced as
-// the useless "[POST] /_backend/api/... 422 Unprocessable Content".
-const extractError = (error: unknown, fallback: string) => {
-  const e = error as {
-    data?: { message?: string; errors?: Record<string, string[]> }
-    message?: string
-  }
-  const fieldError = Object.values(e?.data?.errors ?? {})[0]?.[0]
-
-  return fieldError || e?.data?.message || e?.message || fallback
-}
+const toast = useToast()
 
 const files = ref<File[]>([])
 const form = reactive({
   isThumbnail: false,
   sortOrder: '',
 })
-const errorMessage = ref('')
 const pending = ref(false)
 
 const onFileChange = (event: Event) => {
@@ -46,10 +33,12 @@ const onFileChange = (event: Event) => {
   // before Laravel runs, and the only clue is a bare 422.
   const tooLarge = selected.filter((file) => file.size > MAX_IMAGE_UPLOAD_MB * 1024 * 1024)
 
-  errorMessage.value =
-    tooLarge.length > 0
-      ? `${tooLarge.map((file) => file.name).join(', ')} exceed${tooLarge.length > 1 ? '' : 's'} the ${MAX_IMAGE_UPLOAD_MB} MB limit. Resize before uploading.`
-      : ''
+  if (tooLarge.length > 0) {
+    toast.warning(
+      `${tooLarge.map((file) => file.name).join(', ')} exceed${tooLarge.length > 1 ? '' : 's'} the ${MAX_IMAGE_UPLOAD_MB} MB limit. Resize before uploading.`,
+      'File too large',
+    )
+  }
 
   files.value = selected.filter((file) => !tooLarge.includes(file))
 }
@@ -62,12 +51,11 @@ const resetForm = () => {
 
 const submit = async () => {
   if (files.value.length === 0) {
-    errorMessage.value = 'Select at least one image before uploading.'
+    toast.warning('Select at least one image before uploading.', 'Nothing to upload')
     return
   }
 
   pending.value = true
-  errorMessage.value = ''
 
   // The backend accepts one image per request, so upload the selection
   // sequentially. Only the first file honours the "set as thumbnail" flag, and
@@ -93,14 +81,23 @@ const submit = async () => {
       uploaded += 1
     }
 
+    toast.success(
+      files.value.length > 1 ? `${files.value.length} images uploaded.` : 'Image uploaded.',
+      'Upload complete',
+    )
     resetForm()
     emit('changed')
   } catch (error) {
-    const detail = extractError(error, 'Check the selected files and try again.')
-    errorMessage.value =
+    const detail = resolveApiErrorMessage(error, {
+      fallback: 'Check the selected files and try again.',
+    })
+
+    toast.error(
       uploaded > 0
         ? `Uploaded ${uploaded} of ${files.value.length} images before failing. ${detail}`
-        : `The image upload failed. ${detail}`
+        : `The image upload failed. ${detail}`,
+      'Upload failed',
+    )
 
     if (uploaded > 0) {
       emit('changed')
@@ -112,16 +109,16 @@ const submit = async () => {
 
 const removeImage = async (imageId: number) => {
   pending.value = true
-  errorMessage.value = ''
 
   try {
     await adminApi(`/images/${imageId}`, {
       method: 'DELETE',
     })
 
+    toast.success('Image deleted.', 'Deleted')
     emit('changed')
   } catch (error) {
-    errorMessage.value = extractError(error, 'The image could not be deleted right now.')
+    toast.apiError(error, 'The image could not be deleted right now.')
   } finally {
     pending.value = false
   }
@@ -198,13 +195,6 @@ const removeImage = async (imageId: number) => {
           description="Uploading as thumbnail resets the previous thumbnail flag."
         />
       </div>
-
-      <StateNotice
-        v-if="errorMessage"
-        title="Image action failed"
-        :message="errorMessage"
-        tone="error"
-      />
 
       <BaseButton type="submit" :disabled="pending">
         <BaseIcon name="plus" :size="18" />

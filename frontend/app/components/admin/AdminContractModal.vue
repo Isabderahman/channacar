@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue'
 import AppModal from '~/components/data/AppModal.vue'
-import StateNotice from '~/components/feedback/StateNotice.vue'
 import FormCheckbox from '~/components/forms/FormCheckbox.vue'
 import FormField from '~/components/forms/FormField.vue'
 import FormSelect from '~/components/forms/FormSelect.vue'
@@ -22,17 +21,10 @@ const emit = defineEmits<{
 }>()
 
 const { adminApi, mediaUrl } = useApi()
-
-// Surface backend messages (validation / 500) when available, not just "[POST] 500".
-const extractError = (error: unknown, fallback: string) => {
-  const e = error as { data?: { message?: string }; message?: string }
-  return e?.data?.message || e?.message || fallback
-}
+const toast = useToast({ locale: 'fr', errorTitle: 'Erreur', successTitle: 'Enregistré' })
 
 const saving = ref(false)
 const generating = ref(false)
-const errorMessage = ref('')
-const successMessage = ref('')
 
 // Each document is recto (front) + verso (back).
 const files = reactive<Record<string, File | null>>({
@@ -102,8 +94,6 @@ const paymentMethod = ref<'cash' | 'cheque'>('cash')
 
 const hydrate = () => {
   const r = props.reservation
-  errorMessage.value = ''
-  successMessage.value = ''
   files.driver_license = null
   files.driver_license_verso = null
   files.identity = null
@@ -218,16 +208,14 @@ const persist = async (): Promise<Reservation | null> => {
 
 const save = async () => {
   saving.value = true
-  errorMessage.value = ''
-  successMessage.value = ''
   try {
     const updated = await persist()
     if (updated) {
       emit('updated', updated)
     }
-    successMessage.value = 'Informations du contrat enregistrées.'
+    toast.success('Informations du contrat enregistrées.')
   } catch (error) {
-    errorMessage.value = extractError(error, 'Échec de l’enregistrement.')
+    toast.apiError(error, 'Échec de l’enregistrement.')
   } finally {
     saving.value = false
   }
@@ -240,8 +228,6 @@ const approveAndGenerate = async () => {
   }
 
   generating.value = true
-  errorMessage.value = ''
-  successMessage.value = ''
   try {
     await persist()
 
@@ -265,8 +251,9 @@ const approveAndGenerate = async () => {
     const refreshed = await adminApi<ResourceResponse<Reservation>>(`/reservations/${r.id}`)
     emit('updated', refreshed.data)
     emit('close')
+    toast.success('Contrat généré et téléchargé.', 'Contrat prêt')
   } catch (error) {
-    errorMessage.value = extractError(error, 'Le contrat n’a pas pu être généré.')
+    toast.apiError(error, 'Le contrat n’a pas pu être généré.')
   } finally {
     generating.value = false
   }
@@ -282,8 +269,6 @@ const approveAndGenerate = async () => {
     @close="emit('close')"
   >
     <div v-if="reservation" class="space-y-6">
-      <StateNotice v-if="errorMessage" title="Erreur" :message="errorMessage" tone="error" />
-      <StateNotice v-else-if="successMessage" title="Enregistré" :message="successMessage" tone="success" />
 
       <!-- 1er conducteur -->
       <section>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PaginatedResponse, ResourceResponse, Season } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { SEASON_PRICE_TYPE_OPTIONS } from '~/utils/constants'
 import { formatCurrency, formatDate } from '~/utils/formatters'
 
@@ -8,13 +9,13 @@ definePageMeta({
 })
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const seasons = ref<Season[]>([])
 const pending = ref(true)
 const saving = ref(false)
 const selectedId = ref<number | null>(null)
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const createFormState = () => ({
   date_from: '',
@@ -50,7 +51,6 @@ const fillForm = (season: Season) => {
 const resetForm = () => {
   Object.assign(form, createFormState())
   selectedId.value = null
-  successMessage.value = ''
 }
 
 const loadSeasons = async () => {
@@ -63,7 +63,8 @@ const loadSeasons = async () => {
     })
     seasons.value = response.data
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Seasons could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, { fallback: 'Seasons could not be loaded.' })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -72,7 +73,6 @@ const loadSeasons = async () => {
 const save = async () => {
   saving.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const endpoint = isEditing.value ? `/seasons/${selectedId.value}` : '/seasons'
@@ -86,11 +86,14 @@ const save = async () => {
       },
     })
 
-    successMessage.value = isEditing.value ? 'Season updated successfully.' : 'Season created successfully.'
+    toast.success(
+      isEditing.value ? 'Season updated successfully.' : 'Season created successfully.',
+      'Saved',
+    )
     resetForm()
     await loadSeasons()
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'The season could not be saved.'
+    toast.apiError(error, 'The season could not be saved.')
   } finally {
     saving.value = false
   }
@@ -105,10 +108,11 @@ const removeSelected = async () => {
 
   try {
     await adminApi(`/seasons/${selectedId.value}`, { method: 'DELETE' })
+    toast.success('Season deleted.', 'Deleted')
     resetForm()
     await loadSeasons()
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'The season could not be deleted.'
+    toast.apiError(error, 'The season could not be deleted.')
   } finally {
     saving.value = false
   }
@@ -127,8 +131,7 @@ onMounted(() => {
       eyebrow="Season manager"
     />
 
-    <StateNotice v-if="errorMessage" title="Season action failed" :message="errorMessage" tone="error" />
-    <StateNotice v-else-if="successMessage" title="Saved" :message="successMessage" tone="success" />
+    <StateNotice v-if="errorMessage" title="Loading failed" :message="errorMessage" tone="error" />
 
     <AdminSplitLayout>
       <template #primary>

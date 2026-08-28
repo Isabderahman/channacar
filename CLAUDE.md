@@ -68,8 +68,18 @@ Core entities (`app/Models/`): `Car` (belongs to `Category`, has `CarImage`s and
 
 When changing pricing, availability, or status transitions, update `ReservationService` rather than individual controllers.
 
+### Error handling & toasts
+Failed requests are reported with toasts, never with raw status codes.
+
+- `app/utils/api-error.ts` — `resolveApiErrorMessage(error, { fallback, locale })` turns any thrown value into a sentence: Laravel validation bag → backend `message` → per-status wording (`en`/`fr`) → caller fallback. ofetch's `[POST] "…": 422 …` message is filtered out, so status codes never reach the UI.
+- `app/composables/useToast.ts` — `useToast(defaults)` gives `success/error/warning/info(message, title?)` and `apiError(error, fallback)`. Toasts are client-only (an SSR-queued toast would hydrate with no dismiss timer). `ToastHost.vue` is mounted once in `app.vue`.
+- Convention: **action** failures (save/delete/upload/submit) are toast-only; **load** failures also keep their inline `StateNotice`, since the page would otherwise be blank. Success confirmations are toasts.
+- `useApi().adminApi` clears the session and warns once on a 401, so an expired Sanctum token surfaces as "signed out" instead of a failure on every page.
+
 ### Internationalization
 Four locales (`en` default, `fr`, `es`, `ar` with RTL) in `frontend/i18n/locales/*.json`, strategy `prefix_except_default` — non-English routes are prefixed (`/fr/...`). The public-facing copy is French-first (page filenames like `location-marrakech.vue`, `nos-vehicules.vue`).
 
 ### Frontend content
+Reservation creation is one component — `app/components/admin/AdminReservationForm.vue` — rendered both by `pages/admin/reservations/new.vue` and by the planning board modal (clicking a free day on `/admin/planning` books that car on that date). Extras are picked with `AdminExtrasPicker.vue`, the tile grid mirroring the public booking page.
+
 Static marketing/home content lives in `app/utils/*-content.ts` and `app/composables/useLandingContent.ts`; dynamic data (cars, reservations, etc.) comes from the API. Admin UI lives under `app/pages/admin/` with dedicated layout/components in `app/components/admin/`.

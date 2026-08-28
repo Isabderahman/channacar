@@ -9,9 +9,11 @@ import PublicCarCardSkeleton from '~/components/public/PublicCarCardSkeleton.vue
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { Car, Category, PaginatedResponse, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
 
 const { publicApi } = useApi()
+const toast = useToast({ locale: 'fr', errorTitle: 'Erreur' })
 
 const pending = ref(false)
 const errorMessage = ref('')
@@ -52,8 +54,20 @@ const heroFeatures = computed(() => [
 ])
 
 const loadCategories = async () => {
-  const response = await publicApi<ResourceResponse<Category[]>>('/public/categories')
-  categories.value = response.data
+  try {
+    const response = await publicApi<ResourceResponse<Category[]>>('/public/categories')
+    categories.value = response.data
+  } catch (error) {
+    // Only the category filter depends on this; the catalogue itself must still
+    // load, so report it and carry on instead of rejecting the mount sequence.
+    toast.error(
+      resolveApiErrorMessage(error, {
+        locale: 'fr',
+        fallback: 'Les catégories ne sont pas disponibles pour le moment.',
+      }),
+      'Filtres indisponibles',
+    )
+  }
 }
 
 const loadCars = async (page = 1) => {
@@ -76,8 +90,11 @@ const loadCars = async (page = 1) => {
     lastPage.value = response.last_page
     total.value = response.total
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'La liste des véhicules est indisponible pour le moment.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      locale: 'fr',
+      fallback: 'La liste des véhicules est indisponible pour le moment.',
+    })
+    toast.error(errorMessage.value, 'Chargement impossible')
   } finally {
     pending.value = false
   }

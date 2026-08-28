@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Car, Category, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { CAR_STATUS_OPTIONS, FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
 import { formatCurrency } from '~/utils/formatters'
 
@@ -9,11 +10,11 @@ definePageMeta({
 
 const route = useRoute()
 const { adminApi, publicApi } = useApi()
+const toast = useToast()
 
 const pending = ref(true)
 const saving = ref(false)
 const errorMessage = ref('')
-const successMessage = ref('')
 const car = ref<Car | null>(null)
 const categories = ref<Category[]>([])
 
@@ -81,7 +82,6 @@ const fillForm = (value: Car) => {
 const loadCar = async () => {
   pending.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const carId = Number(route.params.id)
@@ -94,8 +94,10 @@ const loadCar = async () => {
     categories.value = categoryResponse.data
     fillForm(carResponse.data)
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'This car could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'This car could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -108,7 +110,6 @@ const save = async () => {
 
   saving.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const response = await adminApi<ResourceResponse<Car>>(`/cars/${car.value.id}`, {
@@ -129,10 +130,9 @@ const save = async () => {
 
     car.value = response.data
     fillForm(response.data)
-    successMessage.value = 'Car updated successfully.'
+    toast.success('Car updated successfully.', 'Saved')
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The car could not be saved.'
+    toast.apiError(error, 'The car could not be saved.')
   } finally {
     saving.value = false
   }
@@ -153,8 +153,7 @@ const deleteCar = async () => {
 
     await navigateTo('/admin/cars')
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The car could not be deleted.'
+    toast.apiError(error, 'The car could not be deleted.')
   } finally {
     saving.value = false
   }
@@ -190,15 +189,9 @@ watch(
 
     <StateNotice
       v-if="errorMessage"
-      title="Car detail error"
+      title="Loading failed"
       :message="errorMessage"
       tone="error"
-    />
-    <StateNotice
-      v-else-if="successMessage"
-      title="Saved"
-      :message="successMessage"
-      tone="success"
     />
 
     <StateNotice

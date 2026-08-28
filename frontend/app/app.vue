@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import ToastHost from '~/components/feedback/ToastHost.vue'
 import { businessInfo } from '~/utils/business-info'
 
 // Site-wide structured data (JSON-LD). Lives in app.vue (not a layout) so it
@@ -82,4 +83,7 @@ useHead(() => ({
   <NuxtLayout>
     <NuxtPage />
   </NuxtLayout>
+
+  <!-- App-wide error/success notifications (public site + admin back-office). -->
+  <ToastHost />
 </template>

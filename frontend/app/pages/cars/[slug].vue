@@ -7,10 +7,12 @@ import ReservationForm from '~/components/public/ReservationForm.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { Car, Extra, PickupLocation, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { formatCurrency, pickCarImagePath } from '~/utils/formatters'
 
 const route = useRoute()
 const { mediaUrl, publicApi } = useApi()
+const toast = useToast({ locale: 'fr', errorTitle: 'Erreur' })
 
 const car = ref<Car | null>(null)
 
@@ -40,8 +42,11 @@ const loadCar = async () => {
     extras.value = extrasResponse.data
     locations.value = locationsResponse.data
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'Le véhicule demandé n’a pas pu être chargé.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      locale: 'fr',
+      fallback: 'Le véhicule demandé n’a pas pu être chargé.',
+    })
+    toast.error(errorMessage.value, 'Chargement impossible')
   } finally {
     pending.value = false
   }

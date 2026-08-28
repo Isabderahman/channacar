@@ -4,6 +4,7 @@ import StateNotice from '~/components/feedback/StateNotice.vue'
 import FormField from '~/components/forms/FormField.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 
 const credentials = reactive({
   email: '',
@@ -14,6 +15,7 @@ const pending = ref(false)
 const errorMessage = ref('')
 
 const { isAuthenticated, login, ready } = useAdminAuth()
+const toast = useToast()
 
 const submit = async () => {
   errorMessage.value = ''
@@ -21,9 +23,14 @@ const submit = async () => {
 
   try {
     await login(credentials.email, credentials.password)
+    toast.success(`Signed in as ${credentials.email}.`, 'Welcome back')
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'Unable to sign in with the current credentials.'
+    // Kept inline as well: the reason belongs next to the form the user is
+    // still looking at, after the toast has faded.
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'Unable to sign in with the current credentials.',
+    })
+    toast.error(errorMessage.value, 'Sign-in failed')
   } finally {
     pending.value = false
   }

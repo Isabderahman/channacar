@@ -5,6 +5,12 @@ definePageMeta({
 
 const runtimeConfig = useRuntimeConfig()
 const { clearSession, token, user } = useAdminAuth()
+const toast = useToast()
+
+const clearLocalSession = () => {
+  clearSession()
+  toast.success('The stored admin token was removed from this browser.', 'Session cleared')
+}
 
 const sessionItems = computed(() => [
   { label: 'Name', value: user.value?.name ?? 'Unknown' },
@@ -44,7 +50,7 @@ const sessionItems = computed(() => [
           </div>
 
           <div class="mt-6 flex flex-wrap gap-3">
-            <BaseButton type="button" variant="ghost" @click="clearSession">
+            <BaseButton type="button" variant="ghost" @click="clearLocalSession">
               <BaseIcon name="logout" :size="18" />
               <span>Clear local session</span>
             </BaseButton>

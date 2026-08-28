@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { PaginatedResponse, Reservation } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import {
   PAYMENT_STATUS_OPTIONS,
   RESERVATION_SOURCE_OPTIONS,
@@ -12,6 +13,7 @@ definePageMeta({
 })
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const reservations = ref<Reservation[]>([])
 const pending = ref(true)
@@ -57,8 +59,10 @@ const loadReservations = async (page = 1) => {
     currentPage.value = response.current_page
     lastPage.value = response.last_page
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'Reservations could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'Reservations could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Extra, ExtraBillingType, PaginatedResponse, ResourceResponse } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { formatCurrency, isExtraPerDay } from '~/utils/formatters'
 
 definePageMeta({
@@ -7,6 +8,7 @@ definePageMeta({
 })
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const iconOptions = [
   { label: 'Personnes', value: 'people' },
@@ -33,7 +35,6 @@ const pending = ref(true)
 const saving = ref(false)
 const selectedId = ref<number | null>(null)
 const errorMessage = ref('')
-const successMessage = ref('')
 
 const createFormState = () => ({
   billing_type: 'per_day' as ExtraBillingType,
@@ -67,7 +68,6 @@ const fillForm = (extra: Extra) => {
 const resetForm = () => {
   Object.assign(form, createFormState())
   selectedId.value = null
-  successMessage.value = ''
 }
 
 const loadExtras = async () => {
@@ -80,7 +80,8 @@ const loadExtras = async () => {
     })
     extras.value = response.data
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'Extras could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, { fallback: 'Extras could not be loaded.' })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
@@ -89,7 +90,6 @@ const loadExtras = async () => {
 const save = async () => {
   saving.value = true
   errorMessage.value = ''
-  successMessage.value = ''
 
   try {
     const endpoint = isEditing.value ? `/extras/${selectedId.value}` : '/extras'
@@ -104,11 +104,14 @@ const save = async () => {
       },
     })
 
-    successMessage.value = isEditing.value ? 'Extra updated successfully.' : 'Extra created successfully.'
+    toast.success(
+      isEditing.value ? 'Extra updated successfully.' : 'Extra created successfully.',
+      'Saved',
+    )
     resetForm()
     await loadExtras()
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'The extra could not be saved.'
+    toast.apiError(error, 'The extra could not be saved.')
   } finally {
     saving.value = false
   }
@@ -123,10 +126,11 @@ const removeSelected = async () => {
 
   try {
     await adminApi(`/extras/${selectedId.value}`, { method: 'DELETE' })
+    toast.success('Extra deleted.', 'Deleted')
     resetForm()
     await loadExtras()
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'The extra could not be deleted.'
+    toast.apiError(error, 'The extra could not be deleted.')
   } finally {
     saving.value = false
   }
@@ -145,8 +149,7 @@ onMounted(() => {
       eyebrow="Optional extras"
     />
 
-    <StateNotice v-if="errorMessage" title="Extra action failed" :message="errorMessage" tone="error" />
-    <StateNotice v-else-if="successMessage" title="Saved" :message="successMessage" tone="success" />
+    <StateNotice v-if="errorMessage" title="Loading failed" :message="errorMessage" tone="error" />
 
     <AdminSplitLayout>
       <template #primary>

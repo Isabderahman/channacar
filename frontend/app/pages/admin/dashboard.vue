@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { DashboardStats, PaginatedResponse, Reservation } from '~/types/entities'
+import { resolveApiErrorMessage } from '~/utils/api-error'
 import { formatCurrency, formatDateTimeLine } from '~/utils/formatters'
 
 definePageMeta({
@@ -7,6 +8,7 @@ definePageMeta({
 })
 
 const { adminApi } = useApi()
+const toast = useToast()
 
 const pending = ref(true)
 const errorMessage = ref('')
@@ -41,8 +43,10 @@ const loadDashboard = async () => {
     stats.value = statsResponse
     reservations.value = reservationsResponse.data
   } catch (error) {
-    errorMessage.value =
-      error instanceof Error ? error.message : 'The dashboard could not be loaded.'
+    errorMessage.value = resolveApiErrorMessage(error, {
+      fallback: 'The dashboard could not be loaded.',
+    })
+    toast.error(errorMessage.value, 'Loading failed')
   } finally {
     pending.value = false
   }
