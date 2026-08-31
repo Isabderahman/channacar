@@ -13,7 +13,7 @@ const { mediaUrl } = useApi()
 
 <template>
   <article class="ridex-surface group overflow-hidden p-2.5">
-    <div class="aspect-[16/11] overflow-hidden rounded-[20px] bg-black/20">
+    <div class="aspect-[4/5] overflow-hidden rounded-[20px] bg-black/20 sm:aspect-square">
       <img
         :src="mediaUrl(pickCarImagePath(car))"
         :alt="`${car.brand} ${car.name}`"

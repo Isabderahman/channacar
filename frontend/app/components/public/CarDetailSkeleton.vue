@@ -34,7 +34,7 @@ import BaseSkeleton from '~/components/ui/BaseSkeleton.vue'
 
       <!-- Gallery -->
       <div class="order-1 lg:order-2">
-        <BaseSkeleton class="aspect-[4/3] w-full rounded-[24px] sm:aspect-[16/10]" />
+        <BaseSkeleton class="aspect-[4/5] w-full rounded-[24px] sm:aspect-square" />
 
         <div class="-mx-1 mt-3 flex gap-3 px-1">
           <BaseSkeleton

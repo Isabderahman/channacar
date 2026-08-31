@@ -32,7 +32,7 @@ const formattedPrice = computed(() =>
 
 <template>
   <article class="ridex-surface group p-2.5">
-    <figure class="aspect-[3/2] overflow-hidden rounded-[18px] bg-black/20">
+    <figure class="aspect-[4/5] overflow-hidden rounded-[18px] bg-black/20 sm:aspect-square">
       <img
         :src="car.image"
         :alt="car.alt"

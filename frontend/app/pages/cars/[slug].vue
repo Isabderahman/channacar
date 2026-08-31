@@ -269,7 +269,7 @@ useSchemaOrg(() =>
                 <img
                   :src="mainImage"
                   :alt="`${car.brand} ${car.name}`"
-                  class="aspect-[4/3] w-full object-cover sm:aspect-[16/10]"
+                  class="aspect-[4/5] w-full object-cover sm:aspect-square"
                 >
 
                 <template v-if="gallery.length > 1">
@@ -308,7 +308,7 @@ useSchemaOrg(() =>
                   :aria-label="`Image ${index + 1}`"
                   @click="activeImage = index"
                 >
-                  <img :src="mediaUrl(image.path)" alt="" class="h-16 w-24 object-cover sm:h-20 sm:w-28">
+                  <img :src="mediaUrl(image.path)" alt="" class="h-20 w-24 object-cover sm:h-24 sm:w-32">
                 </button>
               </div>
             </div>

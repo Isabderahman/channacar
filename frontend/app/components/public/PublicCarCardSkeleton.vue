@@ -6,7 +6,7 @@ import BaseSkeleton from '~/components/ui/BaseSkeleton.vue'
 
 <template>
   <article class="ridex-surface overflow-hidden p-2.5">
-    <BaseSkeleton class="aspect-[16/11] w-full rounded-[20px]" />
+    <BaseSkeleton class="aspect-[4/5] w-full rounded-[20px] sm:aspect-square" />
 
     <div class="p-4">
       <div class="flex items-start justify-between gap-3">
