@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div>
-    <div class="border-b border-ink pb-5 md:pb-8">
+    <div v-inview data-anim="rule stagger" class="rule-b pb-5 md:pb-8">
       <h2 class="text-[32px] font-medium leading-none tracking-[-0.035em] lg:text-[40px]">
         {{ title }}
       </h2>
@@ -19,7 +19,7 @@ defineProps<{
       </p>
     </div>
 
-    <dl>
+    <dl v-inview data-anim="stagger">
       <div
         v-for="group in groups"
         :key="group.label"

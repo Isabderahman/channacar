@@ -16,11 +16,11 @@ const toggle = (index: number) => {
 
 <template>
   <div>
-    <h2 class="display border-b border-ink pb-5 text-[40px] md:pb-8 lg:text-[clamp(40px,5vw,72px)]">
+    <h2 v-inview data-anim="rule rise" class="display rule-b pb-5 text-[40px] md:pb-8 lg:text-[clamp(40px,5vw,72px)]">
       {{ title }}
     </h2>
 
-    <div>
+    <div v-inview data-anim="stagger">
       <div v-for="(item, index) in items" :key="item.question" class="border-b border-line">
         <h3>
           <button

@@ -24,7 +24,7 @@ const counter = computed(
         :src="mediaUrl(current.path)"
         :alt="`${name} — photo ${active + 1} sur ${images.length}`"
         fetchpriority="high"
-        class="size-full object-cover"
+        class="intro-photo size-full object-cover"
       >
       <span v-else class="absolute bottom-4 start-5 font-plex text-[11px] text-muted lg:bottom-6 lg:start-6 lg:text-[12px]">
         {{ name }}
@@ -41,8 +41,9 @@ const counter = computed(
     <div
       v-if="images.length > 1"
       role="group"
+      style="--d: 200"
       aria-label="Choisir une photo"
-      class="mt-1.5 flex gap-1.5 overflow-x-auto px-5 [scrollbar-width:none] lg:mt-2 lg:grid lg:grid-cols-4 lg:gap-2 lg:overflow-visible lg:px-0"
+      class="intro mt-1.5 flex gap-1.5 overflow-x-auto px-5 [scrollbar-width:none] lg:mt-2 lg:grid lg:grid-cols-4 lg:gap-2 lg:overflow-visible lg:px-0"
     >
       <button
         v-for="(image, index) in images"

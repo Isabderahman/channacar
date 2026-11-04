@@ -14,14 +14,14 @@ const steps = computed(() =>
 
 <template>
   <section id="etapes" class="wrap scroll-mt-6 pt-24 lg:pt-40">
-    <div class="mb-8 grid gap-10 lg:mb-14 lg:grid-cols-2">
+    <div v-inview data-anim="stagger" class="mb-8 grid gap-10 lg:mb-14 lg:grid-cols-2">
       <h2 class="display text-[40px] lg:text-[clamp(40px,5vw,72px)]">
         {{ t('site.home.steps.titleLine1') }}<br>{{ t('site.home.steps.titleLine2') }}
       </h2>
       <p class="hidden max-w-[440px] self-end text-[17px] text-ink-2 md:block">{{ t('site.home.steps.lead') }}</p>
     </div>
 
-    <ol class="grid border-t border-line xl:grid-cols-4">
+    <ol v-inview data-anim="stagger" class="grid border-t border-line xl:grid-cols-4">
       <li
         v-for="step in steps"
         :key="step.key"

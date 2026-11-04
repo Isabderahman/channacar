@@ -131,19 +131,19 @@ useSeoMeta({
 <template>
   <div>
     <section class="wrap pt-8 lg:pt-14">
-      <p class="mono-label mb-5 lg:mb-7 lg:text-[12px]">Flotte disponible — Marrakech &amp; Maroc</p>
+      <p class="intro mono-label mb-5 lg:mb-7 lg:text-[12px]">Flotte disponible — Marrakech &amp; Maroc</p>
       <div class="grid items-end gap-6 xl:grid-cols-[1.4fr_1fr] xl:gap-10">
-        <h1 class="text-[48px] font-medium leading-[0.92] tracking-[-0.045em] md:text-[clamp(56px,7vw,104px)]">
+        <h1 style="--d: 90" class="intro text-[48px] font-medium leading-[0.92] tracking-[-0.045em] md:text-[clamp(56px,7vw,104px)]">
           Trouvez la voiture adaptée à votre séjour.
         </h1>
-        <p class="max-w-[420px] text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45] xl:pb-3">
+        <p style="--d: 200" class="intro max-w-[420px] text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45] xl:pb-3">
           Parcourez les véhicules disponibles, filtrez selon votre budget et réservez en quelques minutes.
         </p>
       </div>
     </section>
 
     <section ref="listTop" class="wrap scroll-mt-6 pt-16 lg:pt-24">
-      <div class="flex flex-col gap-5 border-b border-ink pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
+      <div v-inview data-anim="rule stagger" class="rule-b flex flex-col gap-5 pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
         <h2 class="display text-[44px] lg:text-[clamp(40px,5vw,72px)]">
           La flotte <span class="font-plex text-[13px] tracking-normal text-muted lg:text-[15px]">{{ total }} véhicule{{ total > 1 ? 's' : '' }}</span>
         </h2>
@@ -176,6 +176,8 @@ useSeoMeta({
       </div>
 
       <form
+        v-inview
+        data-anim="rise"
         aria-label="Filtres"
         class="mt-6 border border-b-0 border-line lg:mt-8"
         @submit.prevent="apply(1)"
@@ -240,7 +242,13 @@ useSeoMeta({
         </li>
       </ul>
 
-      <ul v-else-if="cars.length" class="mt-4">
+      <ul
+        v-else-if="cars.length"
+        :key="`page-${currentPage}-${JSON.stringify(applied)}`"
+        v-inview
+        data-anim="stagger"
+        class="mt-4"
+      >
         <FleetRow
           v-for="(car, index) in cars"
           :key="car.id"

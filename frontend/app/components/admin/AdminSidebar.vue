@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandLogo from '~/components/common/BrandLogo.vue'
 import { computed } from 'vue'
 import { ADMIN_NAV_ITEMS } from '~/utils/constants'
 
@@ -49,10 +50,7 @@ const initials = computed(() =>
       :class="open ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
     >
       <div class="flex h-20 shrink-0 items-center justify-between gap-3 border-b border-line px-6">
-        <NuxtLink to="/admin/dashboard" class="flex items-baseline gap-3">
-          <span class="text-[20px] font-semibold tracking-[-0.02em]">Chanaa<span class="text-accent">Car</span></span>
-          <span class="mono-label">Admin</span>
-        </NuxtLink>
+        <BrandLogo to="/admin/dashboard" tagline="Admin" />
 
         <button
           type="button"

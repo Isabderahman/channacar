@@ -18,7 +18,7 @@ const localePath = useLocalePath()
 
 <template>
   <section class="wrap pb-[72px] pt-24 lg:pb-[120px] lg:pt-40">
-    <div class="flex flex-col gap-6 bg-accent px-5 py-7 text-on-accent lg:flex-row lg:flex-wrap lg:items-end lg:justify-between lg:gap-10 lg:p-14">
+    <div v-inview data-anim="photo" class="flex flex-col gap-6 bg-accent px-5 py-7 text-on-accent lg:flex-row lg:flex-wrap lg:items-end lg:justify-between lg:gap-10 lg:p-14">
       <div class="lg:flex-[1_1_520px]">
         <h2 class="display text-[36px] leading-[0.98] lg:text-[clamp(36px,4.5vw,64px)]">
           {{ title }}

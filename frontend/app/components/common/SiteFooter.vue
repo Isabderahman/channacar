@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandLogo from '~/components/common/BrandLogo.vue'
 import { socialLinkDefs } from '~/utils/home-content'
 
 const { t } = useI18n()
@@ -47,9 +48,7 @@ const socials = computed(() =>
       class="wrap grid gap-10 pb-8 pt-8 text-[14px] sm:grid-cols-2 lg:grid-cols-4 lg:pt-14"
     >
       <div class="max-w-[420px] sm:col-span-2">
-        <p class="mb-3 text-[18px] font-semibold tracking-[-0.02em] lg:mb-4 lg:text-[20px]">
-          Chanaa<span class="text-accent">Car</span>
-        </p>
+        <BrandLogo :to="localePath('/')" size="lg" class="mb-4" />
         <p class="text-muted">
           <span class="lg:hidden">{{ t('site.footer.descriptionShort') }}</span>
           <span class="hidden lg:inline">{{ t('site.footer.description') }}</span>

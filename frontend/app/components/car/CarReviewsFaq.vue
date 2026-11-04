@@ -61,8 +61,8 @@ const toggle = (index: number) => {
 <template>
   <section class="wrap mt-8 flex flex-wrap items-start gap-12 lg:mt-40 lg:gap-16">
     <div v-if="reviews.length" id="avis" class="min-w-0 flex-[1_1_420px] scroll-mt-6">
-      <p class="mono-label mb-3 text-[10px] lg:mb-8 lg:text-[12px]">Ils ont loué chez nous</p>
-      <div class="flex flex-col gap-2.5 lg:gap-3">
+      <p v-inview data-anim="rise" class="mono-label mb-3 text-[10px] lg:mb-8 lg:text-[12px]">Ils ont loué chez nous</p>
+      <div v-inview data-anim="stagger" class="flex flex-col gap-2.5 lg:gap-3">
         <figure
           v-for="review in reviews"
           :key="review.id"
@@ -79,7 +79,7 @@ const toggle = (index: number) => {
       </div>
     </div>
 
-    <div class="min-w-0 flex-[1.3_1_520px]">
+    <div v-inview data-anim="rise" class="min-w-0 flex-[1.3_1_520px]">
       <h2 class="mb-5 text-[28px] font-medium leading-none tracking-[-0.035em] lg:mb-8 lg:text-[40px]">
         <span class="lg:hidden">Bon à savoir</span>
         <span class="hidden lg:inline">Bon à savoir avant de réserver</span>

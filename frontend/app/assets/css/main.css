@@ -408,6 +408,178 @@ html[dir='rtl'] * {
   .photo-frame {
     background: var(--surface);
   }
+
+  /* The logo has white lettering: give it a dark plate on light backgrounds. */
+  .logo-plate {
+    display: inline-block;
+  }
+
+  html[data-theme='light'] .logo-plate {
+    background: #0F0F0E;
+    padding: 4px;
+  }
+}
+
+/*
+ * ─── Motion ────────────────────────────────────────────────────────────────
+ * Quiet, one-shot animations: content rises in, hairlines draw, photos wipe in
+ * from the top. Triggered by the v-inview directive (plugins/scroll-reveal.ts)
+ * or, for hero content, on first paint via `.intro` / `.intro-photo`
+ * (`--d` = delay in ms). Everything is off under prefers-reduced-motion.
+ */
+
+/* 1px ink rules drawn with a pseudo-element so they can animate (data-anim="rule"). */
+@utility rule-b {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--text);
+  }
+}
+
+@utility rule-t {
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 0;
+    height: 1px;
+    background: var(--text);
+  }
+}
+
+@keyframes anim-rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes anim-settle {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes anim-draw {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* A page-coloured curtain that lifts top-down (an overlay, not clip-path:
+   IntersectionObserver ignores fully clipped elements). */
+@keyframes anim-curtain {
+  from {
+    transform: scaleY(1);
+  }
+
+  to {
+    transform: scaleY(0);
+  }
+}
+
+@keyframes anim-zoom {
+  from {
+    transform: scale(1.12);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  :root {
+    --ease-out-soft: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* Hero: plays on first paint, no JavaScript needed. */
+  .intro {
+    animation: anim-rise 0.9s var(--ease-out-soft) both;
+    animation-delay: calc(var(--d, 0) * 1ms);
+  }
+
+  .intro-photo {
+    animation: anim-settle 1.4s var(--ease-out-soft) both;
+    animation-delay: calc(var(--d, 0) * 1ms);
+  }
+
+  /* Scroll reveals: hidden only while the v-inview directive will reveal them. */
+  html.anim [data-anim~='rise']:not([data-inview]),
+  html.anim [data-anim~='stagger']:not([data-inview]) > * {
+    opacity: 0;
+  }
+
+  html.anim [data-anim~='photo'] {
+    position: relative;
+  }
+
+  html.anim [data-anim~='photo']::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background: var(--bg);
+    transform-origin: bottom center;
+    pointer-events: none;
+  }
+
+  html.anim [data-anim~='rule']:not([data-inview])::after {
+    transform: scaleX(0);
+  }
+
+  [data-anim~='rise'][data-inview] {
+    animation: anim-rise 0.9s var(--ease-out-soft) both;
+  }
+
+  [data-anim~='stagger'][data-inview] > * {
+    animation: anim-rise 0.8s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 80ms);
+  }
+
+  /* Inside a staggered list the wipe follows its item's delay (--i). */
+  [data-anim~='photo'][data-inview]::after {
+    animation: anim-curtain 1.1s var(--ease-out-soft) both;
+    animation-delay: calc(var(--i, 0) * 80ms + 80ms);
+  }
+
+  /* `backwards` hands the transform back afterwards, so hover zooms still work. */
+  [data-anim~='photo'][data-inview] img {
+    animation: anim-zoom 1.6s var(--ease-out-soft) backwards;
+    animation-delay: calc(var(--i, 0) * 80ms + 80ms);
+  }
+
+  [data-anim~='rule'][data-inview]::after {
+    transform-origin: left center;
+    animation: anim-draw 1.2s var(--ease-out-soft) both;
+  }
+
+  html[dir='rtl'] [data-anim~='rule'][data-inview]::after {
+    transform-origin: right center;
+  }
 }
 
 /*

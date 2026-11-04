@@ -72,7 +72,7 @@ const price = computed(() =>
 
 <template>
   <li class="group relative flex flex-col border border-line bg-bg transition-colors hover:border-line-strong">
-    <div class="photo-frame relative h-[200px] overflow-hidden md:aspect-[4/3] md:h-auto">
+    <div v-inview data-anim="photo" class="photo-frame relative h-[200px] overflow-hidden md:aspect-[4/3] md:h-auto">
       <img
         v-if="photo"
         :src="photo"

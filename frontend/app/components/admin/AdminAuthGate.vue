@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandLogo from '~/components/common/BrandLogo.vue'
 import StateNotice from '~/components/feedback/StateNotice.vue'
 import FormField from '~/components/forms/FormField.vue'
 import { resolveApiErrorMessage } from '~/utils/api-error'
@@ -46,8 +47,8 @@ const submit = async () => {
   <div v-else class="mx-auto flex min-h-screen w-full max-w-[1360px] items-center px-5 py-10 lg:px-10">
     <div class="grid w-full gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:gap-16">
       <div>
-        <p class="text-[22px] font-semibold tracking-[-0.02em]">Chanaa<span class="text-accent">Car</span></p>
-        <p class="mono-label mt-10">Protected admin workspace</p>
+        <BrandLogo to="/" size="xl" />
+        <p class="mono-label mt-8">Protected admin workspace</p>
         <h1 class="mt-5 text-[40px] font-medium leading-[0.95] tracking-[-0.045em] md:text-[clamp(44px,5vw,72px)]">
           Operate the fleet, reservations, and customer records from one reusable interface.
         </h1>

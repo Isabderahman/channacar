@@ -93,7 +93,7 @@ const fleetLink = computed(() => ({
 
 <template>
   <section id="flotte" class="wrap scroll-mt-6 pt-24 lg:pt-40">
-    <div class="flex flex-col gap-5 border-b border-ink pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
+    <div v-inview data-anim="rule stagger" class="rule-b flex flex-col gap-5 pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
       <h2 class="display text-[44px] lg:text-[clamp(40px,5vw,72px)]">{{ t('site.fleet.title') }}</h2>
 
       <div
@@ -116,6 +116,8 @@ const fleetLink = computed(() => ({
     </div>
 
     <p
+      v-inview
+      data-anim="rise"
       aria-live="polite"
       class="mt-4 font-plex text-[12px] lg:mt-6 lg:text-[13px]"
       :class="{
@@ -127,7 +129,12 @@ const fleetLink = computed(() => ({
       {{ dateNote.text }}
     </p>
 
-    <ul v-if="visibleCars.length" class="mt-4 grid gap-4 md:grid-cols-2 lg:mt-6 lg:gap-6 xl:grid-cols-3">
+    <ul
+      v-if="visibleCars.length"
+      :key="String(selected)"
+      v-inview
+      data-anim="stagger"
+      class="mt-4 grid gap-4 md:grid-cols-2 lg:mt-6 lg:gap-6 xl:grid-cols-3">
       <FleetCard
         v-for="(car, index) in visibleCars"
         :key="car.id"

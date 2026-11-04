@@ -68,12 +68,12 @@ const conditions = [
 
 <template>
   <div>
-    <p class="mb-2 font-plex text-[11px] tracking-[0.08em] text-accent lg:mb-3 lg:text-[12px]">{{ meta }}</p>
-    <h1 class="mb-5 text-[42px] font-medium leading-[0.95] tracking-[-0.045em] lg:mb-8 lg:text-[clamp(44px,5vw,72px)]">
+    <p class="intro mb-2 font-plex text-[11px] tracking-[0.08em] text-accent lg:mb-3 lg:text-[12px]">{{ meta }}</p>
+    <h1 style="--d: 80" class="intro mb-5 text-[42px] font-medium leading-[0.95] tracking-[-0.045em] lg:mb-8 lg:text-[clamp(44px,5vw,72px)]">
       {{ car.brand }} {{ car.name }}
     </h1>
 
-    <div class="flex items-baseline justify-between gap-4 border-b border-t border-b-line border-t-ink py-4 lg:py-5">
+    <div style="--d: 160" class="intro flex items-baseline justify-between gap-4 border-b border-t border-b-line border-t-ink py-4 lg:py-5">
       <p>
         <span class="text-[34px] font-medium tracking-[-0.03em] lg:text-[44px]">{{ formatAmount(car.base_price_per_day) }}</span>
         <span class="font-plex text-[12px] text-muted lg:text-[13px]"> MAD / jour</span>
@@ -85,10 +85,10 @@ const conditions = [
     </div>
 
     <!-- Mobile: one-line specs -->
-    <p class="border-b border-line py-2.5 font-plex text-[12px] text-ink-2 md:hidden">{{ specLine }}</p>
+    <p style="--d: 220" class="intro border-b border-line py-2.5 font-plex text-[12px] text-ink-2 md:hidden">{{ specLine }}</p>
 
     <!-- Desktop: spec table -->
-    <dl class="hidden grid-cols-2 md:grid">
+    <dl style="--d: 220" class="intro hidden grid-cols-2 md:grid">
       <div
         v-for="spec in specs"
         :key="spec.k"
@@ -99,7 +99,7 @@ const conditions = [
       </div>
     </dl>
 
-    <div class="mt-8 hidden gap-2 lg:flex">
+    <div style="--d: 300" class="intro mt-8 hidden gap-2 lg:flex">
       <a href="#reserver" class="btn btn-primary min-h-14 flex-auto">
         Réserver ce véhicule
         <SiteIcon name="arrow-down" />
@@ -114,22 +114,22 @@ const conditions = [
       </a>
     </div>
 
-    <p class="mt-3.5 hidden text-[15px] text-ink-2 lg:block" aria-live="polite">
+    <p style="--d: 340" class="intro mt-3.5 hidden text-[15px] text-ink-2 lg:block" aria-live="polite">
       Votre estimation : {{ booking.fmt(booking.total.value) }} MAD pour {{ booking.daysLabel.value }}.
     </p>
 
-    <ul class="mt-0 grid grid-cols-2 gap-x-3.5 gap-y-2.5 pt-4 text-[13px] text-ink-2 lg:mt-6 lg:gap-x-5 lg:gap-y-3 lg:border-t lg:border-line lg:pt-5 lg:text-[14px]">
+    <ul style="--d: 380" class="intro mt-0 grid grid-cols-2 gap-x-3.5 gap-y-2.5 pt-4 text-[13px] text-ink-2 lg:mt-6 lg:gap-x-5 lg:gap-y-3 lg:border-t lg:border-line lg:pt-5 lg:text-[14px]">
       <li v-for="point in reassurance" :key="point" class="flex gap-2.5">
         <span aria-hidden="true" class="text-accent">—</span>{{ point }}
       </li>
     </ul>
 
     <!-- Mobile: one-line conditions -->
-    <p class="mt-4 bg-surface-2 px-3.5 py-3 text-[13px] text-ink-2 md:hidden">
+    <p style="--d: 420" class="intro mt-4 bg-surface-2 px-3.5 py-3 text-[13px] text-ink-2 md:hidden">
       21 ans minimum · permis de plus d’1 an · CIN ou passeport · assurance incluse selon contrat
     </p>
 
-    <dl class="mt-5 hidden grid-cols-2 gap-x-5 gap-y-3 bg-surface-2 p-4 text-[14px] md:grid">
+    <dl style="--d: 420" class="intro mt-5 hidden grid-cols-2 gap-x-5 gap-y-3 bg-surface-2 p-4 text-[14px] md:grid">
       <div v-for="condition in conditions" :key="condition.k">
         <dt class="font-plex text-[11px] uppercase tracking-[0.06em] text-muted">{{ condition.k }}</dt>
         <dd class="mt-0.5">{{ condition.v }}</dd>

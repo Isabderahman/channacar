@@ -75,6 +75,17 @@ useHead(() => ({
   },
   link: localeHead.value.link,
   meta: localeHead.value.meta,
+  // Scroll animations (plugins/scroll-reveal.ts): flag the page before first
+  // paint so revealed elements start hidden instead of blinking. If the app
+  // never boots, the flag is dropped and everything stays visible.
+  script: [
+    {
+      key: 'cc-anim',
+      tagPosition: 'head',
+      innerHTML:
+        "document.documentElement.classList.add('anim');setTimeout(function(){if(!window.__ccAnim)document.documentElement.classList.remove('anim')},3500)",
+    },
+  ],
   // Append the brand to page titles, but skip it when the page title already
   // contains the brand (several pages hardcode "… | ChanaaCar").
   titleTemplate: (title?: string) => {

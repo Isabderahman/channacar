@@ -10,7 +10,7 @@ defineProps<{
 
 <template>
   <div>
-    <div class="flex flex-col gap-4 border-b border-ink pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
+    <div v-inview data-anim="rule stagger" class="rule-b flex flex-col gap-4 pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
       <h2 class="display text-[40px] lg:text-[clamp(40px,5vw,72px)]">
         {{ title }}
       </h2>
@@ -19,7 +19,7 @@ defineProps<{
       </p>
     </div>
 
-    <ol class="grid md:grid-cols-2 md:gap-x-10 xl:grid-cols-4">
+    <ol v-inview data-anim="stagger" class="grid md:grid-cols-2 md:gap-x-10 xl:grid-cols-4">
       <li
         v-for="(card, index) in cards"
         :key="card.title"

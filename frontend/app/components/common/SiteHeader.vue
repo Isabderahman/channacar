@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BrandLogo from '~/components/common/BrandLogo.vue'
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import { contactDetails } from '~/utils/home-content'
 
@@ -120,7 +121,7 @@ onBeforeUnmount(() => {
   <!-- Compact car-page header (mobile only) -->
   <header
     v-if="isCarDetail"
-    class="flex items-center justify-between border-b border-line px-5 py-3 lg:hidden"
+    class="flex items-center justify-between border-b border-line px-5 py-2 lg:hidden"
   >
     <NuxtLink
       :to="fleetPath"
@@ -130,9 +131,7 @@ onBeforeUnmount(() => {
       <SiteIcon name="arrow-left" :size="20" />
     </NuxtLink>
 
-    <NuxtLink :to="homePath" class="text-[17px] font-semibold tracking-[-0.02em]">
-      Chanaa<span class="text-accent">Car</span>
-    </NuxtLink>
+    <BrandLogo :to="homePath" size="sm" />
 
     <a
       :href="contactDetails.phoneHref"
@@ -145,12 +144,10 @@ onBeforeUnmount(() => {
 
   <!-- Main header -->
   <header
-    class="wrap flex items-center justify-between gap-6 py-3.5 xl:py-6"
+    class="wrap flex items-center justify-between gap-6 py-2.5 xl:py-4"
     :class="isCarDetail ? 'hidden lg:flex' : ''"
   >
-    <NuxtLink :to="homePath" class="text-[20px] font-semibold tracking-[-0.02em] transition-opacity hover:opacity-85 xl:text-[22px]">
-      Chanaa<span class="text-accent">Car</span>
-    </NuxtLink>
+    <BrandLogo :to="homePath" />
 
     <nav :aria-label="t('site.nav.aria')" class="hidden flex-wrap gap-8 text-[15px] xl:flex">
       <NuxtLink
@@ -196,9 +193,7 @@ onBeforeUnmount(() => {
     class="fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-bg xl:hidden"
   >
     <div class="wrap flex items-center justify-between py-3.5">
-      <NuxtLink :to="homePath" class="text-[20px] font-semibold tracking-[-0.02em]">
-        Chanaa<span class="text-accent">Car</span>
-      </NuxtLink>
+      <BrandLogo :to="homePath" />
 
       <button
         ref="menuCloseButton"

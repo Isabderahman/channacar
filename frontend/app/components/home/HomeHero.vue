@@ -40,20 +40,22 @@ const submit = () => {
   <section id="top" class="wrap pt-8 lg:pt-14">
     <div class="grid items-end gap-5 xl:grid-cols-2 xl:gap-10">
       <div>
-        <p class="mono-label mb-5 lg:mb-7 lg:text-[12px]">
+        <p class="intro mono-label mb-5 lg:mb-7 lg:text-[12px]">
           <span class="lg:hidden">{{ t('site.home.hero.eyebrowShort') }}</span>
           <span class="hidden lg:inline">{{ t('site.home.hero.eyebrow') }}</span>
         </p>
         <h1 class="text-[54px] font-medium leading-[0.92] tracking-[-0.045em] md:text-[clamp(56px,8vw,128px)]">
-          {{ t('site.home.hero.line1') }}<br>
-          <span class="text-muted">{{ t('site.home.hero.line2Muted') }}</span>
-          {{ t('site.home.hero.line2') }}
+          <span class="intro block" style="--d: 90">{{ t('site.home.hero.line1') }}</span>
+          <span class="intro block" style="--d: 180">
+            <span class="text-muted">{{ t('site.home.hero.line2Muted') }}</span>
+            {{ t('site.home.hero.line2') }}
+          </span>
         </h1>
       </div>
 
       <div class="flex max-w-[420px] flex-col gap-6 xl:pb-3">
-        <p class="text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45]">{{ t('site.home.hero.lead') }}</p>
-        <div class="hidden flex-wrap gap-x-8 gap-y-2 font-plex text-[12px] text-muted lg:flex">
+        <p class="intro text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45]" style="--d: 300">{{ t('site.home.hero.lead') }}</p>
+        <div class="intro hidden flex-wrap gap-x-8 gap-y-2 font-plex text-[12px] text-muted lg:flex" style="--d: 380">
           <span>{{ t('site.home.hero.delivery') }}</span>
           <span>{{ t('site.home.hero.pricing') }}</span>
           <span>{{ t('site.home.hero.support') }}</span>
@@ -63,21 +65,26 @@ const submit = () => {
   </section>
 
   <div class="mt-8 lg:mx-auto lg:mt-14 lg:max-w-[1360px] lg:px-10">
-    <div class="photo-frame h-[280px] overflow-hidden md:h-[420px] lg:h-[600px]">
-      <img
-        :src="heroImage"
-        :alt="t('site.home.hero.photoAlt')"
-        width="1537"
-        height="1023"
-        fetchpriority="high"
-        class="size-full object-cover object-[center_65%]"
-      >
+    <div class="photo-frame relative h-[280px] overflow-hidden md:h-[420px] lg:h-[600px]">
+      <!-- Settles in on load; the taller image drifts with the scroll (parallax). -->
+      <div class="intro-photo absolute inset-0" style="--d: 150">
+        <img
+          v-parallax="0.06"
+          :src="heroImage"
+          :alt="t('site.home.hero.photoAlt')"
+          width="1537"
+          height="1023"
+          fetchpriority="high"
+          class="absolute inset-x-0 -top-[10%] h-[120%] w-full object-cover object-[center_65%]"
+        >
+      </div>
     </div>
 
     <form
       id="reserver"
       :aria-label="t('site.home.search.aria')"
-      class="mx-5 grid scroll-mt-6 grid-cols-2 border border-t-0 border-line bg-bg lg:mx-0 xl:grid-cols-[repeat(4,minmax(0,1fr))_minmax(220px,1fr)]"
+      style="--d: 450"
+      class="intro mx-5 grid scroll-mt-6 grid-cols-2 border border-t-0 border-line bg-bg lg:mx-0 xl:grid-cols-[repeat(4,minmax(0,1fr))_minmax(220px,1fr)]"
       @submit.prevent="submit"
     >
       <label class="col-span-2 flex flex-col gap-1.5 border-b border-line px-4 py-3.5 font-plex text-[10px] uppercase tracking-[0.08em] text-muted md:col-span-1 md:border-e md:px-6 xl:gap-2.5 xl:border-b-0 xl:py-5 xl:text-[11px]">

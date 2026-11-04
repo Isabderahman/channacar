@@ -193,7 +193,7 @@ useSchemaOrg(() =>
     <template v-else>
       <nav
         aria-label="Fil d’Ariane"
-        class="wrap mb-8 hidden pt-6 font-plex text-[12px] text-muted lg:block"
+        class="intro wrap mb-8 hidden pt-6 font-plex text-[12px] text-muted lg:block"
       >
         <NuxtLink :to="localePath('/cars')" class="transition-colors hover:text-ink">Nos véhicules</NuxtLink>
         <template v-if="car.category">

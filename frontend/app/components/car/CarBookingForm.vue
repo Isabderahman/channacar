@@ -53,8 +53,8 @@ const nextSteps = [
 
 <template>
   <section id="reserver" class="wrap scroll-mt-6 pt-12 lg:mt-36 lg:pt-0">
-    <div class="lg:border-t lg:border-ink lg:pt-8">
-      <div class="mb-11 flex flex-wrap items-end justify-between gap-6 lg:mb-14">
+    <div v-inview data-anim="rule" class="lg:pt-8 lg:rule-t">
+      <div v-inview data-anim="stagger" class="mb-11 flex flex-wrap items-end justify-between gap-6 lg:mb-14">
         <h2 class="display text-[30px] leading-none tracking-[-0.035em] lg:text-[clamp(40px,5vw,64px)] lg:leading-[0.95] lg:tracking-[-0.04em]">
           <span class="lg:hidden">Réservez en 2 minutes.</span>
           <span class="hidden lg:inline">Réservez ce véhicule.</span>
@@ -67,6 +67,8 @@ const nextSteps = [
       <div class="flex flex-wrap items-start gap-11 lg:gap-10 xl:gap-16">
         <form
           id="booking-form"
+          v-inview
+          data-anim="stagger"
           aria-label="Demande de réservation"
           class="flex min-w-0 flex-[1_1_520px] flex-col gap-11 lg:gap-16 xl:flex-[1_1_640px]"
           @submit.prevent="booking.submit"
@@ -235,6 +237,8 @@ const nextSteps = [
 
         <!-- Summary -->
         <aside
+          v-inview
+          data-anim="rise"
           aria-label="Récapitulatif"
           class="w-full min-w-0 border border-line lg:sticky lg:top-6 lg:w-auto lg:min-w-[300px] lg:flex-[0_1_340px] lg:border-line-strong xl:flex-[0_1_400px]"
         >

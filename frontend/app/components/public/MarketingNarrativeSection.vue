@@ -14,7 +14,7 @@ withDefaults(defineProps<Props>(), {
 
 <template>
   <section class="wrap pt-24 lg:pt-40">
-    <div class="grid gap-8 border-t border-ink pt-8 lg:grid-cols-2 lg:gap-10">
+    <div v-inview data-anim="rule stagger" class="rule-t grid gap-8 pt-8 lg:grid-cols-2 lg:gap-10">
       <div>
         <p v-if="eyebrow" class="mono-label mb-4 lg:text-[12px]">
           {{ eyebrow }}

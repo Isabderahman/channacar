@@ -74,19 +74,20 @@ const hasMetaSlot = computed(() => Boolean(slots.meta))
 
 <template>
   <section :id="id" class="wrap pt-8 lg:pt-14">
-    <p class="mono-label mb-5 lg:mb-7 lg:text-[12px]">
+    <p class="intro mono-label mb-5 lg:mb-7 lg:text-[12px]">
       {{ eyebrow }}
     </p>
 
     <div :class="titleWrapClass">
-      <h1 class="font-medium leading-[0.95] tracking-[-0.045em]" :class="titleClass">
+      <h1 style="--d: 90" class="intro font-medium leading-[0.95] tracking-[-0.045em]" :class="titleClass">
         {{ title }}
       </h1>
     </div>
 
     <div
       v-if="subtitle || hasActionRow"
-      class="mt-8 grid items-end gap-6 lg:mt-12 lg:grid-cols-2 lg:gap-10"
+      style="--d: 220"
+      class="intro mt-8 grid items-end gap-6 lg:mt-12 lg:grid-cols-2 lg:gap-10"
     >
       <p v-if="subtitle" class="max-w-[560px] text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45]">
         {{ subtitle }}
@@ -118,19 +119,22 @@ const hasMetaSlot = computed(() => Boolean(slots.meta))
   </section>
 
   <div v-if="image" class="mt-10 lg:mx-auto lg:mt-14 lg:max-w-[1360px] lg:px-10">
-    <div class="photo-frame h-[220px] overflow-hidden md:h-[340px] lg:h-[440px]">
-      <img
-        :src="image"
-        :alt="imageAlt"
-        fetchpriority="high"
-        class="size-full object-cover object-[center_65%]"
-      >
+    <div class="photo-frame relative h-[220px] overflow-hidden md:h-[340px] lg:h-[440px]">
+      <div class="intro-photo absolute inset-0" style="--d: 260">
+        <img
+          v-parallax="0.06"
+          :src="image"
+          :alt="imageAlt"
+          fetchpriority="high"
+          class="absolute inset-x-0 -top-[10%] h-[120%] w-full object-cover object-[center_65%]"
+        >
+      </div>
     </div>
   </div>
 
   <div v-if="hasMetaSlot || features.length" class="wrap">
     <slot name="meta">
-      <ol class="grid md:grid-cols-2 md:gap-x-10">
+      <ol v-inview data-anim="stagger" class="grid md:grid-cols-2 md:gap-x-10">
         <li
           v-for="(feature, index) in features"
           :key="feature.title"

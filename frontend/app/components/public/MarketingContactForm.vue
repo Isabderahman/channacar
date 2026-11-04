@@ -39,7 +39,7 @@ const submit = () => {
 
 <template>
   <div>
-    <div class="border-b border-ink pb-5 md:pb-8">
+    <div v-inview data-anim="rule stagger" class="rule-b pb-5 md:pb-8">
       <h2 class="text-[32px] font-medium leading-none tracking-[-0.035em] lg:text-[40px]">
         Envoyer ma demande
       </h2>
@@ -48,7 +48,7 @@ const submit = () => {
       </p>
     </div>
 
-    <form class="mt-6 flex flex-col gap-4 lg:mt-8" @submit.prevent="submit">
+    <form v-inview data-anim="rise" class="mt-6 flex flex-col gap-4 lg:mt-8" @submit.prevent="submit">
       <div class="grid gap-4 sm:grid-cols-2">
         <label class="field-label">
           Nom complet
