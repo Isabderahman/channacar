@@ -1,233 +1,270 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
-import BrandLogo from '~/components/common/BrandLogo.vue'
-import { useLandingContent } from '~/composables/useLandingContent'
-import { marketingNavLinks } from '~/utils/marketing-content'
+import SiteIcon from '~/components/site/SiteIcon.vue'
+import { contactDetails } from '~/utils/home-content'
 
-const { setLocale } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
-
-const { brand, contactInfo, currentLocale, isRtl, labels, localeOptions } =
-  useLandingContent()
-
-const { isDark, toggle: toggleTheme } = useTheme()
+const switchLocalePath = useSwitchLocalePath()
+const route = useRoute()
 
 const isMenuOpen = ref(false)
-const isScrolled = ref(false)
+const menuCloseButton = ref<HTMLButtonElement | null>(null)
+
+// The car page has its own compact mobile header (back · wordmark · call),
+// as in the product-mobile mockup.
+const isCarDetail = computed(() => String(route.name ?? '').startsWith('cars-slug'))
+
+const navLinks = computed(() =>
+  [
+    { key: 'cars', to: '/cars' },
+    { key: 'marrakech', to: '/location-marrakech' },
+    { key: 'airport', to: '/location-aeroport-marrakech-menara' },
+    { key: 'longTerm', to: '/location-longue-duree' },
+    { key: 'about', to: '/a-propos' },
+    { key: 'faq', to: '/faq' },
+  ].map((link) => {
+    const to = localePath(link.to)
+
+    return {
+      label: t(`site.nav.${link.key}`),
+      to,
+      active: route.path === to || route.path.startsWith(`${to}/`),
+    }
+  }),
+)
+
+const languages = computed(() =>
+  ['fr', 'en', 'es', 'ar'].map((code) => ({
+    code,
+    label: code.toUpperCase(),
+    to: switchLocalePath(code as 'fr' | 'en' | 'es' | 'ar'),
+    active: code === locale.value,
+  })),
+)
+
+// "Réserver" jumps to the booking form on a car page, otherwise to the
+// homepage booking strip.
+const bookTarget = computed(() =>
+  isCarDetail.value ? { hash: '#reserver' } : { path: localePath('/'), hash: '#reserver' },
+)
+
+const fleetPath = computed(() => localePath('/cars'))
+const homePath = computed(() => localePath('/'))
+
+const openMenu = async () => {
+  isMenuOpen.value = true
+  await nextTick()
+  menuCloseButton.value?.focus()
+}
 
 const closeMenu = () => {
   isMenuOpen.value = false
 }
 
-const toggleMenu = () => {
-  isMenuOpen.value = !isMenuOpen.value
-}
-
-const handleScroll = () => {
-  isScrolled.value = window.scrollY > 8
-}
-
-const homePath = computed(() => localePath('/'))
-const customerHeaderLinks = computed(() =>
-  marketingNavLinks.map((link) => ({
-    label: link.label,
-    to: localePath(link.to),
-  })),
-)
-
-const menuSideClass = computed(() => (isRtl.value ? 'left-0' : 'right-0'))
-
-const menuStateClass = computed(() => {
-  if (isMenuOpen.value) {
-    return 'visible translate-x-0'
-  }
-
-  return isRtl.value
-    ? 'invisible -translate-x-full xl:visible xl:translate-x-0'
-    : 'invisible translate-x-full xl:visible xl:translate-x-0'
-})
-
-const handleLocaleChange = (event: Event) => {
-  const nextLocale = (event.target as HTMLSelectElement).value
-
-  if (nextLocale !== currentLocale.value) {
+const onKeydown = (event: KeyboardEvent) => {
+  if (event.key === 'Escape' && isMenuOpen.value) {
     closeMenu()
-    void setLocale(nextLocale)
   }
 }
 
-onMounted(() => {
-  handleScroll()
-  window.addEventListener('scroll', handleScroll, { passive: true })
+watch(() => route.fullPath, closeMenu)
+
+watch(isMenuOpen, (open) => {
+  if (import.meta.client) {
+    document.documentElement.style.overflow = open ? 'hidden' : ''
+  }
 })
 
+onMounted(() => window.addEventListener('keydown', onKeydown))
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', handleScroll)
+  window.removeEventListener('keydown', onKeydown)
+  document.documentElement.style.overflow = ''
 })
 </script>
 
 <template>
-  <header
-    class="fixed inset-x-0 top-0 z-50 bg-[var(--alice-blue-1)] transition duration-500 ease-out"
-    :class="isScrolled ? 'shadow-[var(--shadow-1)]' : ''"
+  <!-- Utility bar -->
+  <div
+    class="border-b border-line"
+    :class="isCarDetail ? 'hidden lg:block' : ''"
   >
-    <div class="mx-auto flex h-[70px] w-full max-w-[1480px] items-center gap-4 px-4 md:px-5 xl:gap-6">
-      <div class="shrink-0">
-        <BrandLogo
-          :brand-name="brand.brandName"
-          :to="homePath"
-        />
-      </div>
+    <div class="wrap flex flex-wrap items-center justify-between gap-3 py-2 font-plex text-[11px] text-muted lg:py-2.5 lg:text-[12px]">
+      <span>
+        <span class="hidden sm:inline">{{ t('site.topbar.availability') }}</span>
+        <span class="sm:hidden">{{ t('site.topbar.availabilityShort') }}</span>
+      </span>
 
-      <div
-        v-if="isMenuOpen"
-        class="fixed inset-x-0 bottom-0 top-[70px] bg-black/60 xl:hidden"
-        @click="closeMenu"
-      />
+      <span class="flex items-center gap-6">
+        <a :href="contactDetails.phoneHref" class="text-ink transition-colors hover:text-accent" dir="ltr">
+          {{ contactDetails.phoneLabel }}
+        </a>
 
-      <nav
-        id="site-nav"
-        class="fixed bottom-0 top-[70px] z-10 w-full max-w-[260px] border border-[var(--surface-border)] bg-[var(--alice-blue-1)] px-[25px] py-5 shadow-[var(--shadow-1)] transition duration-500 ease-out xl:static xl:min-w-0 xl:flex-1 xl:max-w-none xl:border-0 xl:bg-transparent xl:p-0 xl:shadow-none"
-        :class="[menuSideClass, menuStateClass]"
-      >
-        <div class="mb-5 border-b border-[var(--surface-border)] pb-5 sm:hidden">
-          <label
-            for="locale-select-mobile"
-            class="mb-2 block text-[0.75rem] uppercase tracking-[0.18em] text-[var(--manatee)]"
-          >
-            {{ labels.languageLabel }}
-          </label>
-
-          <select
-            id="locale-select-mobile"
-            :value="currentLocale"
-            class="w-full appearance-none rounded-[16px] border border-[var(--surface-border)] bg-[var(--alice-blue-2)] px-4 py-3 text-[0.875rem] text-[var(--space-cadet)] outline-2 outline-transparent transition duration-500 ease-out focus:border-[var(--carolina-blue)] focus:outline-[var(--carolina-blue)]"
-            @change="handleLocaleChange"
-          >
-            <option
-              v-for="option in localeOptions"
-              :key="`mobile-${option.code}`"
-              :value="option.code"
-            >
-              {{ option.name }}
-            </option>
-          </select>
-        </div>
-
-        <ul class="xl:flex xl:items-center xl:justify-center xl:gap-4 2xl:gap-6">
-          <li
-            v-for="link in customerHeaderLinks"
-            :key="link.to"
-          >
+        <span class="hidden items-center gap-1.5 sm:flex" :aria-label="t('site.language')">
+          <template v-for="(lang, index) in languages" :key="lang.code">
+            <span v-if="index > 0" aria-hidden="true">·</span>
+            <span v-if="lang.active" class="text-ink" aria-current="true">{{ lang.label }}</span>
             <NuxtLink
-              :to="link.to"
-              class="mb-[15px] block py-[5px] font-heading text-[0.875rem] text-[var(--independence)] transition duration-500 ease-out hover:text-[var(--carolina-blue)] focus-visible:text-[var(--carolina-blue)] xl:mb-0 xl:whitespace-nowrap xl:text-[0.82rem] xl:font-semibold 2xl:text-[0.875rem]"
-              @click="closeMenu"
+              v-else
+              :to="lang.to"
+              :hreflang="lang.code"
+              class="transition-colors hover:text-accent"
             >
-              {{ link.label }}
+              {{ lang.label }}
             </NuxtLink>
-          </li>
-        </ul>
-      </nav>
+          </template>
+        </span>
+      </span>
+    </div>
+  </div>
 
-      <div class="ml-auto flex shrink-0 items-center gap-3 md:gap-4 xl:gap-5">
-        <div class="hidden shrink-0 text-right 2xl:block">
-          <a
-            :href="contactInfo.phoneHref"
-            class="whitespace-nowrap font-heading text-[0.95rem] leading-none text-[var(--space-cadet)] transition duration-500 ease-out hover:text-[var(--carolina-blue)] focus-visible:text-[var(--carolina-blue)]"
-          >
-            {{ contactInfo.phoneLabel }}
-          </a>
-          <span class="mt-1 block whitespace-nowrap text-[0.625rem] text-[var(--independence)]">
-            {{ contactInfo.availability }}
-          </span>
-        </div>
+  <!-- Compact car-page header (mobile only) -->
+  <header
+    v-if="isCarDetail"
+    class="flex items-center justify-between border-b border-line px-5 py-3 lg:hidden"
+  >
+    <NuxtLink
+      :to="fleetPath"
+      :aria-label="t('site.actions.back')"
+      class="-ms-3 flex size-11 items-center justify-center transition-colors hover:text-accent"
+    >
+      <SiteIcon name="arrow-left" :size="20" />
+    </NuxtLink>
 
-        <div class="relative hidden shrink-0 sm:block">
-          <label
-            for="locale-select"
-            class="sr-only"
-          >
-            {{ labels.languageLabel }}
-          </label>
+    <NuxtLink :to="homePath" class="text-[17px] font-semibold tracking-[-0.02em]">
+      Chanaa<span class="text-accent">Car</span>
+    </NuxtLink>
 
-          <select
-            id="locale-select"
-            :value="currentLocale"
-            class="appearance-none rounded-full border border-[var(--surface-border)] bg-[var(--alice-blue-2)] px-4 py-2 pe-10 text-[0.875rem] text-[var(--space-cadet)] outline-2 outline-transparent transition duration-500 ease-out focus:border-[var(--carolina-blue)] focus:outline-[var(--carolina-blue)]"
-            @change="handleLocaleChange"
-          >
-            <option
-              v-for="option in localeOptions"
-              :key="option.code"
-              :value="option.code"
-            >
-              {{ option.name }}
-            </option>
-          </select>
+    <a
+      :href="contactDetails.phoneHref"
+      :aria-label="t('site.actions.call')"
+      class="-me-3 flex size-11 items-center justify-center transition-colors hover:text-accent"
+    >
+      <SiteIcon name="phone" :size="20" />
+    </a>
+  </header>
 
-          <BaseIcon
-            name="arrow-right"
-            :size="16"
-            class="pointer-events-none absolute end-4 top-1/2 -translate-y-1/2 rotate-90 text-[var(--independence)]"
-          />
-        </div>
+  <!-- Main header -->
+  <header
+    class="wrap flex items-center justify-between gap-6 py-3.5 xl:py-6"
+    :class="isCarDetail ? 'hidden lg:flex' : ''"
+  >
+    <NuxtLink :to="homePath" class="text-[20px] font-semibold tracking-[-0.02em] transition-opacity hover:opacity-85 xl:text-[22px]">
+      Chanaa<span class="text-accent">Car</span>
+    </NuxtLink>
 
-        <button
-          type="button"
-          class="grid size-10 shrink-0 place-items-center rounded-full border border-[var(--surface-border)] text-[var(--text-muted)] transition duration-300 ease-out hover:border-[var(--primary-border)] hover:text-[var(--primary)]"
-          :aria-label="isDark ? 'Activer le mode clair' : 'Activer le mode sombre'"
-          @click="toggleTheme"
-        >
-          <BaseIcon :name="isDark ? 'sun' : 'moon'" :size="18" />
-        </button>
+    <nav :aria-label="t('site.nav.aria')" class="hidden flex-wrap gap-8 text-[15px] xl:flex">
+      <NuxtLink
+        v-for="link in navLinks"
+        :key="link.to"
+        :to="link.to"
+        :aria-current="link.active ? 'page' : undefined"
+        class="transition-colors hover:text-accent"
+        :class="link.active ? 'text-accent' : ''"
+      >
+        {{ link.label }}
+      </NuxtLink>
+    </nav>
 
-        <BaseButton
-          :to="localePath('/cars')"
-          :aria-label="labels.exploreCars"
-          class="shrink-0"
-        >
-          <BaseIcon name="car" :size="18" class="sm:hidden" />
-          <span class="hidden font-normal sm:inline">{{ labels.exploreCars }}</span>
-        </BaseButton>
+    <div class="flex items-center gap-3">
+      <NuxtLink
+        :to="bookTarget"
+        class="hidden min-h-11 items-center border border-ink px-5 text-[15px] font-medium transition-colors hover:border-accent hover:text-accent sm:inline-flex"
+      >
+        {{ t('site.actions.book') }}
+      </NuxtLink>
 
-        <BaseButton
-          :to="localePath('/contact')"
-          variant="ghost"
-          size="icon"
-          class="shrink-0"
-          aria-label="Contact"
-        >
-          <BaseIcon name="mail" :size="18" />
-        </BaseButton>
-
-        <button
-          type="button"
-          class="grid h-10 w-10 place-items-center xl:hidden"
-          :aria-expanded="isMenuOpen ? 'true' : 'false'"
-          :aria-label="labels.toggleMenuAria"
-          aria-controls="site-nav"
-          @click="toggleMenu"
-        >
-          <span class="sr-only">{{ labels.toggleMenuAria }}</span>
-          <span class="flex flex-col items-end">
-            <span
-              class="mb-2 block h-0.5 w-[22px] rounded-full bg-[var(--independence)] transition duration-500 ease-out"
-              :class="isMenuOpen ? 'w-[22px] bg-[var(--carolina-blue)]' : ''"
-            />
-            <span
-              class="mb-2 block h-0.5 w-[15.4px] rounded-full bg-[var(--independence)] transition duration-500 ease-out"
-              :class="isMenuOpen ? 'w-[22px] bg-[var(--carolina-blue)]' : ''"
-            />
-            <span
-              class="block h-0.5 w-[8.8px] rounded-full bg-[var(--independence)] transition duration-500 ease-out"
-              :class="isMenuOpen ? 'w-[22px] bg-[var(--carolina-blue)]' : ''"
-            />
-          </span>
-        </button>
-      </div>
+      <button
+        type="button"
+        class="flex size-11 items-center justify-center border border-line-strong transition-colors hover:border-ink xl:hidden"
+        :aria-label="t('site.actions.menuOpen')"
+        :aria-expanded="isMenuOpen ? 'true' : 'false'"
+        aria-controls="site-menu"
+        @click="openMenu"
+      >
+        <SiteIcon name="menu" />
+      </button>
     </div>
   </header>
+
+  <!-- Mobile / tablet menu -->
+  <div
+    v-if="isMenuOpen"
+    id="site-menu"
+    role="dialog"
+    aria-modal="true"
+    :aria-label="t('site.nav.aria')"
+    class="fixed inset-0 z-[60] flex flex-col overflow-y-auto bg-bg xl:hidden"
+  >
+    <div class="wrap flex items-center justify-between py-3.5">
+      <NuxtLink :to="homePath" class="text-[20px] font-semibold tracking-[-0.02em]">
+        Chanaa<span class="text-accent">Car</span>
+      </NuxtLink>
+
+      <button
+        ref="menuCloseButton"
+        type="button"
+        class="flex size-11 items-center justify-center border border-line-strong transition-colors hover:border-ink"
+        :aria-label="t('site.actions.menuClose')"
+        @click="closeMenu"
+      >
+        <SiteIcon name="close" />
+      </button>
+    </div>
+
+    <nav :aria-label="t('site.nav.aria')" class="wrap mt-6 flex-1">
+      <ul class="border-t border-line">
+        <li v-for="link in navLinks" :key="`menu-${link.to}`" class="border-b border-line">
+          <NuxtLink
+            :to="link.to"
+            :aria-current="link.active ? 'page' : undefined"
+            class="flex min-h-14 items-center justify-between gap-4 py-3 text-[26px] font-medium tracking-[-0.03em] transition-colors hover:text-accent"
+            :class="link.active ? 'text-accent' : ''"
+          >
+            {{ link.label }}
+            <SiteIcon name="arrow-right" />
+          </NuxtLink>
+        </li>
+        <li class="border-b border-line">
+          <NuxtLink
+            :to="localePath('/contact')"
+            class="flex min-h-14 items-center justify-between gap-4 py-3 text-[26px] font-medium tracking-[-0.03em] transition-colors hover:text-accent"
+          >
+            {{ t('site.nav.contact') }}
+            <SiteIcon name="arrow-right" />
+          </NuxtLink>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="wrap flex flex-col gap-2 pb-8 pt-10">
+      <NuxtLink :to="bookTarget" class="btn btn-primary min-h-14" @click="closeMenu">
+        {{ t('site.actions.book') }}
+        <SiteIcon name="arrow-right" />
+      </NuxtLink>
+      <a :href="contactDetails.phoneHref" class="btn btn-outline min-h-14" dir="ltr">
+        {{ contactDetails.phoneLabel }}
+        <SiteIcon name="phone" />
+      </a>
+
+      <div class="mt-6 flex items-center gap-2 font-plex text-[13px] text-muted" :aria-label="t('site.language')">
+        <template v-for="lang in languages" :key="`menu-${lang.code}`">
+          <span
+            v-if="lang.active"
+            class="flex min-h-11 min-w-11 items-center justify-center border border-ink text-ink"
+            aria-current="true"
+          >
+            {{ lang.label }}
+          </span>
+          <NuxtLink
+            v-else
+            :to="lang.to"
+            :hreflang="lang.code"
+            class="flex min-h-11 min-w-11 items-center justify-center border border-line-strong transition-colors hover:border-ink hover:text-ink"
+          >
+            {{ lang.label }}
+          </NuxtLink>
+        </template>
+      </div>
+    </div>
+  </div>
 </template>

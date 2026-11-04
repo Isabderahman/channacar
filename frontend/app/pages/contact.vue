@@ -22,8 +22,8 @@ useSeoMeta({
       :secondary-action="{ label: 'Questions fréquentes', to: '/faq' }"
     />
 
-    <section class="section-shell section-block">
-      <div class="grid gap-6 xl:grid-cols-[1fr_1fr]">
+    <section class="wrap pt-24 lg:pt-40">
+      <div class="grid gap-16 xl:grid-cols-2 xl:gap-16">
         <MarketingContactInfo
           :title="contactContent.title"
           :subtitle="contactContent.subtitle"

@@ -95,9 +95,9 @@ onMounted(() => {
     </AdminPageIntro>
 
     <AppPanel padding="lg">
-      <div class="mb-5 flex items-center gap-3">
-        <BaseIcon name="filter" :size="18" class="text-[var(--primary)]" />
-        <h2 class="font-heading text-[1.15rem] text-[var(--text-strong)]">Reservation filters</h2>
+      <div class="mb-5 flex items-center gap-3 border-b border-line pb-4">
+        <BaseIcon name="filter" :size="18" class="text-accent" />
+        <h2 class="text-[20px] font-medium tracking-[-0.02em]">Reservation filters</h2>
       </div>
 
       <form class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" @submit.prevent="loadReservations(1)">
@@ -149,7 +149,7 @@ onMounted(() => {
       @row-click="(row) => navigateTo(`/admin/reservations/${row.id}`)"
     >
       <template #toolbar>
-        <span class="text-[0.88rem] text-[var(--text-subtle)]">
+        <span class="whitespace-nowrap font-plex text-[12px] text-muted">
           Page {{ currentPage }} / {{ lastPage }}
         </span>
       </template>

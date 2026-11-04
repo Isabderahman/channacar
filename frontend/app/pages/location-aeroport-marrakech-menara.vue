@@ -20,8 +20,6 @@ useSeoMeta({
       :subtitle="airportContent.paragraphs[0]"
       :primary-action="{ label: 'Réserver un véhicule', to: '/cars' }"
       :secondary-action="{ label: 'Appeler maintenant', to: '/contact' }"
-      title-wrap-class="max-w-[20rem] sm:max-w-[28rem] lg:max-w-[34rem] xl:max-w-[38rem]"
-      title-class="text-[1.95rem] leading-[1.04] sm:text-[2.35rem] lg:text-[2.6rem] xl:text-[2.9rem]"
     />
 
     <MarketingNarrativeSection
@@ -31,7 +29,7 @@ useSeoMeta({
       :paragraphs="airportContent.paragraphs"
     />
 
-    <section class="section-shell pb-12">
+    <section class="wrap pt-24 lg:pt-40">
       <MarketingBulletList title="Avantages" :items="airportContent.advantages" />
     </section>
 

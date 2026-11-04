@@ -11,34 +11,35 @@ const props = withDefaults(defineProps<Props>(), {
   label: undefined,
 })
 
+// Square mono tag; the dot carries the status colour (tokens in main.css).
 const toneClass = computed(() => {
   const value = props.value.toLowerCase()
 
   if (['available', 'confirmed', 'completed', 'paid', 'visible', 'active'].includes(value)) {
-    return 'border-emerald-400/20 bg-emerald-500/15 text-emerald-100'
+    return 'bg-ok'
   }
 
   if (['pending', 'deposit', 'maintenance'].includes(value)) {
-    return 'border-amber-400/20 bg-amber-500/15 text-amber-100'
+    return 'bg-warn'
   }
 
   if (['rented', 'ongoing', 'web'].includes(value)) {
-    return 'border-sky-400/20 bg-sky-500/15 text-sky-100'
+    return 'bg-info'
   }
 
   if (['cancelled', 'unpaid'].includes(value)) {
-    return 'border-rose-400/20 bg-rose-500/15 text-rose-100'
+    return 'bg-danger'
   }
 
-  return 'border-[var(--surface-border)] bg-[var(--surface-3)] text-[var(--text-muted)]'
+  return 'bg-muted'
 })
 </script>
 
 <template>
   <span
-    class="inline-flex items-center rounded-full border px-3 py-1 text-[0.72rem] font-semibold uppercase tracking-[0.18em]"
-    :class="toneClass"
+    class="inline-flex items-center gap-2 whitespace-nowrap border border-line-strong px-2.5 py-1 font-plex text-[11px] uppercase tracking-[0.06em] text-ink"
   >
+    <span class="size-1.5 shrink-0" :class="toneClass" aria-hidden="true" />
     {{ label ?? formatEnumLabel(value) }}
   </span>
 </template>

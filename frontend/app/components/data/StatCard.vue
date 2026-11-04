@@ -19,19 +19,19 @@ withDefaults(defineProps<Props>(), {
   <AppPanel>
     <div class="flex items-start justify-between gap-4">
       <div>
-        <p class="text-[0.78rem] uppercase tracking-[0.2em] text-[var(--text-subtle)]">
+        <p class="mono-label">
           {{ label }}
         </p>
-        <p class="mt-3 font-heading text-[2rem] leading-none text-[var(--text-strong)]">
+        <p class="mt-4 text-[44px] font-medium leading-none tracking-[-0.04em]">
           {{ value }}
         </p>
-        <p v-if="description" class="mt-3 max-w-[30ch] text-[0.9rem] leading-6 text-[var(--text-muted)]">
+        <p v-if="description" class="mt-3 max-w-[30ch] text-[14px] leading-6 text-ink-2">
           {{ description }}
         </p>
       </div>
 
-      <span class="grid size-11 place-items-center rounded-[18px] bg-[var(--primary-soft)] text-[var(--primary)]">
-        <BaseIcon :name="icon" :size="20" />
+      <span class="grid size-10 shrink-0 place-items-center border border-line text-accent">
+        <BaseIcon :name="icon" :size="18" />
       </span>
     </div>
   </AppPanel>

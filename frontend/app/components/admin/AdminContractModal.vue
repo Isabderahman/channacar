@@ -268,11 +268,11 @@ const approveAndGenerate = async () => {
     size="xl"
     @close="emit('close')"
   >
-    <div v-if="reservation" class="space-y-6">
+    <div v-if="reservation" class="space-y-10">
 
       <!-- 1er conducteur -->
       <section>
-        <h4 class="mb-3 font-heading text-[1rem] uppercase tracking-[0.12em] text-[var(--text-strong)]">1er conducteur</h4>
+        <h4 class="mb-4 border-b border-line pb-3 text-[19px] font-medium tracking-[-0.02em]">1er conducteur</h4>
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           <FormField v-model="client.full_name" name="c_name" label="Nom & prénom" />
           <FormField v-model="client.birth_date" name="c_birth" label="Né le" type="date" />
@@ -290,7 +290,7 @@ const approveAndGenerate = async () => {
 
       <!-- 2ème conducteur -->
       <section>
-        <h4 class="mb-3 font-heading text-[1rem] uppercase tracking-[0.12em] text-[var(--text-strong)]">2ème conducteur (optionnel)</h4>
+        <h4 class="mb-4 border-b border-line pb-3 text-[19px] font-medium tracking-[-0.02em]">2ème conducteur (optionnel)</h4>
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           <FormField v-model="secondDriver.full_name" name="s_name" label="Nom & prénom" />
           <FormField v-model="secondDriver.birth_date" name="s_birth" label="Né le" type="date" />
@@ -303,24 +303,24 @@ const approveAndGenerate = async () => {
 
       <!-- Documents -->
       <section>
-        <h4 class="mb-3 font-heading text-[1rem] uppercase tracking-[0.12em] text-[var(--text-strong)]">Documents (recto / verso)</h4>
+        <h4 class="mb-4 border-b border-line pb-3 text-[19px] font-medium tracking-[-0.02em]">Documents (recto / verso)</h4>
         <div class="grid gap-4 sm:grid-cols-2">
           <div v-for="doc in documentFields" :key="doc.field">
-            <span class="mb-2 block text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">{{ doc.label }}</span>
+            <span class="mono-label mb-2 block">{{ doc.label }}</span>
             <img
               v-if="existingDoc(doc.existing)"
               :src="mediaUrl(existingDoc(doc.existing))"
               :alt="doc.label"
-              class="mb-2 h-28 w-full rounded-[14px] border border-[var(--surface-border)] object-cover"
+              class="mb-2 h-28 w-full border border-line object-cover"
             >
-            <input type="file" accept="image/*" class="block w-full rounded-[16px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.9rem] text-[var(--text-strong)] file:mr-3 file:rounded-[10px] file:border-0 file:bg-[var(--primary-soft)] file:px-3 file:py-1.5 file:text-[var(--primary)]" @change="(e) => onFile(e, doc.field)">
+            <input type="file" accept="image/*" class="block w-full cursor-pointer border border-line-strong px-3 py-2.5 text-[14px] text-ink-2 file:mr-3 file:cursor-pointer file:border file:border-solid file:border-line-strong file:bg-transparent file:px-3 file:py-1.5 file:font-plex file:text-[11px] file:uppercase file:tracking-[0.06em] file:text-ink hover:file:border-ink" @change="(e) => onFile(e, doc.field)">
           </div>
         </div>
       </section>
 
       <!-- Détails du contrat -->
       <section>
-        <h4 class="mb-3 font-heading text-[1rem] uppercase tracking-[0.12em] text-[var(--text-strong)]">Détails du contrat</h4>
+        <h4 class="mb-4 border-b border-line pb-3 text-[19px] font-medium tracking-[-0.02em]">Détails du contrat</h4>
         <div class="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           <FormField v-model="details.prolongation_date" name="d_prol_date" label="Prolongation — date" type="date" />
           <FormField v-model="details.prolongation_time" name="d_prol_time" label="Prolongation — heure" type="time" />
@@ -332,8 +332,8 @@ const approveAndGenerate = async () => {
           <FormSelect v-model="details.fuel_retour" name="d_fuel_ret" label="Carburant retour" :options="fuelOptions" />
         </div>
         <div class="mt-3 grid gap-3 md:grid-cols-2">
-          <FormTextarea v-model="details.condition_depart" name="d_cond_dep" label="État du véhicule — départ" rows="2" />
-          <FormTextarea v-model="details.condition_retour" name="d_cond_ret" label="État du véhicule — retour" rows="2" />
+          <FormTextarea v-model="details.condition_depart" name="d_cond_dep" label="État du véhicule — départ" :rows="2" />
+          <FormTextarea v-model="details.condition_retour" name="d_cond_ret" label="État du véhicule — retour" :rows="2" />
         </div>
         <div class="mt-3 grid gap-3 md:grid-cols-2">
           <FormField v-model="details.divers_note" name="d_divers" label="Divers (note)" />
@@ -344,7 +344,7 @@ const approveAndGenerate = async () => {
       <!-- Paiement + récapitulatif -->
       <section class="grid gap-4 md:grid-cols-2">
         <div>
-          <h4 class="mb-3 font-heading text-[1rem] uppercase tracking-[0.12em] text-[var(--text-strong)]">Mode de règlement</h4>
+          <h4 class="mb-4 border-b border-line pb-3 text-[19px] font-medium tracking-[-0.02em]">Mode de règlement</h4>
           <FormSelect
             v-model="paymentMethod"
             name="payment_method"
@@ -352,12 +352,12 @@ const approveAndGenerate = async () => {
             :options="[{ label: 'Cash', value: 'cash' }, { label: 'Chèque', value: 'cheque' }]"
           />
         </div>
-        <div class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-          <div v-for="row in priceRows" :key="row.label" class="flex items-center justify-between py-1 text-[0.9rem]">
-            <span class="text-[var(--text-muted)]">{{ row.label }}</span>
-            <span class="font-semibold text-[var(--text-strong)]">{{ row.value }}</span>
+        <div class="border border-line p-4">
+          <div v-for="row in priceRows" :key="row.label" class="flex items-center justify-between border-b border-line py-2 text-[14px] last-of-type:border-b-0">
+            <span class="text-ink-2">{{ row.label }}</span>
+            <span class="font-medium text-ink">{{ row.value }}</span>
           </div>
-          <p v-if="reservation.contract_number" class="mt-2 text-[0.8rem] text-[var(--text-subtle)]">
+          <p v-if="reservation.contract_number" class="mt-3 font-plex text-[11px] text-muted">
             Contrat N° {{ reservation.contract_number }}
           </p>
         </div>

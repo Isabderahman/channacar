@@ -147,6 +147,9 @@ onMounted(() => {
           :rows="rows"
           @row-click="(row) => fillForm(seasons.find((season) => season.id === row.id)!)"
         >
+          <template #cell-range="{ row }">
+            <span class="cursor-pointer whitespace-nowrap">{{ row.range }}</span>
+          </template>
           <template #cell-price_type="{ row }">
             <StatusBadge :value="row.price_type" />
           </template>
@@ -155,11 +158,11 @@ onMounted(() => {
 
       <template #secondary>
         <AppPanel padding="lg">
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">
+          <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">
             {{ isEditing ? 'Edit season' : 'Create season' }}
           </h3>
 
-          <form class="mt-6 space-y-4" @submit.prevent="save">
+          <form class="mt-6 space-y-4 border-t border-line pt-6" @submit.prevent="save">
             <FormField v-model="form.name" name="name" label="Season name" />
             <FormField v-model="form.date_from" name="date_from" label="Start date" type="date" />
             <FormField v-model="form.date_to" name="date_to" label="End date" type="date" />

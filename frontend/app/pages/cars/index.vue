@@ -1,29 +1,23 @@
 <script setup lang="ts">
-import AppPanel from '~/components/data/AppPanel.vue'
 import StateNotice from '~/components/feedback/StateNotice.vue'
-import FormField from '~/components/forms/FormField.vue'
-import FormSelect from '~/components/forms/FormSelect.vue'
-import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
-import PublicCarCard from '~/components/public/PublicCarCard.vue'
-import PublicCarCardSkeleton from '~/components/public/PublicCarCardSkeleton.vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
+import ContactBlock from '~/components/site/ContactBlock.vue'
+import FleetRow from '~/components/site/FleetRow.vue'
+import SiteIcon from '~/components/site/SiteIcon.vue'
 import type { Car, Category, PaginatedResponse, ResourceResponse } from '~/types/entities'
 import { resolveApiErrorMessage } from '~/utils/api-error'
-import { FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
 
+const route = useRoute()
+const localePath = useLocalePath()
 const { publicApi } = useApi()
 const toast = useToast({ locale: 'fr', errorTitle: 'Erreur' })
 
-const pending = ref(false)
-const errorMessage = ref('')
-const cars = ref<Car[]>([])
-const categories = ref<Category[]>([])
-const currentPage = ref(1)
-const lastPage = ref(1)
-const total = ref(0)
+// Place/dates chosen on the homepage travel on to the car pages.
+const { hydrateFromQuery, toQuery } = useBookingDraft()
+hydrateFromQuery(route.query)
 
-const filters = reactive({
+const PER_PAGE = 12
+
+const emptyFilters = () => ({
   category_id: '',
   fuel: '',
   max_price: '',
@@ -33,89 +27,100 @@ const filters = reactive({
   transmission: '',
 })
 
-const categoryOptions = computed(() =>
-  categories.value.map((category) => ({
-    label: category.name,
-    value: category.id,
-  })),
+// `filters` is what the visitor is typing; `applied` is what was last
+// submitted and drives the (server-rendered) request.
+const filters = reactive({
+  ...emptyFilters(),
+  category_id: typeof route.query.category_id === 'string' ? route.query.category_id : '',
+})
+const applied = reactive({ ...filters, page: 1 })
+
+const { data: categoriesData } = await useAsyncData('fleet-categories', () =>
+  publicApi<ResourceResponse<Category[]>>('/public/categories').catch(() => null),
 )
+const categories = computed(() => categoriesData.value?.data ?? [])
 
-const heroFeatures = computed(() => [
-  {
-    icon: 'calendar' as const,
-    title: 'Réservation rapide',
-    description: 'Filtrez, comparez, puis envoyez votre demande sans quitter la page.',
-  },
-  {
-    icon: 'car' as const,
-    title: `${categories.value.length || 0} catégories disponibles`,
-    description: 'Citadines, familiales, SUV et modèles premium pour différents budgets.',
-  },
-])
-
-const loadCategories = async () => {
-  try {
-    const response = await publicApi<ResourceResponse<Category[]>>('/public/categories')
-    categories.value = response.data
-  } catch (error) {
-    // Only the category filter depends on this; the catalogue itself must still
-    // load, so report it and carry on instead of rejecting the mount sequence.
-    toast.error(
-      resolveApiErrorMessage(error, {
-        locale: 'fr',
-        fallback: 'Les catégories ne sont pas disponibles pour le moment.',
-      }),
-      'Filtres indisponibles',
-    )
-  }
-}
-
-const loadCars = async (page = 1) => {
-  pending.value = true
-  errorMessage.value = ''
-
-  try {
-    const response = await publicApi<PaginatedResponse<Car>>('/public/cars', {
+const {
+  data: fleet,
+  status,
+  error,
+} = await useAsyncData(
+  'fleet',
+  () =>
+    publicApi<PaginatedResponse<Car>>('/public/cars', {
       query: {
-        page,
-        per_page: 12,
+        per_page: PER_PAGE,
         ...Object.fromEntries(
-          Object.entries(filters).filter(([, value]) => String(value).trim().length > 0),
+          Object.entries(applied).filter(([, value]) => String(value).trim().length > 0),
         ),
       },
-    })
+    }),
+  { watch: [applied] },
+)
 
-    cars.value = response.data
-    currentPage.value = response.current_page
-    lastPage.value = response.last_page
-    total.value = response.total
-  } catch (error) {
-    errorMessage.value = resolveApiErrorMessage(error, {
-      locale: 'fr',
-      fallback: 'La liste des véhicules est indisponible pour le moment.',
-    })
+const cars = computed(() => fleet.value?.data ?? [])
+const total = computed(() => fleet.value?.total ?? 0)
+const currentPage = computed(() => fleet.value?.current_page ?? 1)
+const lastPage = computed(() => fleet.value?.last_page ?? 1)
+const pending = computed(() => status.value === 'pending')
+
+const errorMessage = computed(() =>
+  error.value
+    ? resolveApiErrorMessage(error.value, {
+        locale: 'fr',
+        fallback: 'La liste des véhicules est indisponible pour le moment.',
+      })
+    : '',
+)
+
+const reportError = () => {
+  if (errorMessage.value) {
     toast.error(errorMessage.value, 'Chargement impossible')
-  } finally {
-    pending.value = false
   }
 }
+onMounted(reportError)
+watch(errorMessage, reportError)
 
-const resetFilters = async () => {
-  filters.category_id = ''
-  filters.fuel = ''
-  filters.max_price = ''
-  filters.min_price = ''
-  filters.search = ''
-  filters.seats = ''
-  filters.transmission = ''
+const listTop = ref<HTMLElement | null>(null)
 
-  await loadCars(1)
+const apply = (page = 1) => {
+  Object.assign(applied, filters, { page })
 }
 
-onMounted(async () => {
-  await loadCategories()
-  await loadCars()
+const pickCategory = (id: string) => {
+  filters.category_id = id
+  apply(1)
+}
+
+const goToPage = (page: number) => {
+  applied.page = page
+  listTop.value?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+const reset = () => {
+  Object.assign(filters, emptyFilters())
+  apply(1)
+}
+
+const carLink = (car: Car) => ({
+  path: localePath(`/cars/${car.slug ?? car.id}`),
+  query: toQuery(),
 })
+
+const transmissionOptions = [
+  { label: 'Automatique', value: 'auto' },
+  { label: 'Manuelle', value: 'manual' },
+]
+
+const fuelOptions = [
+  { label: 'Diesel', value: 'diesel' },
+  { label: 'Essence', value: 'petrol' },
+  { label: 'Hybride', value: 'hybrid' },
+  { label: 'Électrique', value: 'electric' },
+]
+
+const cellClass =
+  'flex min-w-0 flex-col gap-1.5 border-b border-line px-4 py-3.5 font-plex text-[10px] uppercase tracking-[0.08em] text-muted lg:gap-2 lg:px-5 lg:py-4 lg:text-[11px]'
 
 useSeoMeta({
   title: 'Réserver une voiture | ChanaaCar',
@@ -125,197 +130,158 @@ useSeoMeta({
 
 <template>
   <div>
-    <MarketingHeroSection
-      eyebrow="Flotte disponible"
-      title="Trouvez la voiture adaptée à votre séjour."
-      subtitle="Parcourez les véhicules disponibles, filtrez selon votre budget et réservez plus vite depuis une seule interface."
-      :primary-action="{ label: 'Contacter ChanaaCar', to: '/contact' }"
-      :features="heroFeatures"
-    >
-      <template #meta>
-        <div class="grid gap-3 sm:grid-cols-3">
-          <div class="group flex items-center gap-3 rounded-[20px] border border-[var(--surface-border)] bg-[linear-gradient(160deg,var(--surface-2),var(--surface-1))] px-4 py-4 transition duration-500 ease-out hover:-translate-y-1 hover:border-[var(--primary-border)] hover:shadow-[var(--shadow-2)]">
-            <span class="grid size-10 shrink-0 place-items-center rounded-[12px] bg-[var(--primary-soft)] text-[var(--primary)] shadow-[inset_0_0_0_1px_var(--primary-border)] transition duration-500 ease-out group-hover:scale-105">
-              <BaseIcon name="car" :size="18" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-[0.62rem] uppercase tracking-[0.08em] leading-tight text-[var(--text-subtle)]">
-                Véhicules trouvés
-              </p>
-              <p class="mt-1.5 font-heading text-[1.45rem] leading-none text-[var(--text-strong)]">
-                {{ total }}
-              </p>
-            </div>
-          </div>
-          <div class="group flex items-center gap-3 rounded-[20px] border border-[var(--surface-border)] bg-[linear-gradient(160deg,var(--surface-2),var(--surface-1))] px-4 py-4 transition duration-500 ease-out hover:-translate-y-1 hover:border-[var(--primary-border)] hover:shadow-[var(--shadow-2)]">
-            <span class="grid size-10 shrink-0 place-items-center rounded-[12px] bg-[var(--primary-soft)] text-[var(--primary)] shadow-[inset_0_0_0_1px_var(--primary-border)] transition duration-500 ease-out group-hover:scale-105">
-              <BaseIcon name="filter" :size="18" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-[0.62rem] uppercase tracking-[0.08em] leading-tight text-[var(--text-subtle)]">
-                Page actuelle
-              </p>
-              <p class="mt-1.5 font-heading text-[1.45rem] leading-none text-[var(--text-strong)]">
-                {{ currentPage }} / {{ lastPage }}
-              </p>
-            </div>
-          </div>
-          <div class="group flex items-center gap-3 rounded-[20px] border border-[var(--surface-border)] bg-[linear-gradient(160deg,var(--surface-2),var(--surface-1))] px-4 py-4 transition duration-500 ease-out hover:-translate-y-1 hover:border-[var(--primary-border)] hover:shadow-[var(--shadow-2)]">
-            <span class="grid size-10 shrink-0 place-items-center rounded-[12px] bg-[var(--primary-soft)] text-[var(--primary)] shadow-[inset_0_0_0_1px_var(--primary-border)] transition duration-500 ease-out group-hover:scale-105">
-              <BaseIcon name="clock" :size="18" />
-            </span>
-            <div class="min-w-0">
-              <p class="text-[0.62rem] uppercase tracking-[0.08em] leading-tight text-[var(--text-subtle)]">
-                Assistance
-              </p>
-              <p class="mt-1.5 font-heading text-[1.45rem] leading-none text-[var(--text-strong)]">
-                7j/7
-              </p>
-            </div>
-          </div>
-        </div>
-      </template>
-    </MarketingHeroSection>
-
-    <section class="section-shell pb-12">
-      <AppPanel v-reveal padding="lg">
-        <div class="mb-5 flex items-center gap-3">
-          <BaseIcon name="filter" :size="18" class="text-[var(--primary)]" />
-          <h2 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Filtres</h2>
-        </div>
-
-        <form class="grid gap-4 md:grid-cols-2 xl:grid-cols-4" @submit.prevent="loadCars(1)">
-          <FormField
-            v-model="filters.search"
-            name="search"
-            label="Recherche"
-            placeholder="Marque ou modèle"
-            variant="hero"
-          />
-          <FormSelect
-            v-model="filters.category_id"
-            name="category"
-            label="Catégorie"
-            :options="categoryOptions"
-            variant="hero"
-          />
-          <FormSelect
-            v-model="filters.transmission"
-            name="transmission"
-            label="Transmission"
-            :options="[...TRANSMISSION_OPTIONS]"
-            variant="hero"
-          />
-          <FormSelect
-            v-model="filters.fuel"
-            name="fuel"
-            label="Carburant"
-            :options="[...FUEL_OPTIONS]"
-            variant="hero"
-          />
-          <FormField
-            v-model="filters.seats"
-            name="seats"
-            label="Places min"
-            type="number"
-            min="1"
-            variant="hero"
-          />
-          <FormField
-            v-model="filters.min_price"
-            name="min_price"
-            label="Prix min / jour"
-            type="number"
-            min="0"
-            variant="hero"
-          />
-          <FormField
-            v-model="filters.max_price"
-            name="max_price"
-            label="Prix max / jour"
-            type="number"
-            min="0"
-            variant="hero"
-          />
-
-          <div class="flex items-end gap-3 xl:col-span-1">
-            <BaseButton type="submit">
-              <BaseIcon name="search" :size="18" />
-              <span>Appliquer</span>
-            </BaseButton>
-            <BaseButton type="button" variant="secondary" @click="resetFilters">
-              <BaseIcon name="refresh" :size="18" />
-              <span>Réinitialiser</span>
-            </BaseButton>
-          </div>
-        </form>
-      </AppPanel>
-
-      <div v-reveal class="mt-6 flex flex-wrap items-center justify-between gap-3">
-        <p class="text-[0.92rem] text-[var(--text-muted)]">
-          {{ cars.length }} véhicule(s) affiché(s) sur {{ total }} disponible(s).
+    <section class="wrap pt-8 lg:pt-14">
+      <p class="mono-label mb-5 lg:mb-7 lg:text-[12px]">Flotte disponible — Marrakech &amp; Maroc</p>
+      <div class="grid items-end gap-6 xl:grid-cols-[1.4fr_1fr] xl:gap-10">
+        <h1 class="text-[48px] font-medium leading-[0.92] tracking-[-0.045em] md:text-[clamp(56px,7vw,104px)]">
+          Trouvez la voiture adaptée à votre séjour.
+        </h1>
+        <p class="max-w-[420px] text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45] xl:pb-3">
+          Parcourez les véhicules disponibles, filtrez selon votre budget et réservez en quelques minutes.
         </p>
+      </div>
+    </section>
 
-        <div class="flex items-center gap-3">
-          <BaseButton
+    <section ref="listTop" class="wrap scroll-mt-6 pt-16 lg:pt-24">
+      <div class="flex flex-col gap-5 border-b border-ink pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
+        <h2 class="display text-[44px] lg:text-[clamp(40px,5vw,72px)]">
+          La flotte <span class="font-plex text-[13px] tracking-normal text-muted lg:text-[15px]">{{ total }} véhicule{{ total > 1 ? 's' : '' }}</span>
+        </h2>
+
+        <div
+          v-if="categories.length"
+          role="group"
+          aria-label="Filtrer par catégorie"
+          class="flex flex-wrap gap-1"
+        >
+          <button
             type="button"
-            variant="secondary"
-            :disabled="currentPage <= 1 || pending"
-            @click="loadCars(currentPage - 1)"
+            class="chip lg:text-[13px]"
+            :aria-pressed="!applied.category_id ? 'true' : 'false'"
+            @click="pickCategory('')"
           >
-            <BaseIcon name="arrow-right" :size="18" class="rotate-180" />
-            <span>Précédent</span>
-          </BaseButton>
-          <span class="text-[0.88rem] text-[var(--text-subtle)]">
-            Page {{ currentPage }} / {{ lastPage }}
-          </span>
-          <BaseButton
+            Tous
+          </button>
+          <button
+            v-for="category in categories"
+            :key="category.id"
             type="button"
-            variant="secondary"
-            :disabled="currentPage >= lastPage || pending"
-            @click="loadCars(currentPage + 1)"
+            class="chip lg:text-[13px]"
+            :aria-pressed="applied.category_id === String(category.id) ? 'true' : 'false'"
+            @click="pickCategory(String(category.id))"
           >
-            <span>Suivant</span>
-            <BaseIcon name="arrow-right" :size="18" />
-          </BaseButton>
+            {{ category.name }}
+          </button>
         </div>
       </div>
 
+      <form
+        aria-label="Filtres"
+        class="mt-6 border border-b-0 border-line lg:mt-8"
+        @submit.prevent="apply(1)"
+      >
+        <div class="grid grid-cols-2 lg:grid-cols-6">
+          <label :class="cellClass" class="col-span-2 lg:border-e">
+            Recherche
+            <input v-model="filters.search" type="search" placeholder="Marque ou modèle" class="field-bare text-[16px] placeholder:text-faint">
+          </label>
+          <label :class="cellClass" class="border-e">
+            Boîte
+            <select v-model="filters.transmission" class="field-bare text-[16px]">
+              <option value="">Toutes</option>
+              <option v-for="option in transmissionOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
+            </select>
+          </label>
+          <label :class="cellClass" class="lg:border-e">
+            Carburant
+            <select v-model="filters.fuel" class="field-bare text-[16px]">
+              <option value="">Tous</option>
+              <option v-for="option in fuelOptions" :key="option.value" :value="option.value">{{ option.label }}</option>
+            </select>
+          </label>
+          <label :class="cellClass" class="border-e">
+            Prix min / jour
+            <input v-model="filters.min_price" type="number" min="0" inputmode="numeric" placeholder="MAD" class="field-bare text-[16px] placeholder:text-faint">
+          </label>
+          <label :class="cellClass">
+            Prix max / jour
+            <input v-model="filters.max_price" type="number" min="0" inputmode="numeric" placeholder="MAD" class="field-bare text-[16px] placeholder:text-faint">
+          </label>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between gap-4 border-b border-line ps-4 lg:ps-5">
+          <label class="flex items-center gap-3 py-2 font-plex text-[11px] uppercase tracking-[0.08em] text-muted">
+            Places min
+            <input v-model="filters.seats" type="number" min="1" inputmode="numeric" class="field-bare w-16 text-[16px]">
+          </label>
+          <div class="flex items-center gap-5">
+            <button type="button" class="text-link text-[14px]" @click="reset">Réinitialiser</button>
+            <button type="submit" class="btn btn-primary min-h-14">
+              Appliquer
+              <SiteIcon name="arrow-right" />
+            </button>
+          </div>
+        </div>
+      </form>
+
       <StateNotice
         v-if="errorMessage"
-        class="mt-6"
+        class="mt-8"
         title="Liste indisponible"
         :message="errorMessage"
         tone="error"
       />
 
-      <div
-        v-else-if="pending"
-        class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
-        aria-busy="true"
-      >
-        <PublicCarCardSkeleton v-for="n in 6" :key="n" />
-      </div>
+      <ul v-else-if="pending" aria-busy="true" class="mt-4">
+        <li v-for="n in 4" :key="n" class="flex animate-pulse items-center gap-10 border-b border-line py-7">
+          <span class="hidden h-[120px] w-[200px] bg-surface md:block" />
+          <span class="h-[72px] w-28 bg-surface md:hidden" />
+          <span class="h-6 w-48 bg-surface" />
+        </li>
+      </ul>
 
-      <div
-        v-else-if="cars.length"
-        :key="`cars-page-${currentPage}`"
-        v-reveal="{ stagger: 0.08, y: 32, start: 'top 92%' }"
-        class="mt-6 grid gap-5 md:grid-cols-2 xl:grid-cols-3"
-      >
-        <PublicCarCard
-          v-for="car in cars"
+      <ul v-else-if="cars.length" class="mt-4">
+        <FleetRow
+          v-for="(car, index) in cars"
           :key="car.id"
           :car="car"
+          :index="(currentPage - 1) * PER_PAGE + index"
+          :to="carLink(car)"
         />
+      </ul>
+
+      <div v-else class="border-b border-line py-12">
+        <p class="text-[21px] font-medium">Aucun véhicule trouvé</p>
+        <p class="mt-1 text-ink-2">Ajustez les filtres ou réinitialisez la recherche pour revoir toute la flotte.</p>
       </div>
 
-      <div v-else class="mt-6">
-        <StateNotice
-          title="Aucun véhicule trouvé"
-          message="Ajustez les filtres ou réinitialisez la recherche pour revoir toute la flotte."
-        />
-      </div>
+      <nav
+        v-if="lastPage > 1"
+        aria-label="Pagination"
+        class="mt-6 flex items-center justify-between gap-4"
+      >
+        <button
+          type="button"
+          class="btn btn-outline"
+          :disabled="currentPage <= 1 || pending"
+          @click="goToPage(currentPage - 1)"
+        >
+          <SiteIcon name="arrow-left" />
+          Précédent
+        </button>
+        <span class="font-plex text-[12px] text-muted">Page {{ currentPage }} / {{ lastPage }}</span>
+        <button
+          type="button"
+          class="btn btn-outline"
+          :disabled="currentPage >= lastPage || pending"
+          @click="goToPage(currentPage + 1)"
+        >
+          Suivant
+          <SiteIcon name="arrow-right" />
+        </button>
+      </nav>
     </section>
+
+    <ContactBlock />
   </div>
 </template>

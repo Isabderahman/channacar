@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { MarketingContactGroup } from '~/utils/marketing-content'
 
 defineProps<{
@@ -11,45 +10,30 @@ defineProps<{
 
 <template>
   <div>
-    <h2 class="ridex-title-2">
-      {{ title }}
-    </h2>
-    <p v-if="subtitle" class="mt-3 max-w-[58ch] text-[0.96rem] leading-7 text-[var(--text-muted)]">
-      {{ subtitle }}
-    </p>
+    <div class="border-b border-ink pb-5 md:pb-8">
+      <h2 class="text-[32px] font-medium leading-none tracking-[-0.035em] lg:text-[40px]">
+        {{ title }}
+      </h2>
+      <p v-if="subtitle" class="mt-4 max-w-[52ch] text-[15px] text-ink-2 lg:text-[16px]">
+        {{ subtitle }}
+      </p>
+    </div>
 
-    <div class="mt-6 grid gap-4 md:grid-cols-2">
-      <article
+    <dl>
+      <div
         v-for="group in groups"
         :key="group.label"
-        class="rounded-[22px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-5"
+        class="grid gap-2 border-b border-line py-5 sm:grid-cols-[140px_1fr] sm:gap-6"
       >
-        <div class="flex items-center gap-3">
-          <BaseIcon
-            :name="
-              group.label === 'Téléphone'
-                ? 'phone'
-                : group.label === 'WhatsApp'
-                  ? 'whatsapp'
-                  : group.label === 'Email'
-                    ? 'mail'
-                    : group.label === 'Adresse'
-                      ? 'map-pin'
-                      : 'clock'
-            "
-            :size="18"
-            class="text-[var(--primary)]"
-          />
-          <h3 class="font-heading text-[1.05rem] text-[var(--text-strong)]">
-            {{ group.label }}
-          </h3>
-        </div>
-        <ul class="mt-4 space-y-2 text-[0.95rem] leading-6 text-[var(--text-muted)]">
-          <li v-for="value in group.values" :key="value">
+        <dt class="mono-label pt-1">
+          {{ group.label }}
+        </dt>
+        <dd class="flex flex-col gap-1 text-[17px] lg:text-[19px]">
+          <template v-for="value in group.values" :key="value">
             <a
               v-if="group.label === 'Email'"
               :href="`mailto:${value}`"
-              class="transition duration-300 hover:text-[var(--primary)]"
+              class="w-fit transition-colors hover:text-accent"
             >
               {{ value }}
             </a>
@@ -58,21 +42,23 @@ defineProps<{
               :href="`https://wa.me/${value.replace(/\D/g, '')}`"
               target="_blank"
               rel="noopener"
-              class="transition duration-300 hover:text-[var(--primary)]"
+              class="w-fit transition-colors hover:text-accent"
+              dir="ltr"
             >
               {{ value }}
             </a>
             <a
               v-else-if="group.label === 'Téléphone'"
               :href="`tel:${value.replace(/\s+/g, '')}`"
-              class="transition duration-300 hover:text-[var(--primary)]"
+              class="w-fit transition-colors hover:text-accent"
+              dir="ltr"
             >
               {{ value }}
             </a>
             <span v-else>{{ value }}</span>
-          </li>
-        </ul>
-      </article>
-    </div>
+          </template>
+        </dd>
+      </div>
+    </dl>
   </div>
 </template>

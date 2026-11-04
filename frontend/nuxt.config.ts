@@ -48,6 +48,12 @@ export default defineNuxtConfig({
       link: [
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
         { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+        // Redesign typefaces (public site + admin). Plex Sans Arabic covers the
+        // Arabic locale; Google only serves its files when Arabic text renders.
+        {
+          rel: 'stylesheet',
+          href: 'https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap',
+        },
         { rel: 'icon', type: 'image/png', sizes: '32x32', href: '/favicon-32.png' },
         { rel: 'icon', type: 'image/png', sizes: '64x64', href: '/favicon-64.png' },
         { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' },

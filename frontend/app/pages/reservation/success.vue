@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
+import SiteIcon from '~/components/site/SiteIcon.vue'
 
 const route = useRoute()
+const localePath = useLocalePath()
 
 const reservationNumber = computed(() => String(route.query.reservation ?? 'Référence en attente'))
 const carName = computed(() => String(route.query.car ?? 'votre véhicule sélectionné'))
@@ -14,45 +14,41 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
-    <MarketingHeroSection
-      eyebrow="Confirmation"
-      :title="`Votre demande pour ${carName} est bien reçue.`"
-      subtitle="Nous avons enregistré votre demande de réservation. L’équipe ChanaaCar vous recontacte pour confirmer la disponibilité et finaliser la remise du véhicule."
-      :primary-action="{ label: 'Réserver un autre véhicule', to: '/cars' }"
-      :secondary-action="{ label: 'Contacter l’équipe', to: '/contact' }"
-    >
-      <template #meta>
-        <div class="grid gap-4 sm:grid-cols-3">
-          <article class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--alice-blue-2)] p-5">
-            <BaseIcon name="check-circle" :size="20" class="text-[var(--carolina-blue)]" />
-            <p class="mt-3 text-[0.76rem] uppercase tracking-[0.2em] text-[var(--manatee)]">
-              Statut
-            </p>
-            <p class="mt-2 text-[1rem] font-semibold text-[var(--space-cadet)]">
-              Demande enregistrée
-            </p>
-          </article>
+  <section class="wrap pb-[72px] pt-8 lg:pb-[120px] lg:pt-14">
+    <p class="mono-label mb-5 lg:mb-7 lg:text-[12px]">Confirmation</p>
 
-          <article class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--alice-blue-2)] p-5">
-            <p class="text-[0.76rem] uppercase tracking-[0.2em] text-[var(--manatee)]">
-              Référence
-            </p>
-            <p class="mt-3 text-[1rem] font-semibold text-[var(--space-cadet)]">
-              {{ reservationNumber }}
-            </p>
-          </article>
+    <h1 class="max-w-[18ch] text-[44px] font-medium leading-[0.95] tracking-[-0.045em] md:text-[clamp(48px,6.2vw,96px)]">
+      Votre demande pour {{ carName }} est bien reçue.
+    </h1>
 
-          <article class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--alice-blue-2)] p-5">
-            <p class="text-[0.76rem] uppercase tracking-[0.2em] text-[var(--manatee)]">
-              Suite
-            </p>
-            <p class="mt-3 text-[1rem] font-semibold text-[var(--space-cadet)]">
-              Retour rapide de l’équipe
-            </p>
-          </article>
-        </div>
-      </template>
-    </MarketingHeroSection>
-  </div>
+    <p class="mt-8 max-w-[560px] text-[16px] text-ink-2 lg:mt-12 lg:text-[18px] lg:leading-[1.45]">
+      Nous avons enregistré votre demande de réservation. L’équipe ChanaaCar vous recontacte pour confirmer la disponibilité et finaliser la remise du véhicule.
+    </p>
+
+    <dl class="mt-12 grid border-t border-line md:grid-cols-3 lg:mt-16">
+      <div class="border-b border-line py-5 md:border-e md:pe-6">
+        <dt class="mono-label">Statut</dt>
+        <dd class="mt-2 text-[18px] lg:text-[21px]">Demande enregistrée</dd>
+      </div>
+      <div class="border-b border-line py-5 md:border-e md:px-6">
+        <dt class="mono-label">Référence</dt>
+        <dd class="mt-2 font-plex text-[18px] text-accent lg:text-[21px]">{{ reservationNumber }}</dd>
+      </div>
+      <div class="border-b border-line py-5 md:ps-6">
+        <dt class="mono-label">Suite</dt>
+        <dd class="mt-2 text-[18px] lg:text-[21px]">Retour rapide de l’équipe</dd>
+      </div>
+    </dl>
+
+    <div class="mt-10 flex flex-col gap-2 sm:flex-row sm:flex-wrap lg:mt-14">
+      <NuxtLink :to="localePath('/cars')" class="btn btn-primary min-h-14 sm:min-w-[280px]">
+        Réserver un autre véhicule
+        <SiteIcon name="arrow-right" />
+      </NuxtLink>
+      <NuxtLink :to="localePath('/contact')" class="btn btn-outline min-h-14 sm:min-w-[280px]">
+        Contacter l’équipe
+        <SiteIcon name="arrow-right" />
+      </NuxtLink>
+    </div>
+  </section>
 </template>

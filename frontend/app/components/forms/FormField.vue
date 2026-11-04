@@ -29,16 +29,13 @@ const props = withDefaults(defineProps<Props>(), {
 
 const model = defineModel<string | number | null>({ default: '' })
 const inputId = computed(() => `field-${props.name}`)
-const inputClass = computed(() =>
-  props.variant === 'hero'
-    ? 'h-11 rounded-[10px] border border-black/10 bg-[var(--white)] px-4 py-2 text-[0.875rem] text-[#241c22] outline-none transition duration-300 placeholder:text-black/40 focus:border-[var(--primary)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_18%,transparent)]'
-    : 'rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.95rem] text-[var(--text-strong)] outline-none transition duration-300 placeholder:text-[var(--text-subtle)] focus:border-[var(--primary-border)] focus:ring-2 focus:ring-[color-mix(in_srgb,var(--primary)_28%,transparent)]',
-)
+// Square hairline control (design handoff); `hero` kept for API compatibility.
+const inputClass = 'field min-h-11 text-[15px]'
 </script>
 
 <template>
   <label class="block">
-    <span class="mb-2 block text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
+    <span class="mono-label mb-2 block">
       {{ label }}
     </span>
 
@@ -57,7 +54,7 @@ const inputClass = computed(() =>
       :class="inputClass"
     >
 
-    <span v-if="help" class="mt-2 block text-[0.82rem] leading-5 text-[var(--text-subtle)]">
+    <span v-if="help" class="mt-1.5 block text-[13px] leading-5 text-muted">
       {{ help }}
     </span>
   </label>

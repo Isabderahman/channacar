@@ -198,5 +198,139 @@
       "mail": "Email"
     },
     "copyright": "All Rights Reserved"
+  },
+  "site": {
+    "topbar": {
+      "availability": "Available 24/7",
+      "availabilityShort": "24/7"
+    },
+    "nav": {
+      "aria": "Main navigation",
+      "cars": "Our cars",
+      "marrakech": "Marrakech rental",
+      "airport": "Airport rental",
+      "longTerm": "Long term",
+      "about": "About",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "actions": {
+      "book": "Book",
+      "menuOpen": "Open menu",
+      "menuClose": "Close menu",
+      "call": "Call ChanaaCar",
+      "back": "Back to the fleet",
+      "whatsappFloat": "Contact ChanaaCar on WhatsApp",
+      "whatsappChat": "Chat on WhatsApp"
+    },
+    "language": "Language",
+    "home": {
+      "hero": {
+        "eyebrow": "Car rental — Marrakech & Morocco",
+        "eyebrowShort": "Car rental — Marrakech",
+        "line1": "Marrakech,",
+        "line2Muted": "at your",
+        "line2": "own pace.",
+        "lead": "A recent car, delivered to Marrakech Menara airport, your hotel or in town. Booked in minutes.",
+        "delivery": "Airport delivery",
+        "pricing": "Transparent pricing",
+        "support": "24/7 assistance",
+        "photoAlt": "ChanaaCar rental car in Marrakech"
+      },
+      "search": {
+        "aria": "Book a car",
+        "pickup": "Pick-up location",
+        "dropoff": "Return location",
+        "sameLocation": "Same as pick-up",
+        "from": "Pick-up",
+        "to": "Return",
+        "submit": "See the cars"
+      },
+      "steps": {
+        "titleLine1": "Book in",
+        "titleLine2": "4 steps.",
+        "lead": "From choosing the car to handing over the keys, everything is settled online or on WhatsApp.",
+        "place": {
+          "title": "Place and dates",
+          "description": "Enter your pick-up location, your dates and your flight time."
+        },
+        "car": {
+          "title": "Your car",
+          "description": "Compare our economy, family and premium cars to suit your trip and budget."
+        },
+        "confirm": {
+          "title": "Confirmation",
+          "description": "Add GPS, a child seat or an extra driver, then confirm online or via WhatsApp."
+        },
+        "road": {
+          "title": "The road",
+          "description": "Collect the car at the airport, your hotel or the agency, and set off to explore Morocco."
+        }
+      },
+      "zones": {
+        "label": "Service areas",
+        "airport": "Marrakech Menara Airport",
+        "gueliz": "Gueliz",
+        "medina": "Medina",
+        "palmeraie": "Palmeraie",
+        "hivernage": "Hivernage",
+        "cities": "Casablanca, Agadir, Essaouira"
+      },
+      "contact": {
+        "line1": "A question?",
+        "line2": "Write to us."
+      }
+    },
+    "fleet": {
+      "dateNoteValid": "Total price for {days}, from {from} to {to}",
+      "dateNoteInvalid": "The return date must be after the pick-up date.",
+      "dateNotePrompt": "Choose your dates: the total price shows on every car.",
+      "days": "{n} day | {n} days",
+      "deposit": "Refundable deposit",
+      "onRequest": "On request",
+      "unitTotal": "MAD · {days}",
+      "sub": "{price} MAD/day × {days}",
+      "subPrompt": "Choose your dates for the total",
+      "view": "View",
+      "specLine": "{seats} seats · {gearbox} · {fuel} · {bags} bags",
+      "title": "The fleet",
+      "all": "All",
+      "filterAria": "Filter by category",
+      "seats": "Seats",
+      "gearbox": "Gearbox",
+      "fuel": "Fuel",
+      "bags": "Luggage",
+      "perDay": "MAD / day",
+      "perDayShort": "MAD/day",
+      "seatsShort": "{n} seats",
+      "bagsShort": "{n} bags",
+      "viewAll": "See all cars",
+      "viewCar": "View {name}",
+      "empty": "Our cars will be listed here as soon as they are online. Contact us for availability.",
+      "transmission": {
+        "auto": "Auto",
+        "manual": "Manual"
+      },
+      "fuels": {
+        "diesel": "Diesel",
+        "petrol": "Petrol",
+        "hybrid": "Hybrid",
+        "electric": "Electric"
+      }
+    },
+    "footer": {
+      "description": "Car rental agency in Marrakech and across Morocco. Recent, well-maintained cars, delivery to Marrakech Menara airport, 24/7 assistance.",
+      "descriptionShort": "Car rental in Marrakech and across Morocco.",
+      "company": "Company",
+      "support": "Support",
+      "about": "About",
+      "pricing": "Our prices",
+      "process": "How it works",
+      "contact": "Contact",
+      "help": "Help centre",
+      "ask": "Ask a question",
+      "social": "Social media",
+      "rights": "All rights reserved."
+    }
   }
 }

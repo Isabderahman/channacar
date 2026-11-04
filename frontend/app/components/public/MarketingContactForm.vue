@@ -1,9 +1,5 @@
 <script setup lang="ts">
-import StateNotice from '~/components/feedback/StateNotice.vue'
-import FormField from '~/components/forms/FormField.vue'
-import FormTextarea from '~/components/forms/FormTextarea.vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
+import SiteIcon from '~/components/site/SiteIcon.vue'
 
 const route = useRoute()
 const submitted = ref(false)
@@ -42,52 +38,67 @@ const submit = () => {
 </script>
 
 <template>
-  <div class="ridex-surface p-6 md:p-7">
-    <div class="flex items-start justify-between gap-3">
-      <div>
-        <h2 class="ridex-title-2">
-          Envoyer ma demande
-        </h2>
-        <p class="mt-3 max-w-[58ch] text-[0.96rem] leading-7 text-[var(--text-muted)]">
-          Formulaire statique prêt pour un futur branchement API, email ou CRM.
-        </p>
-      </div>
-      <BaseIcon name="mail" :size="20" class="text-[var(--primary)]" />
+  <div>
+    <div class="border-b border-ink pb-5 md:pb-8">
+      <h2 class="text-[32px] font-medium leading-none tracking-[-0.035em] lg:text-[40px]">
+        Envoyer ma demande
+      </h2>
+      <p class="mt-4 max-w-[52ch] text-[15px] text-ink-2 lg:text-[16px]">
+        Formulaire statique prêt pour un futur branchement API, email ou CRM.
+      </p>
     </div>
 
-    <form class="mt-6 space-y-4" @submit.prevent="submit">
-      <div class="grid gap-4 md:grid-cols-2">
-        <FormField v-model="form.nom_complet" name="nom_complet" label="Nom complet" />
-        <FormField v-model="form.telephone" name="telephone" label="Téléphone" type="tel" />
-        <FormField v-model="form.email" name="email" label="Email" type="email" />
-        <FormField v-model="form.date_depart" name="date_depart" label="Date de départ" type="date" />
-        <FormField v-model="form.date_retour" name="date_retour" label="Date de retour" type="date" />
-        <FormField
-          v-model="form.lieu_prise_en_charge"
-          name="lieu_prise_en_charge"
-          label="Lieu de prise en charge"
-        />
-        <FormField v-model="form.lieu_retour" name="lieu_retour" label="Lieu de retour" />
+    <form class="mt-6 flex flex-col gap-4 lg:mt-8" @submit.prevent="submit">
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="field-label">
+          Nom complet
+          <input v-model="form.nom_complet" class="field" name="nom_complet" type="text" autocomplete="name">
+        </label>
+        <label class="field-label">
+          Téléphone
+          <input v-model="form.telephone" class="field" name="telephone" type="tel" autocomplete="tel">
+        </label>
+        <label class="field-label">
+          Email
+          <input v-model="form.email" class="field" name="email" type="email" autocomplete="email">
+        </label>
+        <label class="field-label">
+          Date de départ
+          <input v-model="form.date_depart" class="field" name="date_depart" type="date">
+        </label>
+        <label class="field-label">
+          Date de retour
+          <input v-model="form.date_retour" class="field" name="date_retour" type="date">
+        </label>
+        <label class="field-label">
+          Lieu de prise en charge
+          <input v-model="form.lieu_prise_en_charge" class="field" name="lieu_prise_en_charge" type="text">
+        </label>
+        <label class="field-label sm:col-span-2">
+          Lieu de retour
+          <input v-model="form.lieu_retour" class="field" name="lieu_retour" type="text">
+        </label>
+        <label class="field-label sm:col-span-2">
+          Message
+          <textarea v-model="form.message" class="field" name="message" rows="5" />
+        </label>
       </div>
 
-      <FormTextarea
-        v-model="form.message"
-        name="message"
-        label="Message"
-        rows="5"
-      />
-
-      <StateNotice
+      <div
         v-if="submitted"
-        title="Formulaire prêt"
-        message="La mise en page statique est en place. Il reste à relier ce formulaire à un vrai endpoint si vous voulez une soumission réelle."
-        tone="success"
-      />
+        role="status"
+        class="border border-line-strong px-4 py-3.5"
+      >
+        <p class="font-medium">Formulaire prêt</p>
+        <p class="mt-1 text-[14px] text-ink-2">
+          La mise en page statique est en place. Il reste à relier ce formulaire à un vrai endpoint si vous voulez une soumission réelle.
+        </p>
+      </div>
 
-      <BaseButton type="submit">
-        <BaseIcon name="mail" :size="18" />
-        <span>Envoyer ma demande</span>
-      </BaseButton>
+      <button type="submit" class="btn btn-primary min-h-14 w-full sm:w-auto sm:self-start sm:min-w-[280px]">
+        Envoyer ma demande
+        <SiteIcon name="arrow-right" />
+      </button>
     </form>
   </div>
 </template>

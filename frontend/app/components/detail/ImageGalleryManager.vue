@@ -129,28 +129,28 @@ const removeImage = async (imageId: number) => {
   <AppPanel padding="lg">
     <div class="flex items-start justify-between gap-4">
       <div>
-        <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Image manager</h3>
-        <p class="mt-2 max-w-[56ch] text-[0.92rem] leading-6 text-[var(--text-muted)]">
+        <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">Image manager</h3>
+        <p class="mt-1.5 max-w-[56ch] text-[14px] leading-6 text-ink-2">
           Upload gallery images, optionally mark the next upload as the thumbnail, and keep sort
           order explicit.
         </p>
       </div>
-      <BaseIcon name="image" :size="20" class="text-[var(--primary)]" />
+      <BaseIcon name="image" :size="20" class="shrink-0 text-accent" />
     </div>
 
-    <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+    <div class="mt-6 grid gap-2 sm:grid-cols-2">
       <figure
         v-for="image in images"
         :key="image.id"
-        class="rounded-[20px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-3"
+        class="border border-line"
       >
         <img
           :src="mediaUrl(image.path)"
           alt="Car gallery asset"
-          class="h-40 w-full rounded-[14px] object-cover"
+          class="h-40 w-full bg-surface object-cover"
         >
-        <div class="mt-3 flex items-center justify-between gap-3">
-          <div class="text-[0.82rem] text-[var(--text-subtle)]">
+        <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line px-3 py-2.5">
+          <div class="font-plex text-[11px] uppercase tracking-[0.06em] text-muted">
             <p>Sort: {{ image.sort_order }}</p>
             <p>{{ image.is_thumbnail ? 'Thumbnail' : 'Gallery image' }}</p>
           </div>
@@ -162,19 +162,19 @@ const removeImage = async (imageId: number) => {
       </figure>
     </div>
 
-    <form class="mt-6 space-y-4" @submit.prevent="submit">
+    <form class="mt-6 space-y-4 border-t border-line pt-6" @submit.prevent="submit">
       <div>
-        <span class="mb-2 block text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
+        <span class="mono-label mb-2 block">
           Image files
         </span>
         <input
           type="file"
           accept="image/*"
           multiple
-          class="block w-full rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.95rem] text-[var(--text-strong)]"
+          class="block w-full cursor-pointer border border-line-strong px-3 py-2.5 text-[14px] text-ink-2 file:me-4 file:cursor-pointer file:border-0 file:bg-surface file:px-4 file:py-2 file:font-plex file:text-[12px] file:uppercase file:tracking-[0.06em] file:text-ink hover:file:bg-surface-3"
           @change="onFileChange"
         >
-        <p class="mt-2 text-[0.82rem] text-[var(--text-subtle)]">
+        <p class="mt-1.5 text-[13px] text-muted">
           {{ files.length > 0 ? `${files.length} image${files.length > 1 ? 's' : ''} selected. The thumbnail flag applies to the first one.` : `Max ${MAX_IMAGE_UPLOAD_MB} MB per image — JPEG, PNG or WebP.` }}
         </p>
       </div>

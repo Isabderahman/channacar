@@ -4,10 +4,10 @@ import type { Extra } from '~/types/entities'
 import { extraLineTotal, formatCurrency, isExtraPerDay } from '~/utils/formatters'
 
 /**
- * Extras selector for the admin reservation forms, mirroring the tile grid the
- * public booking page shows clients (`components/public/ReservationForm.vue`):
- * the operator sees the same icons, prices and billing rules the customer sees,
- * instead of a multi-select where nothing but the label is visible.
+ * Extras selector for the admin reservation forms. Like the public booking form
+ * (`components/car/CarBookingForm.vue`), it shows each option's price and
+ * billing rule (per day / one time) instead of a multi-select where nothing but
+ * the label is visible.
  *
  * The running totals are an on-screen estimate only — the backend recomputes the
  * authoritative price from the car, season and extras snapshot on save.
@@ -67,66 +67,60 @@ const unitLabel = (extra: Extra) =>
 <template>
   <div>
     <div class="flex flex-wrap items-center justify-between gap-2">
-      <span class="text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
+      <span class="mono-label">
         Extras
       </span>
       <span
         v-if="selectedExtras.length"
-        class="rounded-full bg-[var(--primary-soft)] px-3 py-1 text-[0.72rem] font-semibold text-[var(--primary)]"
+        class="font-plex text-[11px] text-accent"
       >
         {{ selectedExtras.length }} selected
       </span>
     </div>
 
-    <p v-if="!extras.length" class="mt-3 text-[0.88rem] text-[var(--text-subtle)]">
+    <p v-if="!extras.length" class="mt-3 text-[14px] text-muted">
       No extra is configured yet. Add one from the Extras page to offer it here.
     </p>
 
-    <div v-else class="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-4">
+    <div v-else class="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-3 xl:grid-cols-4">
       <button
         v-for="extra in extras"
         :key="extra.id"
         type="button"
-        class="group flex flex-col items-center rounded-[18px] border-2 p-3 text-center transition duration-300 ease-out"
+        class="flex min-h-[124px] flex-col items-start border p-3 text-start transition-colors duration-200"
         :class="
           isSelected(extra.id)
-            ? 'border-[var(--primary)] bg-[var(--primary-soft)]'
-            : 'border-[var(--surface-border)] bg-[var(--surface-2)] hover:border-[var(--primary-border)]'
+            ? 'border-ink bg-ink text-bg'
+            : 'border-line-strong text-ink hover:border-ink'
         "
         :aria-pressed="isSelected(extra.id)"
         @click="toggle(extra.id)"
       >
-        <span
-          class="grid size-11 place-items-center rounded-full bg-[var(--primary-soft)] text-[var(--primary)] shadow-[inset_0_0_0_1px_var(--primary-border)]"
-        >
-          <BaseIcon :name="resolveIcon(extra.icon)" :size="20" />
+        <span class="flex w-full items-start justify-between gap-2">
+          <BaseIcon
+            :name="resolveIcon(extra.icon)"
+            :size="18"
+            :class="isSelected(extra.id) ? '' : 'text-accent'"
+          />
+          <span class="inline-flex items-center gap-1 font-plex text-[10px] tracking-[0.06em]">
+            <BaseIcon :name="isSelected(extra.id) ? 'check-circle' : 'plus'" :size="12" />
+            {{ isSelected(extra.id) ? 'ADDED' : 'ADD' }}
+          </span>
         </span>
 
-        <span class="mt-2 line-clamp-2 text-[0.82rem] font-medium text-[var(--text-strong)]">
+        <span class="mt-3 line-clamp-2 w-full text-[14px] font-medium [overflow-wrap:anywhere]">
           {{ extra.name }}
         </span>
 
-        <span class="mt-0.5 text-[0.82rem] font-bold text-[var(--text-strong)]">
+        <span class="mt-0.5 font-plex text-[11px] opacity-70">
           {{ unitLabel(extra) }}
         </span>
 
         <span
           v-if="!extra.is_active"
-          class="mt-1 rounded-full bg-[var(--surface-3)] px-2 py-0.5 text-[0.66rem] uppercase tracking-[0.1em] text-[var(--text-subtle)]"
+          class="mt-1.5 border border-current px-1.5 py-0.5 font-plex text-[10px] uppercase tracking-[0.06em] opacity-70"
         >
           Inactive
-        </span>
-
-        <span
-          class="mt-2 inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[0.7rem] font-semibold"
-          :class="
-            isSelected(extra.id)
-              ? 'bg-[var(--primary)] text-[var(--white)]'
-              : 'bg-[var(--surface-3)] text-[var(--text-muted)]'
-          "
-        >
-          <BaseIcon :name="isSelected(extra.id) ? 'check-circle' : 'plus'" :size="13" />
-          {{ isSelected(extra.id) ? 'ADDED' : 'ADD' }}
         </span>
       </button>
     </div>
@@ -134,24 +128,16 @@ const unitLabel = (extra: Extra) =>
     <button
       v-if="showInsurance"
       type="button"
-      class="mt-3 flex w-full items-center gap-4 rounded-[18px] border-2 p-4 text-left transition duration-300 ease-out"
-      :class="
-        applyInsurance
-          ? 'border-[var(--primary)] bg-[var(--primary-soft)]'
-          : 'border-[var(--surface-border)] bg-[var(--surface-2)] hover:border-[var(--primary-border)]'
-      "
+      class="mt-2 flex w-full items-center gap-4 border p-4 text-start transition-colors duration-200"
+      :class="applyInsurance ? 'border-ink' : 'border-line-strong hover:border-ink'"
       :aria-pressed="applyInsurance"
       @click="applyInsurance = !applyInsurance"
     >
-      <span
-        class="grid size-12 shrink-0 place-items-center rounded-full bg-[var(--primary-soft)] text-[var(--primary)] shadow-[inset_0_0_0_1px_var(--primary-border)]"
-      >
-        <BaseIcon name="shield" :size="22" />
-      </span>
+      <BaseIcon name="shield" :size="20" class="shrink-0 text-accent" />
 
       <div class="min-w-0 flex-1">
-        <p class="font-heading text-[1rem] text-[var(--text-strong)]">Assurance complémentaire</p>
-        <p class="mt-0.5 text-[0.84rem] leading-5 text-[var(--text-muted)]">
+        <p class="text-[15px] font-medium">Assurance complémentaire</p>
+        <p class="mt-0.5 text-[13px] leading-5 text-muted">
           <template v-if="insurancePerDay > 0">
             Optional protection, billed {{ formatCurrency(insurancePerDay) }} per rental day.
           </template>
@@ -162,49 +148,46 @@ const unitLabel = (extra: Extra) =>
       </div>
 
       <span
-        class="inline-flex shrink-0 items-center gap-1 rounded-full px-3 py-1.5 text-[0.74rem] font-semibold"
-        :class="
-          applyInsurance
-            ? 'bg-[var(--primary)] text-[var(--white)]'
-            : 'bg-[var(--surface-3)] text-[var(--text-muted)]'
-        "
+        class="inline-flex min-h-9 shrink-0 items-center gap-1.5 border px-3 font-plex text-[11px] tracking-[0.06em]"
+        :class="applyInsurance ? 'border-ink bg-ink text-bg' : 'border-line-strong text-ink'"
       >
-        <BaseIcon :name="applyInsurance ? 'check-circle' : 'plus'" :size="14" />
+        <BaseIcon :name="applyInsurance ? 'check-circle' : 'plus'" :size="13" />
         {{ applyInsurance ? 'ADDED' : 'ADD' }}
       </span>
     </button>
 
     <div
       v-if="showTotals && optionsTotal > 0"
-      class="mt-4 space-y-2 rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.88rem]"
+      class="mt-4 space-y-2 border border-line px-4 py-3 text-[14px]"
     >
       <div
         v-for="extra in selectedExtras"
         :key="`line-${extra.id}`"
-        class="flex items-center justify-between gap-3 text-[var(--text-muted)]"
+        class="flex items-center justify-between gap-3 text-ink-2"
       >
-        <span class="truncate">
+        <!-- w-0 flex-1: the name truncates instead of widening the whole form on phones. -->
+        <span class="w-0 flex-1 truncate">
           {{ extra.name }}
-          <span class="text-[0.75rem] text-[var(--text-subtle)]">
+          <span class="font-plex text-[11px] text-muted">
             ({{ isExtraPerDay(extra) ? `${billedDays} × ${formatCurrency(extra.price_per_day)}` : 'one-time' }})
           </span>
         </span>
         <span>{{ formatCurrency(extraLineTotal(extra, billedDays)) }}</span>
       </div>
 
-      <div v-if="insuranceTotal > 0" class="flex items-center justify-between text-[var(--text-muted)]">
+      <div v-if="insuranceTotal > 0" class="flex items-center justify-between text-ink-2">
         <span>Assurance complémentaire</span>
         <span>{{ formatCurrency(insuranceTotal) }}</span>
       </div>
 
       <div
-        class="flex items-center justify-between border-t border-[var(--surface-border)] pt-2 font-semibold text-[var(--text-strong)]"
+        class="flex items-center justify-between border-t border-line pt-2 font-medium text-ink"
       >
         <span>Options estimate · {{ billedDays }} day{{ billedDays > 1 ? 's' : '' }}</span>
         <span>{{ formatCurrency(optionsTotal) }}</span>
       </div>
 
-      <p class="text-[0.75rem] leading-5 text-[var(--text-subtle)]">
+      <p class="font-plex text-[11px] leading-5 text-muted">
         Estimate only — the backend applies the seasonal rate and returns the final total.
       </p>
     </div>

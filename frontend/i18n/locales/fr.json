@@ -198,5 +198,139 @@
       "mail": "E-mail"
     },
     "copyright": "Tous droits réservés"
+  },
+  "site": {
+    "topbar": {
+      "availability": "Disponible 24h/24 · 7j/7",
+      "availabilityShort": "24h/24 · 7j/7"
+    },
+    "nav": {
+      "aria": "Navigation principale",
+      "cars": "Nos véhicules",
+      "marrakech": "Location Marrakech",
+      "airport": "Location Aéroport",
+      "longTerm": "Longue durée",
+      "about": "À propos",
+      "faq": "FAQ",
+      "contact": "Contact"
+    },
+    "actions": {
+      "book": "Réserver",
+      "menuOpen": "Ouvrir le menu",
+      "menuClose": "Fermer le menu",
+      "call": "Appeler ChanaaCar",
+      "back": "Retour à la flotte",
+      "whatsappFloat": "Contacter ChanaaCar sur WhatsApp",
+      "whatsappChat": "Discuter sur WhatsApp"
+    },
+    "language": "Langue",
+    "home": {
+      "hero": {
+        "eyebrow": "Location de voiture — Marrakech & Maroc",
+        "eyebrowShort": "Location de voiture — Marrakech",
+        "line1": "Marrakech,",
+        "line2Muted": "à votre",
+        "line2": "rythme.",
+        "lead": "Un véhicule récent, livré à l’aéroport Marrakech Menara, à votre hôtel ou en ville. Réservé en quelques minutes.",
+        "delivery": "Livraison aéroport",
+        "pricing": "Tarifs transparents",
+        "support": "Assistance 24/7",
+        "photoAlt": "Voiture de location ChanaaCar à Marrakech"
+      },
+      "search": {
+        "aria": "Réserver un véhicule",
+        "pickup": "Lieu de départ",
+        "dropoff": "Lieu de retour",
+        "sameLocation": "Même lieu que le départ",
+        "from": "Départ",
+        "to": "Retour",
+        "submit": "Voir les véhicules"
+      },
+      "steps": {
+        "titleLine1": "Réservez en",
+        "titleLine2": "4 étapes.",
+        "lead": "Du choix du véhicule à la remise des clés, tout se règle en ligne ou sur WhatsApp.",
+        "place": {
+          "title": "Lieu et dates",
+          "description": "Indiquez votre lieu de prise en charge, vos dates et l’heure de votre vol."
+        },
+        "car": {
+          "title": "Votre voiture",
+          "description": "Comparez nos véhicules économiques, familiaux et premium selon votre voyage et votre budget."
+        },
+        "confirm": {
+          "title": "Confirmation",
+          "description": "Ajoutez GPS, siège enfant ou conducteur supplémentaire, puis confirmez en ligne ou via WhatsApp."
+        },
+        "road": {
+          "title": "La route",
+          "description": "Récupérez le véhicule à l’aéroport, à votre hôtel ou à l’agence, et partez explorer le Maroc."
+        }
+      },
+      "zones": {
+        "label": "Zones de service",
+        "airport": "Aéroport Marrakech Menara",
+        "gueliz": "Guéliz",
+        "medina": "Médina",
+        "palmeraie": "Palmeraie",
+        "hivernage": "Hivernage",
+        "cities": "Casablanca, Agadir, Essaouira"
+      },
+      "contact": {
+        "line1": "Une question ?",
+        "line2": "Écrivez-nous."
+      }
+    },
+    "fleet": {
+      "dateNoteValid": "Prix total pour {days}, du {from} au {to}",
+      "dateNoteInvalid": "La date de retour doit être après la date de départ.",
+      "dateNotePrompt": "Choisissez vos dates : le prix total s’affiche sur chaque véhicule.",
+      "days": "{n} jour | {n} jours",
+      "deposit": "Caution remboursable",
+      "onRequest": "Sur demande",
+      "unitTotal": "MAD · {days}",
+      "sub": "{price} MAD/j × {days}",
+      "subPrompt": "Choisissez vos dates pour le total",
+      "view": "Voir",
+      "specLine": "{seats} places · {gearbox} · {fuel} · {bags} bagages",
+      "title": "La flotte",
+      "all": "Tous",
+      "filterAria": "Filtrer par catégorie",
+      "seats": "Places",
+      "gearbox": "Boîte",
+      "fuel": "Carburant",
+      "bags": "Bagages",
+      "perDay": "MAD / jour",
+      "perDayShort": "MAD/j",
+      "seatsShort": "{n} pl",
+      "bagsShort": "{n} bag.",
+      "viewAll": "Voir tous les véhicules",
+      "viewCar": "Voir {name}",
+      "empty": "Nos véhicules seront affichés ici dès leur mise en ligne. Contactez-nous pour connaître les disponibilités.",
+      "transmission": {
+        "auto": "Auto",
+        "manual": "Manuelle"
+      },
+      "fuels": {
+        "diesel": "Diesel",
+        "petrol": "Essence",
+        "hybrid": "Hybride",
+        "electric": "Électrique"
+      }
+    },
+    "footer": {
+      "description": "Agence de location de voiture à Marrakech et partout au Maroc. Véhicules récents et entretenus, livraison à l’aéroport Marrakech Menara, assistance 24h/24.",
+      "descriptionShort": "Location de voiture à Marrakech et partout au Maroc.",
+      "company": "Entreprise",
+      "support": "Support",
+      "about": "À propos",
+      "pricing": "Nos tarifs",
+      "process": "Comment ça marche",
+      "contact": "Contact",
+      "help": "Centre d’aide",
+      "ask": "Poser une question",
+      "social": "Réseaux sociaux",
+      "rights": "Tous droits réservés."
+    }
   }
 }

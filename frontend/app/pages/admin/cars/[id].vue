@@ -207,17 +207,17 @@ watch(
           <AppPanel padding="lg">
             <div class="flex items-start justify-between gap-4">
               <div>
-                <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">
+                <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">
                   {{ car.brand }} {{ car.name }}
                 </h3>
-                <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
+                <p class="mt-1.5 text-[14px] leading-6 text-ink-2">
                   Update core specs here, then use the image manager below for gallery changes.
                 </p>
               </div>
               <StatusBadge :value="car.status" />
             </div>
 
-            <form class="mt-6 space-y-4" @submit.prevent="save">
+            <form class="mt-6 space-y-4 border-t border-line pt-6" @submit.prevent="save">
               <div class="grid gap-4 md:grid-cols-2">
                 <FormField v-model="form.brand" name="brand" label="Brand" />
                 <FormField v-model="form.name" name="name" label="Model name" />

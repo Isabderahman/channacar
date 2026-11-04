@@ -43,13 +43,13 @@ const resolveCell = (row: T, key: string) =>
 
 <template>
   <AppPanel padding="none">
-    <div class="border-b border-[var(--surface-border)] px-5 py-5 md:px-6">
+    <div class="border-b border-line px-5 py-5 md:px-6">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h3 class="font-heading text-[1.15rem] font-semibold text-[var(--text-strong)]">
+          <h3 class="text-[20px] font-medium tracking-[-0.02em]">
             {{ title }}
           </h3>
-          <p v-if="description" class="mt-2 max-w-[60ch] text-[0.92rem] leading-6 text-[var(--text-muted)]">
+          <p v-if="description" class="mt-1.5 max-w-[60ch] text-[14px] leading-6 text-ink-2">
             {{ description }}
           </p>
         </div>
@@ -65,7 +65,7 @@ const resolveCell = (row: T, key: string) =>
             <th
               v-for="column in columns"
               :key="column.key"
-              class="border-b border-[var(--surface-border)] px-5 py-3 text-left text-[0.75rem] uppercase tracking-[0.18em] text-[var(--text-subtle)]"
+              class="whitespace-nowrap border-b border-line px-5 py-3 text-left font-plex text-[11px] font-normal uppercase tracking-[0.08em] text-muted"
               :class="column.align === 'end' ? 'text-right' : 'text-left'"
             >
               {{ column.label }}
@@ -77,12 +77,12 @@ const resolveCell = (row: T, key: string) =>
           <tr
             v-for="row in rows"
             :key="String(resolveCell(row, rowKey) ?? Math.random())"
-            class="transition duration-300 hover:bg-white/4"
+            class="transition-colors hover:bg-surface-2"
           >
             <td
               v-for="column in columns"
               :key="`${String(resolveCell(row, rowKey))}-${column.key}`"
-              class="border-b border-[var(--surface-border)] px-5 py-4 align-top text-[0.95rem] text-[var(--text-muted)]"
+              class="border-b border-line px-5 py-4 align-top text-[14px] text-ink-2"
               :class="column.align === 'end' ? 'text-right' : 'text-left'"
               @click="emit('rowClick', row)"
             >
@@ -100,10 +100,10 @@ const resolveCell = (row: T, key: string) =>
     </div>
 
     <div v-else class="px-5 py-8 md:px-6">
-      <p class="font-heading text-[1.05rem] font-semibold text-[var(--text-strong)]">
+      <p class="text-[17px] font-medium">
         {{ emptyTitle }}
       </p>
-      <p class="mt-2 max-w-[48ch] text-[0.92rem] leading-6 text-[var(--text-muted)]">
+      <p class="mt-1.5 max-w-[48ch] text-[14px] leading-6 text-ink-2">
         {{ emptyMessage }}
       </p>
     </div>

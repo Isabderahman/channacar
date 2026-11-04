@@ -40,15 +40,15 @@ const onCreated = async (reservation: Reservation) => {
       </BaseButton>
     </AdminPageIntro>
 
-    <AppPanel padding="lg" class="mt-6">
-      <div class="flex items-start justify-between gap-4">
+    <AppPanel padding="lg">
+      <div class="flex items-start justify-between gap-4 border-b border-line pb-5">
         <div>
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Reservation details</h3>
-          <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
+          <h3 class="text-[22px] font-medium tracking-[-0.02em]">Reservation details</h3>
+          <p class="mt-1.5 text-[14px] leading-6 text-ink-2">
             The same pricing rules used by the public booking flow are applied here. A car can hold several reservations, even on overlapping dates.
           </p>
         </div>
-        <BaseIcon name="plus" :size="18" class="text-[var(--primary)]" />
+        <BaseIcon name="plus" :size="18" class="text-accent" />
       </div>
 
       <AdminReservationForm

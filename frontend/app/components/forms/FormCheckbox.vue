@@ -13,19 +13,19 @@ const model = defineModel<boolean>({ default: false })
 </script>
 
 <template>
-  <label class="flex items-start gap-3 rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3">
+  <label class="flex cursor-pointer items-start gap-3 border border-line px-4 py-3 transition-colors hover:border-line-strong">
     <input
       v-model="model"
       :name="name"
       type="checkbox"
-      class="mt-1 size-4 rounded border-[var(--surface-border)] accent-[var(--primary)]"
+      class="mt-0.5 size-[18px] shrink-0 accent-accent"
     >
 
     <span>
-      <span class="block text-[0.95rem] font-semibold text-[var(--text-strong)]">
+      <span class="block text-[15px] font-medium text-ink">
         {{ label }}
       </span>
-      <span v-if="description" class="mt-1 block text-[0.82rem] leading-5 text-[var(--text-subtle)]">
+      <span v-if="description" class="mt-1 block text-[13px] leading-5 text-muted">
         {{ description }}
       </span>
     </span>

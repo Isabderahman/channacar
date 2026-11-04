@@ -50,14 +50,14 @@ const VIEW_OPTIONS: Array<{ label: string; value: ViewMode }> = [
   { label: 'Week', value: 'week' },
 ]
 
-// Solid fills rather than the translucent StatusBadge tones: bars sit on top of
-// the weekend/today tints, so they need their own opaque colour to stay legible.
+// Square bars: a status-colour left edge over an opaque tint of the same colour
+// (mixed into the page background so they stay legible on weekend/today tints).
 const STATUS_STYLES: Record<ReservationStatus, { bar: string; dot: string; label: string }> = {
-  pending: { bar: 'bg-amber-400 text-amber-950', dot: 'bg-amber-400', label: 'Pending' },
-  confirmed: { bar: 'bg-emerald-500 text-white', dot: 'bg-emerald-500', label: 'Confirmed' },
-  ongoing: { bar: 'bg-sky-500 text-white', dot: 'bg-sky-500', label: 'Ongoing' },
-  completed: { bar: 'bg-zinc-500 text-white', dot: 'bg-zinc-500', label: 'Completed' },
-  cancelled: { bar: 'bg-rose-500/70 text-white line-through', dot: 'bg-rose-500/70', label: 'Cancelled' },
+  pending: { bar: 'border-warn bg-[color-mix(in_srgb,var(--warn)_22%,var(--bg))] text-ink', dot: 'bg-warn', label: 'Pending' },
+  confirmed: { bar: 'border-ok bg-[color-mix(in_srgb,var(--ok)_22%,var(--bg))] text-ink', dot: 'bg-ok', label: 'Confirmed' },
+  ongoing: { bar: 'border-info bg-[color-mix(in_srgb,var(--info)_24%,var(--bg))] text-ink', dot: 'bg-info', label: 'Ongoing' },
+  completed: { bar: 'border-muted bg-[color-mix(in_srgb,var(--muted)_22%,var(--bg))] text-ink-2', dot: 'bg-muted', label: 'Completed' },
+  cancelled: { bar: 'border-danger bg-[color-mix(in_srgb,var(--danger)_16%,var(--bg))] text-muted line-through', dot: 'bg-danger', label: 'Cancelled' },
 }
 
 const CAR_STATUS_LABELS: Record<string, string> = {
@@ -453,12 +453,12 @@ onMounted(() => {
 
     <AppPanel padding="lg">
       <div class="flex flex-wrap items-center justify-between gap-4">
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
           <BaseButton variant="secondary" size="icon" aria-label="Previous period" @click="shift(-1)">
             <BaseIcon name="arrow-right" :size="18" class="rotate-180" />
           </BaseButton>
 
-          <p class="min-w-[13rem] text-center font-heading text-[1.15rem] text-[var(--text-strong)]">
+          <p class="min-w-[9rem] text-center text-[18px] font-medium tracking-[-0.01em] sm:min-w-[13rem]">
             {{ rangeLabel }}
           </p>
 
@@ -468,21 +468,17 @@ onMounted(() => {
 
           <BaseButton variant="ghost" size="sm" @click="goToToday">
             <BaseIcon name="calendar" :size="16" />
-            <span class="ml-2">Today</span>
+            <span>Today</span>
           </BaseButton>
         </div>
 
-        <div class="flex items-center gap-1 rounded-[16px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-1">
+        <div class="flex items-center gap-1">
           <button
             v-for="option in VIEW_OPTIONS"
             :key="option.value"
             type="button"
-            class="rounded-[12px] px-4 py-2 text-[0.85rem] font-semibold transition duration-300"
-            :class="
-              viewMode === option.value
-                ? 'bg-[var(--primary)] text-[var(--white)]'
-                : 'text-[var(--text-muted)] hover:text-[var(--text-strong)]'
-            "
+            class="chip min-h-10"
+            :aria-pressed="viewMode === option.value ? 'true' : 'false'"
             @click="setViewMode(option.value)"
           >
             {{ option.label }}
@@ -512,26 +508,26 @@ onMounted(() => {
         />
       </div>
 
-      <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-[var(--surface-border)] pt-5">
-        <span class="text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
+      <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-line pt-5">
+        <span class="mono-label">
           Legend
         </span>
 
         <span
           v-for="(style, status) in STATUS_STYLES"
           :key="status"
-          class="flex items-center gap-2 text-[0.88rem] text-[var(--text-muted)]"
+          class="flex items-center gap-2 text-[14px] text-ink-2"
         >
-          <span class="size-3 rounded-[4px]" :class="style.dot" />
+          <span class="size-2.5" :class="style.dot" />
           {{ style.label }}
         </span>
 
-        <span class="flex items-center gap-2 text-[0.88rem] text-[var(--text-muted)]">
-          <span class="size-3 rounded-[4px] bg-[color-mix(in_srgb,var(--primary)_30%,transparent)] ring-1 ring-[var(--primary)]" />
+        <span class="flex items-center gap-2 text-[14px] text-ink-2">
+          <span class="size-2.5 bg-[color-mix(in_srgb,var(--accent)_30%,transparent)] ring-1 ring-accent" />
           Today
         </span>
-        <span class="flex items-center gap-2 text-[0.88rem] text-[var(--text-muted)]">
-          <span class="size-3 rounded-[4px] bg-[color-mix(in_srgb,var(--secondary)_18%,transparent)]" />
+        <span class="flex items-center gap-2 text-[14px] text-ink-2">
+          <span class="size-2.5 bg-[color-mix(in_srgb,var(--text)_18%,transparent)]" />
           Weekend
         </span>
       </div>
@@ -553,21 +549,21 @@ onMounted(() => {
     />
 
     <AppPanel v-else class="mt-6" padding="none">
-      <div class="flex items-center justify-between gap-4 border-b border-[var(--surface-border)] px-5 py-4 md:px-6">
+      <div class="flex items-center justify-between gap-4 border-b border-line px-5 py-4 md:px-6">
         <div>
-          <h2 class="font-heading text-[1.15rem] text-[var(--text-strong)]">Availability board</h2>
-          <p class="mt-1 text-[0.88rem] text-[var(--text-subtle)]">
+          <h2 class="text-[20px] font-medium tracking-[-0.02em]">Availability board</h2>
+          <p class="mt-1 text-[14px] text-muted">
             Click any bar to open the reservation, or click a free day to book that car on the spot.
           </p>
         </div>
-        <span v-if="pending" class="text-[0.85rem] text-[var(--text-subtle)]">Loading…</span>
+        <span v-if="pending" class="font-plex text-[12px] text-muted">Loading…</span>
       </div>
 
-      <div class="max-h-[72vh] overflow-auto rounded-b-[24px]">
+      <div class="max-h-[72vh] overflow-auto">
         <div class="relative" :style="{ minWidth: `${totalWidth}px` }">
-          <div class="sticky top-0 z-30 flex border-b border-[var(--surface-border)] bg-[var(--surface-2)]">
+          <div class="sticky top-0 z-30 flex border-b border-line bg-bg">
             <div
-              class="sticky left-0 z-40 flex shrink-0 items-center bg-[var(--surface-2)] px-4 py-3 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]"
+              class="mono-label sticky left-0 z-40 flex shrink-0 items-center border-r border-line bg-bg px-4 py-3"
               :style="{ width: `${LEFT_COLUMN_WIDTH}px` }"
             >
               Vehicle
@@ -576,25 +572,25 @@ onMounted(() => {
             <div
               v-for="day in days"
               :key="day.iso"
-              class="shrink-0 border-l border-[var(--surface-border)] py-2 text-center"
+              class="shrink-0 border-l border-line py-2 text-center"
               :class="[
-                day.isToday ? 'bg-[color-mix(in_srgb,var(--primary)_20%,transparent)]' : day.isWeekend ? 'bg-[color-mix(in_srgb,var(--secondary)_7%,transparent)]' : '',
+                day.isToday ? 'bg-[color-mix(in_srgb,var(--accent)_16%,transparent)]' : day.isWeekend ? 'bg-[color-mix(in_srgb,var(--text)_6%,transparent)]' : '',
               ]"
               :style="{ width: `${cellWidth}px` }"
             >
               <p
-                class="text-[0.68rem] uppercase tracking-[0.12em]"
-                :class="day.isToday ? 'text-[var(--primary)]' : 'text-[var(--text-subtle)]'"
+                class="font-plex text-[10px] uppercase tracking-[0.08em]"
+                :class="day.isToday ? 'text-accent' : 'text-muted'"
               >
                 {{ day.weekdayLabel }}
               </p>
               <p
-                class="text-[0.95rem] font-semibold"
-                :class="day.isToday ? 'text-[var(--primary)]' : 'text-[var(--text-strong)]'"
+                class="text-[15px] font-medium"
+                :class="day.isToday ? 'text-accent' : 'text-ink'"
               >
                 {{ day.dayNumber }}
               </p>
-              <p v-if="day.isFirstOfMonth" class="text-[0.62rem] uppercase text-[var(--text-subtle)]">
+              <p v-if="day.isFirstOfMonth" class="font-plex text-[10px] uppercase text-muted">
                 {{ day.monthLabel }}
               </p>
             </div>
@@ -609,7 +605,7 @@ onMounted(() => {
                 v-for="day in highlightDays"
                 :key="`tint-${day.iso}`"
                 class="absolute inset-y-0"
-                :class="day.isToday ? 'bg-[color-mix(in_srgb,var(--primary)_14%,transparent)] ring-1 ring-inset ring-[color-mix(in_srgb,var(--primary)_45%,transparent)]' : 'bg-[color-mix(in_srgb,var(--secondary)_6%,transparent)]'"
+                :class="day.isToday ? 'bg-[color-mix(in_srgb,var(--accent)_10%,transparent)] ring-1 ring-inset ring-[color-mix(in_srgb,var(--accent)_45%,transparent)]' : 'bg-[color-mix(in_srgb,var(--text)_5%,transparent)]'"
                 :style="{ left: `${day.index * cellWidth}px`, width: `${cellWidth}px` }"
               />
             </div>
@@ -617,25 +613,25 @@ onMounted(() => {
             <div
               v-for="row in rows"
               :key="row.car.id"
-              class="relative z-10 flex border-b border-[var(--surface-border)] last:border-b-0"
+              class="relative z-10 flex border-b border-line last:border-b-0"
             >
               <div
-                class="sticky left-0 z-20 flex shrink-0 flex-col justify-center gap-1 border-r border-[var(--surface-border)] bg-[var(--surface-1)] px-4 py-2"
+                class="sticky left-0 z-20 flex shrink-0 flex-col justify-center gap-1 border-r border-line bg-bg px-4 py-2"
                 :style="{ width: `${LEFT_COLUMN_WIDTH}px`, minHeight: `${rowHeight(row)}px` }"
               >
                 <NuxtLink
                   :to="`/admin/cars/${row.car.id}`"
-                  class="font-heading text-[0.98rem] leading-tight text-[var(--text-strong)] hover:text-[var(--primary)]"
+                  class="text-[15px] font-medium leading-tight transition-colors hover:text-accent"
                 >
                   {{ row.car.brand }} {{ row.car.name }}
                 </NuxtLink>
-                <p class="flex flex-wrap items-center gap-2 text-[0.78rem] text-[var(--text-subtle)]">
-                  <span class="rounded-[6px] bg-[var(--surface-3)] px-2 py-0.5 font-mono">
+                <p class="flex flex-wrap items-center gap-2 text-[12px] text-muted">
+                  <span class="border border-line px-1.5 py-0.5 font-plex text-[11px] text-ink-2">
                     {{ row.car.registration_number }}
                   </span>
                   <span>{{ CAR_STATUS_LABELS[row.car.status] ?? row.car.status }}</span>
                 </p>
-                <p class="text-[0.75rem] text-[var(--text-subtle)]">
+                <p class="font-plex text-[11px] text-muted">
                   {{ row.bookedDays }} / {{ days.length }} days booked
                 </p>
               </div>
@@ -652,7 +648,7 @@ onMounted(() => {
                   v-for="day in days"
                   :key="`cell-${row.car.id}-${day.iso}`"
                   type="button"
-                  class="absolute top-0 grid h-full place-items-center transition duration-200 after:grid after:size-6 after:place-items-center after:rounded-full after:bg-[var(--primary)] after:text-[0.95rem] after:font-bold after:leading-none after:text-[var(--white)] after:opacity-0 after:transition after:duration-200 after:content-['+'] hover:bg-[color-mix(in_srgb,var(--primary)_18%,transparent)] hover:after:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--primary)] focus-visible:after:opacity-100"
+                  class="absolute top-0 grid h-full place-items-center transition-colors duration-200 after:grid after:size-6 after:place-items-center after:bg-accent after:text-[15px] after:font-medium after:leading-none after:text-on-accent after:opacity-0 after:transition-opacity after:duration-200 after:content-['+'] hover:bg-[color-mix(in_srgb,var(--accent)_12%,transparent)] hover:after:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent focus-visible:after:opacity-100"
                   :style="{ left: `${day.index * cellWidth}px`, width: `${cellWidth}px` }"
                   :title="`New reservation · ${row.car.brand} ${row.car.name} · ${day.iso}`"
                   :aria-label="`Book ${row.car.brand} ${row.car.name} on ${day.iso}`"
@@ -663,11 +659,11 @@ onMounted(() => {
                   v-for="bar in row.bars"
                   :key="bar.reservation.id"
                   type="button"
-                  class="absolute flex items-center overflow-hidden px-2 text-[0.8rem] font-semibold shadow-[0_6px_16px_rgb(0_0_0/0.25)] transition duration-200 hover:brightness-110 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--white)]"
+                  class="absolute flex items-center overflow-hidden px-2 text-[12px] font-medium transition-[filter] duration-200 hover:brightness-125 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ink"
                   :class="[
                     STATUS_STYLES[bar.reservation.status].bar,
-                    bar.clippedStart ? 'rounded-l-none' : 'rounded-l-[10px]',
-                    bar.clippedEnd ? 'rounded-r-none' : 'rounded-r-[10px]',
+                    // A bar running in from before the range has no start edge.
+                    bar.clippedStart ? 'border-l-0' : 'border-l-[3px]',
                   ]"
                   :style="barStyle(bar, row)"
                   :title="barTooltip(bar)"
@@ -680,7 +676,7 @@ onMounted(() => {
 
             <p
               v-if="!rows.length && !pending"
-              class="px-6 py-10 text-center text-[0.95rem] text-[var(--text-subtle)]"
+              class="px-6 py-10 text-center text-[15px] text-muted"
             >
               No car matches the current filters.
             </p>

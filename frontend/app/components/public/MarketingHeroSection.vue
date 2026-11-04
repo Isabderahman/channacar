@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, useSlots } from 'vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
+import SiteIcon from '~/components/site/SiteIcon.vue'
 
 interface ActionLink {
   label: string
@@ -28,6 +27,7 @@ interface HeroFeature {
 
 interface Props {
   eyebrow?: string
+  /** `icon` is kept for API compatibility; the redesign shows numbered rows instead. */
   features?: HeroFeature[]
   id?: string
   image?: string
@@ -60,144 +60,89 @@ const props = withDefaults(defineProps<Props>(), {
   primaryAction: undefined,
   secondaryAction: undefined,
   subtitle: undefined,
-  titleClass: 'text-[2.2rem] leading-[1.02] sm:text-[2.6rem] lg:text-[2.85rem] xl:text-[3.2rem]',
-  titleWrapClass: 'max-w-[18rem] sm:max-w-[22rem] xl:max-w-[28rem]',
+  // `ch` resolves against the heading's own font size, so the measure lives here.
+  titleClass: 'max-w-[18ch] text-[44px] md:text-[clamp(48px,6.2vw,96px)]',
+  titleWrapClass: '',
 })
 
 const slots = useSlots()
-const { localeProperties } = useI18n()
 const localePath = useLocalePath()
 
-const isRtl = computed(() => localeProperties.value.dir === 'rtl')
-const layoutOffsetClass = computed(() =>
-  isRtl.value ? 'lg:pl-[18rem] xl:pl-[42rem]' : 'lg:pr-[18rem] xl:pr-[42rem]',
-)
-const imagePositionClass = computed(() =>
-  isRtl.value ? 'left-0 bg-right' : 'right-0 bg-left',
-)
-const surfacePositionClass = computed(() =>
-  isRtl.value
-    ? 'lg:absolute lg:bottom-10 lg:right-0 lg:z-20 lg:mt-0 lg:w-[70%] lg:max-w-none'
-    : 'lg:absolute lg:bottom-10 lg:left-0 lg:z-20 lg:mt-0 lg:w-[70%] lg:max-w-none',
-)
 const hasActionRow = computed(() => Boolean(props.primaryAction || props.secondaryAction))
 const hasMetaSlot = computed(() => Boolean(slots.meta))
-const hasSurface = computed(() => hasActionRow.value || hasMetaSlot.value || props.features.length > 0)
-const surfaceGridClass = computed(() => {
-  if (hasActionRow.value && (hasMetaSlot.value || props.features.length > 0)) {
-    return 'lg:grid lg:grid-cols-[0.78fr_1.22fr] lg:items-center'
-  }
-
-  return ''
-})
-const featureGridClass = computed(() => {
-  if (props.features.length === 1) {
-    return 'sm:grid-cols-1'
-  }
-
-  return 'sm:grid-cols-2'
-})
 </script>
 
 <template>
-  <section
-    v-intro
-    :id="id"
-    class="relative overflow-hidden pb-[50px] pt-[120px] lg:min-h-[85vh] lg:pt-[140px] xl:min-h-screen"
-  >
-    <div class="section-shell">
-      <div class="relative lg:min-h-[640px]">
-        <div :class="layoutOffsetClass">
-          <div :class="titleWrapClass">
-            <p data-intro class="text-[0.8rem] uppercase tracking-[0.24em] text-[var(--text-subtle)]">
-              {{ eyebrow }}
-            </p>
+  <section :id="id" class="wrap pt-8 lg:pt-14">
+    <p class="mono-label mb-5 lg:mb-7 lg:text-[12px]">
+      {{ eyebrow }}
+    </p>
 
-            <h1 data-intro class="ridex-title-1 mt-4" :class="titleClass">
-              {{ title }}
-            </h1>
-          </div>
+    <div :class="titleWrapClass">
+      <h1 class="font-medium leading-[0.95] tracking-[-0.045em]" :class="titleClass">
+        {{ title }}
+      </h1>
+    </div>
 
-          <p
-            v-if="subtitle"
-            data-intro
-            class="mb-[30px] mt-[15px] max-w-[48ch] text-[var(--independence)] leading-8"
-          >
-            {{ subtitle }}
-          </p>
-        </div>
+    <div
+      v-if="subtitle || hasActionRow"
+      class="mt-8 grid items-end gap-6 lg:mt-12 lg:grid-cols-2 lg:gap-10"
+    >
+      <p v-if="subtitle" class="max-w-[560px] text-[16px] text-ink-2 lg:text-[18px] lg:leading-[1.45]">
+        {{ subtitle }}
+      </p>
 
-        <div>
-          <div
-            data-intro-image
-            class="absolute bottom-[50px] top-[20px] hidden w-[min(41vw,630px)] rounded-[30px] bg-cover shadow-[var(--shadow-1)] lg:block lg:z-0"
-            :class="imagePositionClass"
-            :style="{ backgroundImage: `url(${image})` }"
-            :aria-label="imageAlt"
-            role="img"
-          />
-        </div>
-
-        <div
-          v-if="hasSurface"
-          data-intro
-          class="ridex-surface relative isolate mt-8 overflow-hidden p-5 font-heading lg:p-6"
-          :class="[surfaceGridClass, surfacePositionClass]"
+      <div
+        v-if="hasActionRow"
+        class="flex flex-col gap-2 sm:flex-row sm:flex-wrap lg:justify-end"
+        :class="subtitle ? '' : 'lg:col-start-2'"
+      >
+        <NuxtLink
+          v-if="primaryAction"
+          :to="localePath(primaryAction.to)"
+          class="btn btn-primary min-h-14 sm:min-w-[240px]"
         >
-          <div
-            class="pointer-events-none absolute -right-20 -top-24 -z-10 size-56 rounded-full bg-[var(--primary)] opacity-[0.12] blur-[70px]"
-          />
-          <div
-            class="pointer-events-none absolute inset-x-0 top-0 -z-10 h-px bg-[linear-gradient(to_right,transparent,color-mix(in_srgb,var(--primary)_60%,transparent),transparent)]"
-          />
-          <div
-            v-if="hasActionRow"
-            class="flex flex-wrap items-center gap-3"
-          >
-            <BaseButton v-if="primaryAction" :to="localePath(primaryAction.to)" size="lg">
-              <BaseIcon name="arrow-right" :size="18" />
-              <span>{{ primaryAction.label }}</span>
-            </BaseButton>
-
-            <BaseButton
-              v-if="secondaryAction"
-              :to="localePath(secondaryAction.to)"
-              variant="ghost"
-              size="lg"
-            >
-              <BaseIcon name="arrow-right" :size="18" />
-              <span>{{ secondaryAction.label }}</span>
-            </BaseButton>
-          </div>
-
-          <div
-            v-if="hasMetaSlot || features.length"
-            :class="hasActionRow ? 'mt-5 lg:mt-0' : ''"
-          >
-            <slot name="meta">
-              <div class="grid gap-4" :class="featureGridClass">
-                <article
-                  v-for="feature in features"
-                  :key="feature.title"
-                  class="group relative overflow-hidden rounded-[20px] border border-[var(--surface-border)] bg-[linear-gradient(160deg,color-mix(in_srgb,var(--surface-2)_94%,var(--primary)),var(--surface-1))] p-5 transition duration-500 ease-out hover:-translate-y-1 hover:border-[var(--primary-border)] hover:shadow-[var(--shadow-2)]"
-                >
-                  <span
-                    class="grid size-11 place-items-center rounded-[14px] bg-[var(--primary-soft)] text-[var(--primary)] shadow-[inset_0_0_0_1px_var(--primary-border)] transition duration-500 ease-out group-hover:scale-105"
-                  >
-                    <BaseIcon :name="feature.icon" :size="20" />
-                  </span>
-                  <p class="mt-4 text-[1rem] font-semibold text-[var(--space-cadet)]">
-                    {{ feature.title }}
-                  </p>
-                  <p class="mt-2 text-[0.875rem] leading-6 text-[var(--independence)]">
-                    {{ feature.description }}
-                  </p>
-                </article>
-              </div>
-            </slot>
-          </div>
-        </div>
+          {{ primaryAction.label }}
+          <SiteIcon name="arrow-right" />
+        </NuxtLink>
+        <NuxtLink
+          v-if="secondaryAction"
+          :to="localePath(secondaryAction.to)"
+          class="btn btn-outline min-h-14 sm:min-w-[240px]"
+        >
+          {{ secondaryAction.label }}
+          <SiteIcon name="arrow-right" />
+        </NuxtLink>
       </div>
     </div>
   </section>
+
+  <div v-if="image" class="mt-10 lg:mx-auto lg:mt-14 lg:max-w-[1360px] lg:px-10">
+    <div class="photo-frame h-[220px] overflow-hidden md:h-[340px] lg:h-[440px]">
+      <img
+        :src="image"
+        :alt="imageAlt"
+        fetchpriority="high"
+        class="size-full object-cover object-[center_65%]"
+      >
+    </div>
+  </div>
+
+  <div v-if="hasMetaSlot || features.length" class="wrap">
+    <slot name="meta">
+      <ol class="grid md:grid-cols-2 md:gap-x-10">
+        <li
+          v-for="(feature, index) in features"
+          :key="feature.title"
+          class="flex gap-5 border-b border-line py-6"
+        >
+          <span class="font-plex text-[12px] text-accent lg:text-[13px]">{{ String(index + 1).padStart(2, '0') }}</span>
+          <div>
+            <p class="mb-1 text-[18px] font-medium lg:text-[21px]">{{ feature.title }}</p>
+            <p class="text-[14px] text-muted lg:text-[15px]">{{ feature.description }}</p>
+          </div>
+        </li>
+      </ol>
+    </slot>
+  </div>
 </template>

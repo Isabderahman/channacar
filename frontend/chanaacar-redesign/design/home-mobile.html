@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>ChanaaCar — Accueil mobile</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#EDEBE6;text-decoration:none}a:hover{color:#FF8F2A}
+input,select,button{font:inherit}
+</style>
+</helmet>
+<div style="width: 390px; min-height: 4900px; box-sizing: border-box; background: #0F0F0E; color: #EDEBE6; font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5">
+
+<div style="padding: 8px 20px; border-bottom: 1px solid #262624; display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86"><span>24h/24 · 7j/7</span><a href="tel:+212666623645">+212 6 66 62 36 45</a></div>
+
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 14px 20px">
+<a href="#top" style="font-weight: 600; font-size: 20px; letter-spacing: -0.02em">Chanaa<span style="color: {{accent}}">Car</span></a>
+<button type="button" aria-label="Ouvrir le menu" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #3A3A37; background: transparent; color: #EDEBE6; cursor: pointer"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 9h16M4 15h16"></path></svg></button>
+</header>
+
+<section id="top" style="padding: 32px 20px 0">
+<p style="margin: 0 0 20px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Location de voiture — Marrakech</p>
+<h1 style="margin: 0 0 20px; font-weight: 500; font-size: 54px; line-height: 0.92; letter-spacing: -0.045em">Marrakech,<br><span style="color: #8E8C86">à votre</span> rythme.</h1>
+<p style="margin: 0; font-size: 16px; color: #BDBAB3">Un véhicule récent, livré à l’aéroport Menara, à votre hôtel ou en ville.</p>
+</section>
+
+<div role="img" aria-label="Emplacement photo : Audi Q3 Sportback" style="margin-top: 32px; height: 280px; background: #1B1B19; display: flex; align-items: flex-end; padding: 16px 20px; box-sizing: border-box; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86">[PHOTO — Audi Q3 Sportback]</div>
+
+<form aria-label="Réserver un véhicule" style="margin: 0 20px; border: 1px solid #262624; border-top: 0">
+<label style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-bottom: 1px solid #262624; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Lieu de départ
+<select style="min-height: 40px; border: 0; background: transparent; color: #EDEBE6; font-family: 'Schibsted Grotesk', sans-serif; font-size: 16px; letter-spacing: 0; text-transform: none; padding: 0"><option>Aéroport Marrakech Menara</option><option>Centre-ville de Marrakech</option><option>Guéliz</option><option>Médina</option><option>Livraison à l’hôtel</option></select></label>
+<label style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-bottom: 1px solid #262624; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Lieu de retour
+<select style="min-height: 40px; border: 0; background: transparent; color: #EDEBE6; font-family: 'Schibsted Grotesk', sans-serif; font-size: 16px; letter-spacing: 0; text-transform: none; padding: 0"><option>Aéroport Marrakech Menara</option><option>Centre-ville de Marrakech</option><option>Guéliz</option><option>Médina</option><option>Livraison à l’hôtel</option></select></label>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr))">
+<label style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; border-right: 1px solid #262624; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Départ
+<input type="datetime-local" onChange="{{setStart}}" style="min-height: 40px; width: 100%; border: 0; background: transparent; color: #EDEBE6; color-scheme: dark; font-family: 'Schibsted Grotesk', sans-serif; font-size: 13px; letter-spacing: 0; padding: 0"></label>
+<label style="display: flex; flex-direction: column; gap: 6px; padding: 14px 16px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Retour
+<input type="datetime-local" onChange="{{setEnd}}" style="min-height: 40px; width: 100%; border: 0; background: transparent; color: #EDEBE6; color-scheme: dark; font-family: 'Schibsted Grotesk', sans-serif; font-size: 13px; letter-spacing: 0; padding: 0"></label>
+</div>
+<button type="button" style="width: 100%; min-height: 60px; border: 0; background: {{accent}}; color: #0F0F0E; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: space-between; padding: 0 16px">Voir les véhicules <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></button>
+</form>
+
+<section style="padding: 96px 20px 0">
+<div style="padding-bottom: 20px; border-bottom: 1px solid #EDEBE6">
+<h2 style="margin: 0 0 20px; font-weight: 500; font-size: 44px; line-height: 0.95; letter-spacing: -0.04em">La flotte</h2>
+<div role="group" aria-label="Filtrer par catégorie" style="display: flex; gap: 4px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px">
+<sc-for list="{{filters}}" as="f" hint-placeholder-count="3">
+<button type="button" onClick="{{f.pick}}" aria-pressed="{{f.pressed}}" style="{{f.style}}">{{f.label}} <span style="opacity: 0.55">{{f.count}}</span></button>
+</sc-for>
+</div>
+</div>
+<p aria-live="polite" style="{{dateNoteStyle}}; margin: 16px 0 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px">{{dateNote}}</p>
+<div role="list" style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px">
+<sc-for list="{{cars}}" as="car" hint-placeholder-count="6">
+<article role="listitem" style="border: 1px solid #262624">
+<div role="img" aria-label="Emplacement photo du véhicule" style="position: relative; height: 200px; background: #1B1B19; display: flex; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; color: #8E8C86">
+<span style="position: absolute; top: 12px; left: 12px">{{car.n}}</span>
+<span style="position: absolute; top: 12px; right: 12px; color: {{accent}}; letter-spacing: 0.08em">{{car.cat}} · {{car.year}}</span>
+[PHOTO]
+</div>
+<div style="padding: 16px; display: flex; flex-direction: column; gap: 12px">
+<h3 style="margin: 0; font-weight: 500; font-size: 22px; line-height: 1.15; letter-spacing: -0.02em">{{car.name}}</h3>
+<p style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #8E8C86">{{car.seats}} places · Auto · {{car.fuel}} · {{car.bags}} bagages</p>
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 12px; background: #171716; font-size: 14px"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; color: #8E8C86; text-transform: uppercase; letter-spacing: 0.06em">Caution remboursable</span><span>{{car.deposit}}</span></div>
+<div style="display: flex; justify-content: space-between; align-items: center; padding-top: 12px; border-top: 1px solid #262624">
+<div>
+<p style="margin: 0"><span style="font-size: 22px; font-weight: 500">{{car.priceMain}}</span> <span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86">{{car.priceUnit}}</span></p>
+<p style="margin: 2px 0 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; color: #8E8C86">{{car.priceSub}}</p>
+</div>
+<a href="#top" style="display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px; border: 1px solid #3A3A37; font-size: 14px; font-weight: 500">Voir <svg aria-hidden="true" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 17L17 7M9 7h8v8"></path></svg></a>
+</div>
+</div>
+</article>
+</sc-for>
+</div>
+<p style="margin: 20px 0 0"><a href="#" style="border-bottom: 1px solid #EDEBE6; padding-bottom: 2px">Voir tous les véhicules</a></p>
+</section>
+
+<section style="padding: 96px 20px 0">
+<h2 style="margin: 0 0 32px; font-weight: 500; font-size: 40px; line-height: 0.95; letter-spacing: -0.04em">Réservez en<br>4 étapes.</h2>
+<ol style="list-style: none; margin: 0; padding: 0; border-top: 1px solid #262624">
+<li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #262624"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: {{accent}}">01</span><div><h3 style="margin: 0 0 4px; font-weight: 500; font-size: 18px">Lieu et dates</h3><p style="margin: 0; font-size: 14px; color: #8E8C86">Lieu de prise en charge, dates et heure de votre vol.</p></div></li>
+<li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #262624"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: {{accent}}">02</span><div><h3 style="margin: 0 0 4px; font-weight: 500; font-size: 18px">Votre voiture</h3><p style="margin: 0; font-size: 14px; color: #8E8C86">Économique, familiale ou premium.</p></div></li>
+<li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #262624"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: {{accent}}">03</span><div><h3 style="margin: 0 0 4px; font-weight: 500; font-size: 18px">Confirmation</h3><p style="margin: 0; font-size: 14px; color: #8E8C86">Options puis confirmation en ligne ou via WhatsApp.</p></div></li>
+<li style="display: flex; gap: 20px; padding: 20px 0; border-bottom: 1px solid #262624"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: {{accent}}">04</span><div><h3 style="margin: 0 0 4px; font-weight: 500; font-size: 18px">La route</h3><p style="margin: 0; font-size: 14px; color: #8E8C86">Aéroport, hôtel ou agence : à vous le Maroc.</p></div></li>
+</ol>
+</section>
+
+<section style="padding: 96px 20px 0">
+<p style="margin: 0 0 16px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Zones de service</p>
+<ul style="list-style: none; margin: 0; padding: 0; font-weight: 500; font-size: 28px; line-height: 1.2; letter-spacing: -0.03em">
+<li>Aéroport Menara</li><li>Guéliz <span style="color: #4A4945">/</span> Médina</li><li>Palmeraie <span style="color: #4A4945">/</span> Hivernage</li><li style="color: #8E8C86">Casablanca, Agadir, Essaouira</li>
+</ul>
+</section>
+
+<section style="padding: 96px 20px 0">
+<div style="background: {{accent}}; color: #0F0F0E; padding: 28px 20px; display: flex; flex-direction: column; gap: 24px">
+<h2 style="margin: 0; font-weight: 500; font-size: 36px; line-height: 0.98; letter-spacing: -0.04em">Une question ?<br>Écrivez-nous.</h2>
+<a href="https://wa.me/212666623645" style="display: flex; align-items: center; justify-content: space-between; min-height: 54px; padding: 0 16px; background: #0F0F0E; color: #EDEBE6; font-weight: 500">Discuter sur WhatsApp <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6"></path></svg></a>
+</div>
+</section>
+
+<footer style="margin-top: 72px; padding: 32px 20px; border-top: 1px solid #262624; font-size: 14px; color: #8E8C86">
+<p style="margin: 0 0 12px; font-weight: 600; font-size: 18px; color: #EDEBE6">Chanaa<span style="color: {{accent}}">Car</span></p>
+<p style="margin: 0 0 24px">Location de voiture à Marrakech et partout au Maroc.</p>
+<p style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px">© 2026 ChanaaCar. Tous droits réservés.</p>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF8F2A","options":["#FF8F2A","#E8D5B0","#C9B38A","#EDEBE6"]},"$preview":{"width":390,"height":4900}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { cat: 'Tous' };
+  }
+  renderVals() {
+    const all = [
+      { name: 'Audi Q3 Sportback', cat: 'SUV', year: '2026', seats: '5', fuel: 'Diesel', bags: '2', p: 1000, dep: 15000 },
+      { name: 'Volkswagen T-Roc X’trême', cat: 'SUV', year: '2024', seats: '5', fuel: 'Diesel', bags: '3', p: 800, dep: 9000 },
+      { name: 'Volkswagen Golf 8', cat: 'PREMIUM', year: '2025', seats: '5', fuel: 'Diesel', bags: '4', p: 900, dep: 9000 },
+      { name: 'Audi Q3', cat: 'SUV', year: '2026', seats: '5', fuel: 'Diesel', bags: '4', p: 1100, dep: 15000 },
+      { name: 'Mercedes-Benz Classe A', cat: 'PREMIUM', year: '2023', seats: '5', fuel: 'Essence', bags: '3', p: 700, dep: null },
+      { name: 'Volkswagen Touareg', cat: 'SUV', year: '2026', seats: '5', fuel: 'Diesel', bags: '4', p: 1100, dep: 15000 }
+    ];
+    const fmt = (n) => n.toLocaleString('fr-FR').replace(/\u202f|\u00a0/g, ' ');
+    const s0 = this.state.start ? new Date(this.state.start) : null;
+    const s1 = this.state.end ? new Date(this.state.end) : null;
+    const valid = s0 && s1 && !isNaN(s0) && !isNaN(s1) && s1 > s0;
+    const days = valid ? Math.max(1, Math.ceil((s1 - s0) / 86400000)) : 0;
+    const dl = days + (days > 1 ? ' jours' : ' jour');
+    const fd = (d) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+    const cat = this.state.cat;
+    const list = cat === 'Tous' ? all : all.filter((c) => c.cat === cat);
+    const cars = list.map((c, i) => ({
+      ...c,
+      n: String(i + 1).padStart(2, '0'),
+      price: fmt(c.p),
+      priceMain: valid ? fmt(c.p * days) : fmt(c.p),
+      priceUnit: valid ? 'MAD · ' + dl : 'MAD / jour',
+      priceSub: valid ? fmt(c.p) + ' MAD/j × ' + dl : 'Choisissez vos dates pour le total',
+      deposit: c.dep ? fmt(c.dep) + ' MAD' : 'Sur demande'
+    }));
+    const base = 'min-height: 44px; padding: 0 14px; cursor: pointer; ';
+    const filters = [['Tous', 'Tous'], ['SUV', 'SUV'], ['Premium', 'PREMIUM']].map(([label, key]) => {
+      const on = key === cat;
+      const count = key === 'Tous' ? all.length : all.filter((c) => c.cat === key).length;
+      return {
+        label, count: String(count),
+        pressed: on ? 'true' : 'false',
+        style: base + (on ? 'background: #EDEBE6; color: #0F0F0E; border: 1px solid #EDEBE6' : 'background: transparent; color: #EDEBE6; border: 1px solid #3A3A37'),
+        pick: () => this.setState({ cat: key })
+      };
+    });
+    return {
+      accent: this.props.accent ?? '#FF8F2A', filters, cars,
+      setStart: (e) => this.setState({ start: e.target.value }),
+      setEnd: (e) => this.setState({ end: e.target.value }),
+      dateNote: valid ? 'Prix total pour ' + dl + ', du ' + fd(s0) + ' au ' + fd(s1) + '.' : (this.state.start && this.state.end ? 'La date de retour doit être après la date de départ.' : 'Choisissez vos dates : le prix total s’affiche sur chaque véhicule.'),
+      dateNoteStyle: valid ? 'color: ' + (this.props.accent ?? '#FF8F2A') : 'color: #8E8C86'
+    };
+  }
+}
+</script>
+</body>
+</html>

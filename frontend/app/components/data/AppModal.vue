@@ -74,28 +74,28 @@ onBeforeUnmount(() => {
     >
       <div
         v-if="open"
-        class="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/60 px-4 py-6 backdrop-blur-sm md:py-12"
+        class="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-black/70 px-4 py-6 md:py-12"
         role="dialog"
         aria-modal="true"
         @click.self="emit('close')"
       >
         <div
-          class="w-full rounded-[24px] border border-[var(--surface-border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-1)_94%,transparent),color-mix(in_srgb,var(--surface-2)_96%,transparent))] shadow-[var(--shadow-2)]"
+          class="w-full border border-line-strong bg-bg text-ink"
           :class="maxWidth"
         >
-          <div class="flex items-start justify-between gap-4 border-b border-[var(--surface-border)] px-6 py-5">
+          <div class="flex items-start justify-between gap-4 border-b border-line px-6 py-5">
             <div>
-              <h3 v-if="title" class="font-heading text-[1.3rem] text-[var(--text-strong)]">
+              <h3 v-if="title" class="text-[24px] font-medium leading-tight tracking-[-0.02em]">
                 {{ title }}
               </h3>
-              <p v-if="description" class="mt-1 text-[0.9rem] leading-6 text-[var(--text-muted)]">
+              <p v-if="description" class="mt-1.5 text-[14px] leading-6 text-ink-2">
                 {{ description }}
               </p>
             </div>
 
             <button
               type="button"
-              class="grid size-10 shrink-0 place-items-center rounded-full border border-[var(--surface-border)] text-[var(--text-muted)] transition duration-200 hover:bg-[var(--surface-2)] hover:text-[var(--text-strong)]"
+              class="grid size-10 shrink-0 place-items-center border border-line-strong text-ink-2 transition-colors hover:border-ink hover:text-ink"
               aria-label="Close dialog"
               @click="emit('close')"
             >
@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
             <slot />
           </div>
 
-          <div v-if="$slots.footer" class="border-t border-[var(--surface-border)] px-6 py-4">
+          <div v-if="$slots.footer" class="border-t border-line px-6 py-4">
             <slot name="footer" />
           </div>
         </div>

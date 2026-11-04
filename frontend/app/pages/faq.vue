@@ -30,7 +30,7 @@ useSchemaOrg([
       :secondary-action="{ label: 'Voir les voitures', to: '/cars' }"
     />
 
-    <section class="section-shell pb-12">
+    <section class="wrap pt-24 lg:pt-40">
       <MarketingFaqList :title="faqContent.title" :items="faqContent.items" />
     </section>
 

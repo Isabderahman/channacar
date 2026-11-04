@@ -85,93 +85,102 @@ onMounted(() => {
         <StatCard label="Paid revenue" :value="formatCurrency(stats.revenue.paid_total)" icon="payment" description="Fully paid reservation revenue tracked by the backend." />
       </div>
 
-      <div class="mt-6 grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-        <div class="space-y-6">
-          <TableCard
-            title="Upcoming reservations"
-            description="Use this list to jump directly into active reservations and keep pickup timing visible."
-            :columns="[
-              { key: 'reservation_number', label: 'Reference' },
-              { key: 'client', label: 'Client' },
-              { key: 'car', label: 'Car' },
-              { key: 'pickup', label: 'Pickup' },
-              { key: 'status', label: 'Status' },
-            ]"
-            :rows="upcomingRows"
-            @row-click="(row) => navigateTo(`/admin/reservations/${row.id}`)"
-          >
-            <template #cell-status="{ row }">
-              <StatusBadge :value="row.status" />
-            </template>
-          </TableCard>
+      <div class="mt-6">
+        <TableCard
+          title="Upcoming reservations"
+          description="Use this list to jump directly into active reservations and keep pickup timing visible."
+          :columns="[
+            { key: 'reservation_number', label: 'Reference' },
+            { key: 'client', label: 'Client' },
+            { key: 'car', label: 'Car' },
+            { key: 'pickup', label: 'Pickup' },
+            { key: 'status', label: 'Status' },
+          ]"
+          :rows="upcomingRows"
+          @row-click="(row) => navigateTo(`/admin/reservations/${row.id}`)"
+        >
+          <template #cell-reservation_number="{ row }">
+            <span class="cursor-pointer whitespace-nowrap font-plex text-[13px] text-ink">{{ row.reservation_number }}</span>
+          </template>
+          <template #cell-client="{ row }">
+            <span class="cursor-pointer whitespace-nowrap text-ink">{{ row.client }}</span>
+          </template>
+          <template #cell-car="{ row }">
+            <span class="cursor-pointer whitespace-nowrap">{{ row.car }}</span>
+          </template>
+          <template #cell-pickup="{ row }">
+            <span class="cursor-pointer whitespace-nowrap">{{ row.pickup }}</span>
+          </template>
+          <template #cell-status="{ row }">
+            <StatusBadge :value="row.status" />
+          </template>
+        </TableCard>
+      </div>
 
-          <AppPanel padding="lg">
-            <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Operations snapshot</h3>
-            <div class="mt-5 grid gap-4 sm:grid-cols-2">
-              <div class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-                <p class="text-[0.76rem] uppercase tracking-[0.18em] text-[var(--text-subtle)]">Today</p>
-                <p class="mt-3 text-[0.95rem] text-[var(--text-muted)]">
-                  {{ stats.today.pickups }} pickups and {{ stats.today.dropoffs }} dropoffs are scheduled.
-                </p>
-              </div>
-              <div class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-                <p class="text-[0.76rem] uppercase tracking-[0.18em] text-[var(--text-subtle)]">Fleet balance</p>
-                <p class="mt-3 text-[0.95rem] text-[var(--text-muted)]">
-                  {{ stats.cars.available }} available, {{ stats.cars.rented }} rented, {{ stats.cars.maintenance }} in maintenance.
-                </p>
-              </div>
+      <div class="mt-6 grid gap-6 xl:grid-cols-2">
+        <AppPanel padding="lg">
+          <h3 class="text-[20px] font-medium tracking-[-0.02em]">Operations snapshot</h3>
+          <dl class="mt-5 border-t border-line">
+            <div class="grid gap-1 border-b border-line py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+              <dt class="mono-label pt-0.5">Today</dt>
+              <dd class="text-[15px] text-ink-2">
+                {{ stats.today.pickups }} pickups and {{ stats.today.dropoffs }} dropoffs are scheduled.
+              </dd>
             </div>
-          </AppPanel>
-        </div>
+            <div class="grid gap-1 border-b border-line py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+              <dt class="mono-label pt-0.5">Fleet balance</dt>
+              <dd class="text-[15px] text-ink-2">
+                {{ stats.cars.available }} available, {{ stats.cars.rented }} rented, {{ stats.cars.maintenance }} in maintenance.
+              </dd>
+            </div>
+            <div class="grid gap-1 border-b border-line py-4 sm:grid-cols-[10rem_1fr] sm:gap-6">
+              <dt class="mono-label pt-2">Deposits collected</dt>
+              <dd class="text-[32px] font-medium leading-none tracking-[-0.03em]">
+                {{ formatCurrency(stats.revenue.deposits_collected) }}
+              </dd>
+            </div>
+          </dl>
+        </AppPanel>
 
         <AppPanel padding="lg">
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Quick actions</h3>
-          <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
+          <h3 class="text-[20px] font-medium tracking-[-0.02em]">Quick actions</h3>
+          <p class="mt-1.5 text-[14px] leading-6 text-ink-2">
             These routes cover the main operational loops you listed for the admin area.
           </p>
 
-          <div class="mt-6 space-y-3">
+          <div class="mt-5 border-t border-line">
             <NuxtLink
               to="/admin/cars"
-              class="flex items-center justify-between rounded-[20px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-4 text-[var(--text-muted)] transition duration-300 hover:border-[var(--primary-border)] hover:text-[var(--text-strong)]"
+              class="group flex min-h-14 items-center justify-between gap-4 border-b border-line text-[15px] text-ink-2 transition-colors hover:text-ink"
             >
               <span class="flex items-center gap-3">
-                <BaseIcon name="car" :size="18" class="text-[var(--primary)]" />
+                <BaseIcon name="car" :size="18" class="text-accent" />
                 <span>Create or edit cars</span>
               </span>
-              <BaseIcon name="arrow-right" :size="18" />
+              <BaseIcon name="arrow-right" :size="18" class="text-muted transition-colors group-hover:text-accent" />
             </NuxtLink>
 
             <NuxtLink
               to="/admin/reservations"
-              class="flex items-center justify-between rounded-[20px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-4 text-[var(--text-muted)] transition duration-300 hover:border-[var(--primary-border)] hover:text-[var(--text-strong)]"
+              class="group flex min-h-14 items-center justify-between gap-4 border-b border-line text-[15px] text-ink-2 transition-colors hover:text-ink"
             >
               <span class="flex items-center gap-3">
-                <BaseIcon name="calendar" :size="18" class="text-[var(--primary)]" />
+                <BaseIcon name="calendar" :size="18" class="text-accent" />
                 <span>Review reservations</span>
               </span>
-              <BaseIcon name="arrow-right" :size="18" />
+              <BaseIcon name="arrow-right" :size="18" class="text-muted transition-colors group-hover:text-accent" />
             </NuxtLink>
 
             <NuxtLink
               to="/admin/testimonials"
-              class="flex items-center justify-between rounded-[20px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-4 text-[var(--text-muted)] transition duration-300 hover:border-[var(--primary-border)] hover:text-[var(--text-strong)]"
+              class="group flex min-h-14 items-center justify-between gap-4 border-b border-line text-[15px] text-ink-2 transition-colors hover:text-ink"
             >
               <span class="flex items-center gap-3">
-                <BaseIcon name="star" :size="18" class="text-[var(--primary)]" />
+                <BaseIcon name="star" :size="18" class="text-accent" />
                 <span>Moderate testimonials</span>
               </span>
-              <BaseIcon name="arrow-right" :size="18" />
+              <BaseIcon name="arrow-right" :size="18" class="text-muted transition-colors group-hover:text-accent" />
             </NuxtLink>
-          </div>
-
-          <div class="mt-6 rounded-[20px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-            <p class="text-[0.76rem] uppercase tracking-[0.18em] text-[var(--text-subtle)]">
-              Deposits collected
-            </p>
-            <p class="mt-3 font-heading text-[1.8rem] text-[var(--text-strong)]">
-              {{ formatCurrency(stats.revenue.deposits_collected) }}
-            </p>
           </div>
         </AppPanel>
       </div>

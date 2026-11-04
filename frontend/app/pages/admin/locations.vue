@@ -149,11 +149,11 @@ onMounted(() => {
 
       <template #secondary>
         <AppPanel padding="lg">
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">
+          <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">
             {{ isEditing ? 'Edit location' : 'Create location' }}
           </h3>
 
-          <form class="mt-6 space-y-4" @submit.prevent="save">
+          <form class="mt-6 space-y-4 border-t border-line pt-6" @submit.prevent="save">
             <FormField v-model="form.name" name="name" label="Location name" />
             <FormField
               v-model="form.delivery_fee"
@@ -162,7 +162,7 @@ onMounted(() => {
               type="number"
               min="0"
             />
-            <FormTextarea v-model="form.address" name="address" label="Address" rows="5" />
+            <FormTextarea v-model="form.address" name="address" label="Address" :rows="5" />
             <FormCheckbox v-model="form.is_active" name="is_active" label="Active for bookings" />
 
             <div class="flex flex-wrap gap-3">

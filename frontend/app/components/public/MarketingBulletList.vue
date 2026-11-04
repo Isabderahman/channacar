@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import BaseIcon from '~/components/ui/BaseIcon.vue'
-
 interface Props {
   intro?: string
   items: string[]
@@ -14,21 +12,23 @@ withDefaults(defineProps<Props>(), {
 
 <template>
   <div>
-    <h2 class="ridex-title-2">
-      {{ title }}
-    </h2>
-    <p v-if="intro" class="mt-3 max-w-[62ch] text-[0.96rem] leading-7 text-[var(--text-muted)]">
-      {{ intro }}
-    </p>
+    <div class="flex flex-col gap-4 border-b border-ink pb-5 md:flex-row md:flex-wrap md:items-end md:justify-between md:gap-6 md:pb-8">
+      <h2 class="display text-[40px] lg:text-[clamp(40px,5vw,72px)]">
+        {{ title }}
+      </h2>
+      <p v-if="intro" class="max-w-[440px] text-[16px] text-ink-2 lg:text-[17px]">
+        {{ intro }}
+      </p>
+    </div>
 
-    <ul class="mt-6 grid gap-3 md:grid-cols-2">
+    <ul class="grid md:grid-cols-2 md:gap-x-10">
       <li
         v-for="item in items"
         :key="item"
-        class="flex items-start gap-3 rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-4"
+        class="flex gap-3 border-b border-line py-4 text-[15px] text-ink-2 lg:py-5 lg:text-[16px]"
       >
-        <BaseIcon name="check-circle" :size="18" class="mt-0.5 text-[var(--primary)]" />
-        <span class="text-[0.95rem] leading-6 text-[var(--text-muted)]">{{ item }}</span>
+        <span aria-hidden="true" class="text-accent">—</span>
+        <span>{{ item }}</span>
       </li>
     </ul>
   </div>

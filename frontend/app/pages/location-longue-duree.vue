@@ -29,7 +29,7 @@ useSeoMeta({
       :paragraphs="longTermContent.paragraphs"
     />
 
-    <section class="section-shell pb-12">
+    <section class="wrap pt-24 lg:pt-40">
       <MarketingBulletList title="Avantages" :items="longTermContent.advantages" />
     </section>
 

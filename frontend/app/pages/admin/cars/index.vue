@@ -227,6 +227,15 @@ onMounted(() => {
       :rows="tableRows"
       @row-click="(row) => navigateTo(`/admin/cars/${row.id}`)"
     >
+      <template #cell-vehicle="{ row }">
+        <span class="cursor-pointer whitespace-nowrap text-[15px] font-medium text-ink">{{ row.vehicle }}</span>
+      </template>
+      <template #cell-year="{ row }">
+        <span class="cursor-pointer font-plex text-[13px]">{{ row.year }}</span>
+      </template>
+      <template #cell-price="{ row }">
+        <span class="cursor-pointer whitespace-nowrap text-ink">{{ row.price }}</span>
+      </template>
       <template #cell-status="{ row }">
         <StatusBadge :value="row.status" />
       </template>
@@ -274,36 +283,36 @@ onMounted(() => {
         </div>
 
         <div>
-          <span class="mb-2 block text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-[var(--text-subtle)]">
+          <span class="mono-label mb-2 block">
             Images
           </span>
           <input
             type="file"
             accept="image/*"
             multiple
-            class="block w-full rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] px-4 py-3 text-[0.95rem] text-[var(--text-strong)] file:mr-4 file:rounded-[10px] file:border-0 file:bg-[var(--primary-soft)] file:px-4 file:py-2 file:text-[var(--primary)]"
+            class="block w-full cursor-pointer border border-line-strong px-3 py-2.5 text-[14px] text-ink-2 file:me-4 file:cursor-pointer file:border-0 file:bg-surface file:px-4 file:py-2 file:font-plex file:text-[12px] file:uppercase file:tracking-[0.06em] file:text-ink hover:file:bg-surface-3"
             @change="onImagesSelected"
           >
-          <p class="mt-2 text-[0.82rem] leading-5 text-[var(--text-subtle)]">
+          <p class="mt-1.5 text-[13px] leading-5 text-muted">
             Optional. The first image becomes the thumbnail. Uploaded after the car is created (max 50&nbsp;MB each).
           </p>
 
-          <div v-if="pendingImages.length" class="mt-4 grid gap-3 sm:grid-cols-3 md:grid-cols-4">
+          <div v-if="pendingImages.length" class="mt-4 grid gap-2 sm:grid-cols-3 md:grid-cols-4">
             <figure
               v-for="(item, index) in pendingImages"
               :key="item.preview"
-              class="relative overflow-hidden rounded-[16px] border border-[var(--surface-border)] bg-[var(--surface-2)]"
+              class="relative overflow-hidden border border-line bg-surface"
             >
               <img :src="item.preview" alt="Selected car image" class="h-24 w-full object-cover">
               <span
                 v-if="index === 0"
-                class="absolute left-2 top-2 rounded-full bg-[var(--primary)] px-2 py-0.5 text-[0.66rem] font-semibold text-white"
+                class="absolute left-2 top-2 bg-accent px-1.5 py-0.5 font-plex text-[10px] uppercase tracking-[0.06em] text-on-accent"
               >
                 Thumbnail
               </span>
               <button
                 type="button"
-                class="absolute right-2 top-2 grid size-7 place-items-center rounded-full bg-black/60 text-white transition hover:bg-black/80"
+                class="absolute right-2 top-2 grid size-7 place-items-center bg-black/70 text-white transition-colors hover:bg-black"
                 aria-label="Remove image"
                 @click="removePendingImage(index)"
               >

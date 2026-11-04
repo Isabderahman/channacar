@@ -16,7 +16,7 @@ const paddingClass = computed(() => {
     case 'none':
       return ''
     case 'lg':
-      return 'p-6 md:p-7'
+      return 'p-6 md:p-8'
     default:
       return 'p-5 md:p-6'
   }
@@ -26,7 +26,7 @@ const paddingClass = computed(() => {
 <template>
   <component
     :is="tag"
-    class="rounded-[24px] border border-[var(--surface-border)] bg-[linear-gradient(180deg,color-mix(in_srgb,var(--surface-1)_88%,transparent),color-mix(in_srgb,var(--surface-2)_94%,transparent))] shadow-[var(--shadow-1)]"
+    class="border border-line bg-bg"
     :class="paddingClass"
   >
     <slot />

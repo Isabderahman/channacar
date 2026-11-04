@@ -16,7 +16,7 @@ watch(
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--background-canvas)]">
+  <div class="min-h-screen bg-bg font-grotesk text-ink">
     <AdminAuthGate>
       <div class="min-h-screen lg:flex">
         <AdminSidebar :open="sidebarOpen" @close="sidebarOpen = false" />
@@ -24,7 +24,7 @@ watch(
         <div class="min-h-screen min-w-0 flex-1 lg:pl-[18rem]">
           <AdminTopbar @toggle-sidebar="sidebarOpen = true" />
 
-          <main class="px-4 pb-8 pt-24 md:px-6 xl:px-8">
+          <main class="px-4 pb-12 pt-28 md:px-6 xl:px-10">
             <slot />
           </main>
         </div>

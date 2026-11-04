@@ -62,11 +62,16 @@ const localeHead = useLocaleHead({
 })
 
 const { theme } = useTheme()
+const route = useRoute()
+
+// The light/dark toggle belongs to the admin back-office; the public site is
+// always dark (see main.css).
+const isAdminRoute = computed(() => route.path.startsWith('/admin'))
 
 useHead(() => ({
   htmlAttrs: {
     ...localeHead.value.htmlAttrs,
-    'data-theme': theme.value,
+    'data-theme': isAdminRoute.value ? theme.value : 'dark',
   },
   link: localeHead.value.link,
   meta: localeHead.value.meta,

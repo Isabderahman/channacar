@@ -1,13 +1,26 @@
 <script setup lang="ts">
-import BaseIcon from '~/components/ui/BaseIcon.vue'
+import SiteIcon from '~/components/site/SiteIcon.vue'
 import { useWhatsappFloatMessage } from '~/composables/useWhatsappFloat'
 import { whatsappGeneralMessage, whatsappHref } from '~/utils/whatsapp'
 
-// Floating WhatsApp call-to-action, shown on every public page (see the default
-// layout + homepage). Uses the brand colours, not WhatsApp green. Pages can
-// override the prefilled message (car detail sets a car-specific one).
+// Floating WhatsApp call-to-action, shown on every public page (default
+// layout). Pages can override the prefilled message (car detail sets a
+// car-specific one). Hidden on the mobile car page, whose fixed booking bar
+// and summary already carry WhatsApp.
+const { t } = useI18n()
+const route = useRoute()
 const floatMessage = useWhatsappFloatMessage()
-const href = computed(() => whatsappHref(floatMessage.value || whatsappGeneralMessage))
+// The layout renders this before an async page sets its message during SSR,
+// so the page-specific message is only applied once mounted (no hydration
+// mismatch).
+const isMounted = ref(false)
+onMounted(() => {
+  isMounted.value = true
+})
+const href = computed(() =>
+  whatsappHref((isMounted.value && floatMessage.value) || whatsappGeneralMessage),
+)
+const isCarDetail = computed(() => String(route.name ?? '').startsWith('cars-slug'))
 </script>
 
 <template>
@@ -15,18 +28,16 @@ const href = computed(() => whatsappHref(floatMessage.value || whatsappGeneralMe
     :href="href"
     target="_blank"
     rel="noopener"
-    aria-label="Contacter ChanaaCar sur WhatsApp"
-    class="group fixed bottom-5 end-5 z-50 grid size-14 place-items-center rounded-full bg-[var(--carolina-blue)] text-[var(--white)] shadow-[var(--shadow-2)] outline-none transition duration-300 ease-out hover:scale-105 focus-visible:ring-4 focus-visible:ring-[color-mix(in_srgb,var(--primary)_35%,transparent)] print:hidden sm:size-16"
+    :aria-label="t('site.actions.whatsappFloat')"
+    class="group fixed bottom-5 end-5 z-50 size-14 items-center justify-center bg-accent text-on-accent transition-colors hover:bg-[var(--accent-hover)] print:hidden"
+    :class="isCarDetail ? 'hidden lg:flex' : 'flex'"
   >
-    <span
-      class="pointer-events-none absolute inset-0 rounded-full bg-[var(--carolina-blue)] opacity-50 motion-safe:animate-ping"
-    />
-    <BaseIcon name="whatsapp" :size="30" class="relative z-10" />
+    <SiteIcon name="whatsapp" :size="24" />
 
     <span
-      class="pointer-events-none absolute end-full me-3 hidden whitespace-nowrap rounded-full bg-[var(--surface-2)] px-3 py-1.5 text-[0.82rem] font-semibold text-[var(--text-strong)] shadow-[var(--shadow-1)] opacity-0 transition duration-300 group-hover:opacity-100 lg:block"
+      class="pointer-events-none absolute end-full me-2 hidden whitespace-nowrap border border-line-strong bg-bg px-3 py-2 font-plex text-[12px] text-ink opacity-0 transition-opacity group-hover:opacity-100 lg:block"
     >
-      Discuter sur WhatsApp
+      {{ t('site.actions.whatsappChat') }}
     </span>
   </a>
 </template>

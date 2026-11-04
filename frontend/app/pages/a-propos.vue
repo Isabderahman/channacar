@@ -29,7 +29,7 @@ useSeoMeta({
       :paragraphs="aboutContent.paragraphs"
     />
 
-    <section class="section-shell pb-12">
+    <section class="wrap pt-24 lg:pt-40">
       <MarketingCardGrid title="Nos valeurs" :cards="aboutContent.values" />
     </section>
 

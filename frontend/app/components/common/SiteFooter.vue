@@ -1,103 +1,97 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import BrandLogo from '~/components/common/BrandLogo.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
-import { useLandingContent } from '~/composables/useLandingContent'
+import { socialLinkDefs } from '~/utils/home-content'
 
+const { t } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 
-const { brand, footerCopyright, footerDescription, footerLinkGroups, isRtl, socialLinks } =
-  useLandingContent()
+// The car page uses the compact footer from the product mockup, and leaves
+// room for its fixed mobile booking bar.
+const isCarDetail = computed(() => String(route.name ?? '').startsWith('cars-slug'))
 
-const homePath = computed(() => localePath('/'))
-const homeAnchorPath = computed(() => `${homePath.value}#home`)
-const footerBarClass = computed(() => (isRtl.value ? 'md:flex-row' : 'md:flex-row-reverse'))
-const resolvedFooterLinkGroups = computed(() =>
-  footerLinkGroups.value.map((group) => ({
-    ...group,
-    links: group.links.map((link) => ({
-      ...link,
-      href: link.href.startsWith('#') ? `${homePath.value}${link.href}` : link.href,
-    })),
-  })),
+const year = new Date().getFullYear()
+
+const groups = computed(() => [
+  {
+    title: t('site.footer.company'),
+    links: [
+      { label: t('site.footer.about'), to: localePath('/a-propos') },
+      { label: t('site.footer.pricing'), to: localePath('/cars') },
+      { label: t('site.footer.process'), to: { path: localePath('/'), hash: '#etapes' } },
+      { label: t('site.footer.contact'), to: localePath('/contact') },
+    ],
+  },
+  {
+    title: t('site.footer.support'),
+    links: [
+      { label: t('site.footer.help'), to: localePath('/faq') },
+      { label: t('site.footer.ask'), to: localePath('/contact') },
+    ],
+  },
+])
+
+const socials = computed(() =>
+  socialLinkDefs
+    .filter((link) => link.key !== 'mail')
+    .map((link) => ({ ...link, label: t(`footer.social.${link.key}`) })),
 )
 </script>
 
 <template>
-  <footer id="footer" class="bg-[var(--alice-blue-4)] text-[var(--independence)]">
-    <div class="section-shell">
-      <div class="flex flex-wrap items-start justify-between gap-y-[50px] py-[60px]">
-        <div class="w-full xl:w-1/3">
-          <BrandLogo
-            :brand-name="brand.brandName"
-            :to="homePath"
-            class="md:[&_img]:h-16"
-          />
-
-          <p class="mt-5 max-w-[35ch] text-[0.875rem] leading-8">
-            {{ footerDescription }}
-          </p>
-        </div>
-
-        <ul
-          v-for="group in resolvedFooterLinkGroups"
-          :key="group.title"
-          class="font-heading"
-          :class="group.wide ? 'w-full columns-2 md:w-full xl:w-1/3' : 'w-1/2 xl:w-1/6'"
-        >
-          <li class="mb-2 break-inside-avoid">
-            <p class="font-semibold text-[var(--space-cadet)]">
-              {{ group.title }}
-            </p>
-          </li>
-
-          <li
-            v-for="link in group.links"
-            :key="`${group.title}-${link.href}`"
-            class="break-inside-avoid"
-          >
-            <a
-              :href="link.href"
-              class="block py-1.5 text-[0.875rem] transition duration-500 ease-out hover:text-[var(--carolina-blue)] focus-visible:text-[var(--carolina-blue)]"
-            >
-              {{ link.label }}
-            </a>
-          </li>
-        </ul>
-      </div>
-
-      <div
-        class="rounded-t-[18px] border border-[var(--surface-border)] bg-[linear-gradient(to_top,var(--alice-blue-2),var(--alice-blue-3))] p-5 shadow-[var(--shadow-1)] md:flex md:items-center md:justify-between md:py-[30px]"
-        :class="footerBarClass"
-      >
-        <ul class="mb-5 flex items-center gap-5 md:mb-0">
-          <li
-            v-for="social in socialLinks"
-            :key="social.key"
-          >
-            <a
-              :href="social.href"
-              :aria-label="social.label"
-              :target="social.href.startsWith('http') ? '_blank' : undefined"
-              :rel="social.href.startsWith('http') ? 'noopener noreferrer' : undefined"
-              class="text-[20px] transition duration-500 ease-out hover:text-[var(--carolina-blue)] focus-visible:text-[var(--carolina-blue)]"
-            >
-              <BaseIcon :name="social.icon" :size="20" />
-            </a>
-          </li>
-        </ul>
-
-        <p class="text-[0.875rem]">
-          &copy; 2026
-          <a
-            :href="homeAnchorPath"
-            class="inline-block transition duration-500 ease-out hover:text-[var(--carolina-blue)] focus-visible:text-[var(--carolina-blue)]"
-          >
-            {{ brand.brandName }}
-          </a>.
-          {{ footerCopyright }}
+  <footer
+    class="border-t border-line"
+    :class="isCarDetail ? 'mt-24 pb-[84px] lg:mt-36 lg:pb-0' : ''"
+  >
+    <div
+      v-if="!isCarDetail"
+      class="wrap grid gap-10 pb-8 pt-8 text-[14px] sm:grid-cols-2 lg:grid-cols-4 lg:pt-14"
+    >
+      <div class="max-w-[420px] sm:col-span-2">
+        <p class="mb-3 text-[18px] font-semibold tracking-[-0.02em] lg:mb-4 lg:text-[20px]">
+          Chanaa<span class="text-accent">Car</span>
+        </p>
+        <p class="text-muted">
+          <span class="lg:hidden">{{ t('site.footer.descriptionShort') }}</span>
+          <span class="hidden lg:inline">{{ t('site.footer.description') }}</span>
         </p>
       </div>
+
+      <nav
+        v-for="group in groups"
+        :key="group.title"
+        :aria-label="group.title"
+        class="hidden flex-col gap-2.5 sm:flex"
+      >
+        <p class="mono-label mb-1.5">{{ group.title }}</p>
+        <NuxtLink
+          v-for="link in group.links"
+          :key="link.label"
+          :to="link.to"
+          class="w-fit transition-colors hover:text-accent"
+        >
+          {{ link.label }}
+        </NuxtLink>
+      </nav>
+    </div>
+
+    <div
+      class="wrap flex flex-wrap items-center justify-between gap-4 pb-8 font-plex text-[11px] text-muted lg:text-[12px]"
+      :class="isCarDetail ? 'pt-8' : ''"
+    >
+      <span>© {{ year }} ChanaaCar. {{ t('site.footer.rights') }}</span>
+
+      <span class="flex flex-wrap gap-x-6 gap-y-2" :aria-label="t('site.footer.social')">
+        <a
+          v-for="social in socials"
+          :key="social.key"
+          :href="social.href"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="transition-colors hover:text-ink"
+        >
+          {{ social.label }}
+        </a>
+      </span>
     </div>
   </footer>
 </template>

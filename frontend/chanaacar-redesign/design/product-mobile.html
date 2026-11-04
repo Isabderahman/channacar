@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Audi Q3 Sportback · ChanaaCar (mobile)</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#EDEBE6;text-decoration:none}
+input,select,button,textarea{font:inherit}
+.f{min-height:48px;padding:0 12px;border:1px solid #3A3A37;background:transparent;color:#EDEBE6;color-scheme:dark;font-size:16px;box-sizing:border-box;width:100%;border-radius:0}
+.f:focus{outline:2px solid #FF8F2A;outline-offset:-1px}
+.l{display:flex;flex-direction:column;gap:6px;font-family:'IBM Plex Mono',ui-monospace,monospace;font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:#8E8C86}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: #0F0F0E; color: #EDEBE6; font-family: 'Schibsted Grotesk', 'Helvetica Neue', Arial, sans-serif; font-size: 15px; line-height: 1.5">
+
+<div style="height: 760px; overflow-y: auto">
+<header style="display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 1px solid #262624">
+<a href="#" aria-label="Retour à la flotte" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-left: -12px"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 12H4M10 6l-6 6 6 6"></path></svg></a>
+<span style="font-weight: 600; font-size: 17px; letter-spacing: -0.02em">Chanaa<span style="color: {{accent}}">Car</span></span>
+<a href="tel:+212666623645" aria-label="Appeler ChanaaCar" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; margin-right: -12px"><svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+</header>
+
+<div role="img" aria-label="{{photoAlt}}" style="height: 260px; background: #1B1B19; display: flex; align-items: flex-end; justify-content: space-between; padding: 14px 20px; box-sizing: border-box; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86"><span>[PHOTO — {{photoLabel}}]</span><span>{{photoIndex}} / 04</span></div>
+<div role="group" aria-label="Choisir une photo" style="display: flex; gap: 6px; padding: 6px 20px 0; overflow-x: auto">
+<sc-for list="{{photos}}" as="p" hint-placeholder-count="4">
+<button type="button" onClick="{{p.pick}}" aria-pressed="{{p.pressed}}" style="{{p.style}}">{{p.label}}</button>
+</sc-for>
+</div>
+
+<section style="padding: 28px 20px 0">
+<p style="margin: 0 0 8px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.08em; color: {{accent}}">SUV · 2026</p>
+<h1 style="margin: 0 0 20px; font-weight: 500; font-size: 42px; line-height: 0.95; letter-spacing: -0.045em">Audi Q3 Sportback</h1>
+<div style="display: flex; justify-content: space-between; align-items: baseline; padding: 16px 0; border-top: 1px solid #EDEBE6; border-bottom: 1px solid #262624">
+<p style="margin: 0"><span style="font-size: 34px; font-weight: 500; letter-spacing: -0.03em">1 000</span> <span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #8E8C86">MAD / jour</span></p>
+<p style="margin: 0; text-align: right; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86">Caution<br><span style="color: #EDEBE6; font-size: 13px">15 000 MAD</span></p>
+</div>
+<p style="margin: 0; padding: 10px 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12px; color: #BDBAB3; border-bottom: 1px solid #262624">5 places · 5 portes · 2 bagages · Auto · Diesel · Clim · GPS</p>
+<ul style="list-style: none; margin: 0; padding: 16px 0 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; font-size: 13px; color: #BDBAB3">
+<li><span aria-hidden="true" style="color: {{accent}}">— </span>Livraison aéroport ou hôtel</li>
+<li><span aria-hidden="true" style="color: {{accent}}">— </span>Assistance 24h/24</li>
+<li><span aria-hidden="true" style="color: {{accent}}">— </span>Tarifs transparents</li>
+<li><span aria-hidden="true" style="color: {{accent}}">— </span>Caution remboursable</li>
+</ul>
+<p style="margin: 16px 0 0; padding: 12px 14px; background: #171716; font-size: 13px; color: #BDBAB3">21 ans minimum · permis de plus d’1 an · CIN ou passeport · assurance incluse selon contrat</p>
+<a href="#avis" style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px; min-height: 48px; padding: 0 14px; border: 1px dashed #3A3A37; font-size: 14px"><span><span style="color: {{accent}}">★</span> [NOTE] / 5 · [NOMBRE] avis Google</span><span aria-hidden="true">→</span></a>
+</section>
+
+<form aria-label="Demande de réservation" style="padding: 48px 20px 32px; display: flex; flex-direction: column; gap: 44px">
+<h2 style="margin: 0; font-weight: 500; font-size: 30px; line-height: 1; letter-spacing: -0.035em">Réservez en 2 minutes.</h2>
+
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px">
+<legend style="padding: 0; margin-bottom: 16px; font-size: 19px; font-weight: 500"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: {{accent}}; margin-right: 12px">01</span>Quand et où ?</legend>
+<label class="l">Prise en charge<select class="f"><option>Aéroport Marrakech Menara</option><option>Agence Guéliz</option><option>Gare ONCF Marrakech</option><option>Médina</option><option>Aéroport Casablanca Mohammed V</option><option>Casablanca centre</option><option>Aéroport Agadir Al Massira</option><option>Agadir centre</option><option>Essaouira</option><option>Ouarzazate</option><option>Rabat</option></select></label>
+<label class="l">Restitution<select class="f"><option>Même lieu</option><option>Aéroport Marrakech Menara</option><option>Agence Guéliz</option><option>Gare ONCF Marrakech</option><option>Médina</option><option>Aéroport Casablanca Mohammed V</option><option>Casablanca centre</option><option>Aéroport Agadir Al Massira</option><option>Agadir centre</option><option>Essaouira</option><option>Ouarzazate</option><option>Rabat</option></select></label>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<label class="l">Départ<input class="f" type="date"></label>
+<label class="l">Retour<input class="f" type="date"></label>
+</div>
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 4px 0 4px 12px; border: 1px solid #3A3A37">
+<span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; color: #8E8C86; text-transform: uppercase; letter-spacing: 0.08em">Durée</span>
+<div style="display: flex; align-items: center">
+<button type="button" onClick="{{dec}}" aria-label="Retirer un jour" style="width: 44px; height: 44px; border: 0; background: transparent; color: #EDEBE6; font-size: 20px; cursor: pointer">−</button>
+<span aria-live="polite" style="min-width: 72px; text-align: center">{{daysLabel}}</span>
+<button type="button" onClick="{{inc}}" aria-label="Ajouter un jour" style="width: 44px; height: 44px; border: 0; background: transparent; color: #EDEBE6; font-size: 20px; cursor: pointer">+</button>
+</div>
+</div>
+</fieldset>
+
+<fieldset style="border: 0; margin: 0; padding: 0">
+<legend style="padding: 0; margin-bottom: 4px; font-size: 19px; font-weight: 500"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: {{accent}}; margin-right: 12px">02</span>Options <span style="font-size: 13px; color: #8E8C86; font-weight: 400">facultatif · 50 MAD/j</span></legend>
+<div style="margin-top: 12px; border-top: 1px solid #262624">
+<sc-for list="{{options}}" as="o" hint-placeholder-count="3">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #262624">
+<span>{{o.name}}</span>
+<button type="button" onClick="{{o.toggle}}" aria-pressed="{{o.pressed}}" style="{{o.style}}">{{o.btn}}</button>
+</div>
+</sc-for>
+</div>
+<button type="button" onClick="{{toggleMore}}" aria-expanded="{{moreExpanded}}" style="margin-top: 4px; min-height: 44px; padding: 0; border: 0; background: transparent; color: #EDEBE6; font-size: 14px; cursor: pointer; text-decoration: underline; text-underline-offset: 4px">{{moreLabel}}</button>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 12px; padding: 14px; border: 1px solid #3A3A37">
+<div><p style="margin: 0; font-weight: 500">Assurance complémentaire</p><p style="margin: 0; font-size: 13px; color: #8E8C86">300 MAD par jour</p></div>
+<button type="button" onClick="{{toggleIns}}" aria-pressed="{{insPressed}}" style="{{insStyle}}">{{insBtn}}</button>
+</div>
+</fieldset>
+
+<fieldset style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px">
+<legend style="padding: 0; margin-bottom: 16px; font-size: 19px; font-weight: 500"><span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: {{accent}}; margin-right: 12px">03</span>Vos coordonnées</legend>
+<label class="l">Nom complet<input class="f" type="text" autocomplete="name"></label>
+<label class="l">Téléphone<input class="f" type="tel" autocomplete="tel" placeholder="+212 …"></label>
+<label style="display: flex; align-items: center; gap: 12px; min-height: 44px; font-size: 14px; cursor: pointer"><input type="checkbox" checked style="width: 20px; height: 20px; accent-color: {{accent}}; margin: 0">Joignable sur WhatsApp à ce numéro</label>
+<label class="l">N° de permis de conduire<input class="f" type="text"></label>
+<label class="l">E-mail <span style="text-transform: none; letter-spacing: 0">(facultatif)</span><input class="f" type="email" autocomplete="email"></label>
+</fieldset>
+
+<div style="border: 1px solid #262624; padding: 16px">
+<p style="margin: 0 0 10px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; color: #8E8C86; text-transform: uppercase; letter-spacing: 0.08em">Récapitulatif</p>
+<div style="display: flex; flex-direction: column; gap: 8px; font-size: 14px">
+<div style="display: flex; justify-content: space-between"><span style="color: #BDBAB3">Location · {{daysLabel}}</span><span>{{rentTotal}} MAD</span></div>
+<sc-for list="{{lines}}" as="ln" hint-placeholder-count="2">
+<div style="display: flex; justify-content: space-between; gap: 12px"><span style="color: #BDBAB3">{{ln.name}}</span><span>{{ln.amount}} MAD</span></div>
+</sc-for>
+<div style="display: flex; justify-content: space-between; padding-top: 10px; border-top: 1px solid #3A3A37; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86"><span>Caution remboursable, non incluse</span><span>15 000 MAD</span></div>
+</div>
+</div>
+<p style="margin: -24px 0 0; font-size: 13px; color: #8E8C86">Il s’agit d’une demande : notre équipe confirme la disponibilité et le tarif par téléphone ou WhatsApp.</p>
+<a href="{{waLink}}" style="display: flex; align-items: center; justify-content: center; gap: 10px; min-height: 52px; border: 1px solid #3A3A37; font-weight: 500"><svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.6-5.2A8.5 8.5 0 1 1 21 11.5z"></path></svg>Réserver sur WhatsApp</a>
+</form>
+
+<section id="avis" style="padding: 32px 20px 0">
+<p style="margin: 0 0 12px; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: #8E8C86">Ils ont loué chez nous</p>
+<div style="display: flex; flex-direction: column; gap: 10px">
+<div style="padding: 16px; border: 1px dashed #3A3A37; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; color: {{accent}}; letter-spacing: 2px" aria-label="Note du client : [NOTE] sur 5">★★★★★</p>
+<p style="margin: 0; font-size: 14px; color: #BDBAB3">[AVIS CLIENT — 1 à 2 phrases issues de Google]</p>
+<p style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86">[PRÉNOM] · [PAYS] · [MOIS ANNÉE]</p>
+</div>
+<div style="padding: 16px; border: 1px dashed #3A3A37; display: flex; flex-direction: column; gap: 10px">
+<p style="margin: 0; color: {{accent}}; letter-spacing: 2px" aria-label="Note du client : [NOTE] sur 5">★★★★★</p>
+<p style="margin: 0; font-size: 14px; color: #BDBAB3">[AVIS CLIENT — 1 à 2 phrases issues de Google]</p>
+<p style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86">[PRÉNOM] · [PAYS] · [MOIS ANNÉE]</p>
+</div>
+</div>
+</section>
+
+<section style="padding: 48px 20px 40px">
+<h2 style="margin: 0 0 20px; font-weight: 500; font-size: 28px; line-height: 1; letter-spacing: -0.035em">Bon à savoir</h2>
+<div style="border-top: 1px solid #262624">
+<sc-for list="{{faq}}" as="q" hint-placeholder-count="7">
+<div style="border-bottom: 1px solid #262624">
+<button type="button" onClick="{{q.toggle}}" aria-expanded="{{q.expanded}}" style="width: 100%; min-height: 52px; padding: 12px 0; display: flex; justify-content: space-between; align-items: center; gap: 16px; border: 0; background: transparent; color: #EDEBE6; font-size: 15px; text-align: left; cursor: pointer">{{q.q}}<span aria-hidden="true" style="font-family: 'IBM Plex Mono', ui-monospace, monospace; color: {{accent}}">{{q.mark}}</span></button>
+<p style="{{q.ansStyle}}">{{q.a}}</p>
+</div>
+</sc-for>
+</div>
+</section>
+</div>
+
+<div style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; box-sizing: border-box; padding: 12px 20px 16px; background: #0F0F0E; border-top: 1px solid #3A3A37; display: flex; align-items: center; justify-content: space-between; gap: 12px">
+<div>
+<p style="margin: 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 10px; color: #8E8C86; text-transform: uppercase; letter-spacing: 0.08em">{{daysLabel}} · estimé</p>
+<p aria-live="polite" style="margin: 0"><span style="font-size: 24px; font-weight: 500; letter-spacing: -0.02em">{{total}}</span> <span style="font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 11px; color: #8E8C86">MAD</span></p>
+</div>
+<button type="button" style="flex: 0 0 auto; min-height: 52px; padding: 0 20px; border: 0; background: {{accent}}; color: #0F0F0E; font-size: 16px; font-weight: 600; cursor: pointer">Envoyer ma demande</button>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#FF8F2A","options":["#FF8F2A","#E8D5B0","#C9B38A","#EDEBE6"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { photo: 0, days: 3, opts: {}, ins: false, more: false };
+  }
+  renderVals() {
+    const accent = this.props.accent ?? '#FF8F2A';
+    const fmt = (n) => n.toLocaleString('fr-FR').replace(/\u202f|\u00a0/g, ' ');
+    const photoNames = ['Avant', 'Profil', 'Intérieur', 'Coffre'];
+    const ph = this.state.photo;
+    const photos = photoNames.map((label, i) => ({
+      label,
+      pressed: i === ph ? 'true' : 'false',
+      style: 'flex: 0 0 82px; height: 56px; padding: 6px; display: flex; align-items: flex-end; background: #1B1B19; color: ' + (i === ph ? '#EDEBE6' : '#8E8C86') + '; font-family: IBM Plex Mono, monospace; font-size: 10px; cursor: pointer; border: 1px solid ' + (i === ph ? '#EDEBE6' : 'transparent'),
+      pick: () => this.setState({ photo: i })
+    }));
+    const optNames = ['Siège enfant', 'Conducteur supplémentaire', 'Option plein carburant', 'Assistance', 'Assistance dépannage étendue', 'Protection accidents', 'Câble chargeur', 'Réfrigérateur portable', 'Wifi'];
+    const opts = this.state.opts;
+    const more = this.state.more;
+    const btnStyle = (on) => 'flex: 0 0 auto; min-width: 92px; min-height: 44px; padding: 0 12px; cursor: pointer; font-family: IBM Plex Mono, monospace; font-size: 11px; letter-spacing: 0.06em; ' + (on ? 'background: #EDEBE6; color: #0F0F0E; border: 1px solid #EDEBE6' : 'background: transparent; color: #EDEBE6; border: 1px solid #3A3A37');
+    const visible = optNames.filter((n, i) => more || i < 3 || opts[n]);
+    const options = visible.map((name) => {
+      const on = !!opts[name];
+      return { name, pressed: on ? 'true' : 'false', btn: on ? '✓ Ajouté' : 'Ajouter', style: btnStyle(on), toggle: () => this.setState({ opts: { ...this.state.opts, [name]: !on } }) };
+    });
+    const hidden = optNames.length - visible.length;
+    const faqData = [
+      ['Quelles sont les conditions pour louer ?', 'Le conducteur doit avoir au moins 21 ans et un permis de conduire valide depuis au moins 1 an.'],
+      ['Quels documents dois-je présenter ?', 'Une pièce d’identité valide (CIN ou passeport), votre permis de conduire et un moyen de paiement.'],
+      ['L’assurance est-elle incluse ?', 'Oui, nos véhicules sont couverts selon les conditions du contrat de location. L’assurance complémentaire est une protection en plus, facultative.'],
+      ['Le kilométrage est-il limité ?', 'La plupart de nos locations incluent un kilométrage adapté à votre itinéraire. Le kilométrage illimité est disponible sur demande selon la catégorie et la durée.'],
+      ['Comment fonctionne la caution ?', 'Pour ce véhicule, la caution est de 15 000 MAD. C’est une garantie remboursable, non incluse dans le total de la location.'],
+      ['Puis-je annuler ma réservation ?', 'Oui, selon les conditions d’annulation précisées lors de la réservation.'],
+      ['Que faire en cas de panne ou d’accident ?', 'Contactez immédiatement notre équipe d’assistance, disponible 24h/24 et 7j/7.']
+    ];
+    const fo = this.state.faq ?? 0;
+    const faq = faqData.map(([q, a], i) => ({ q, a, expanded: i === fo ? 'true' : 'false', mark: i === fo ? '−' : '+', ansStyle: (i === fo ? 'display: block; ' : 'display: none; ') + 'margin: 0 0 16px; max-width: 560px; font-size: 14px; color: #BDBAB3', toggle: () => this.setState({ faq: i === (this.state.faq ?? 0) ? -1 : i }) }));
+    const d = this.state.days;
+    const chosen = optNames.filter((n) => opts[n]);
+    const lines = chosen.map((n) => ({ name: n, amount: fmt(50 * d) }));
+    const ins = this.state.ins;
+    if (ins) lines.push({ name: 'Assurance complémentaire', amount: fmt(300 * d) });
+    const total = d * (1000 + 50 * chosen.length + (ins ? 300 : 0));
+    const dl = d + (d > 1 ? ' jours' : ' jour');
+    return {
+      accent, photos,
+      photoLabel: photoNames[ph],
+      photoAlt: 'Emplacement photo : Audi Q3 Sportback, ' + photoNames[ph],
+      photoIndex: String(ph + 1).padStart(2, '0'),
+      options,
+      faq,
+      toggleMore: () => this.setState({ more: !more }),
+      moreExpanded: more ? 'true' : 'false',
+      moreLabel: more ? 'Afficher moins d’options' : 'Voir ' + hidden + ' autres options',
+      daysLabel: dl,
+      dec: () => this.setState({ days: Math.max(1, this.state.days - 1) }),
+      inc: () => this.setState({ days: Math.min(90, this.state.days + 1) }),
+      toggleIns: () => this.setState({ ins: !this.state.ins }),
+      insPressed: ins ? 'true' : 'false',
+      insBtn: ins ? '✓ Ajoutée' : 'Ajouter',
+      insStyle: btnStyle(ins),
+      rentTotal: fmt(1000 * d),
+      lines,
+      total: fmt(total),
+      waLink: 'https://wa.me/212666623645?text=' + encodeURIComponent('Bonjour ChanaaCar, je souhaite réserver l’Audi Q3 Sportback pour ' + dl + '.')
+    };
+  }
+}
+</script>
+</body>
+</html>

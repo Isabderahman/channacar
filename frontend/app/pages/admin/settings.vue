@@ -37,14 +37,14 @@ const sessionItems = computed(() => [
 
       <template #secondary>
         <AppPanel padding="lg">
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">Session tools</h3>
-          <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
+          <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">Session tools</h3>
+          <p class="mt-1.5 text-[14px] leading-6 text-ink-2">
             Use this page to verify which API base is active and to clear the stored personal access token.
           </p>
 
-          <div class="mt-6 rounded-[20px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-            <p class="text-[0.76rem] uppercase tracking-[0.18em] text-[var(--text-subtle)]">Token present</p>
-            <p class="mt-3 text-[0.95rem] text-[var(--text-muted)]">
+          <div class="mt-6 grid gap-1 border-y border-line py-4 sm:grid-cols-[9rem_1fr] sm:gap-6">
+            <p class="mono-label pt-0.5">Token present</p>
+            <p class="text-[15px] text-ink-2">
               {{ token ? 'Yes, a token is stored in local browser storage.' : 'No active admin token found.' }}
             </p>
           </div>

@@ -144,8 +144,11 @@ onMounted(() => {
           :rows="rows"
           @row-click="(row) => fillForm(testimonials.find((testimonial) => testimonial.id === row.id)!)"
         >
+          <template #cell-full_name="{ row }">
+            <span class="cursor-pointer whitespace-nowrap text-ink">{{ row.full_name }}</span>
+          </template>
           <template #cell-stars="{ row }">
-            <span class="font-heading text-[var(--text-strong)]">{{ row.stars }}/5</span>
+            <span class="cursor-pointer whitespace-nowrap font-plex text-[13px] text-ink">{{ row.stars }}/5</span>
           </template>
           <template #cell-is_visible="{ row }">
             <StatusBadge :value="row.is_visible ? 'visible' : 'hidden'" :label="row.is_visible ? 'Visible' : 'Hidden'" />
@@ -155,14 +158,14 @@ onMounted(() => {
 
       <template #secondary>
         <AppPanel padding="lg">
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">
+          <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">
             {{ isEditing ? 'Edit testimonial' : 'Create testimonial' }}
           </h3>
 
-          <form class="mt-6 space-y-4" @submit.prevent="save">
+          <form class="mt-6 space-y-4 border-t border-line pt-6" @submit.prevent="save">
             <FormField v-model="form.full_name" name="full_name" label="Customer name" />
             <FormField v-model="form.stars" name="stars" label="Stars" type="number" min="1" max="5" />
-            <FormTextarea v-model="form.content" name="content" label="Quote" rows="6" />
+            <FormTextarea v-model="form.content" name="content" label="Quote" :rows="6" />
             <FormCheckbox v-model="form.is_visible" name="is_visible" label="Visible on storefront" />
 
             <div class="flex flex-wrap gap-3">

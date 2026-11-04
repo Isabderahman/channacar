@@ -151,16 +151,23 @@ onMounted(() => {
           ]"
           :rows="rows"
           @row-click="(row) => fillForm(clients.find((client) => client.id === row.id)!)"
-        />
+        >
+          <template #cell-full_name="{ row }">
+            <span class="cursor-pointer whitespace-nowrap text-ink">{{ row.full_name }}</span>
+          </template>
+          <template #cell-phone="{ row }">
+            <span class="cursor-pointer whitespace-nowrap font-plex text-[13px]">{{ row.phone }}</span>
+          </template>
+        </TableCard>
       </template>
 
       <template #secondary>
         <AppPanel padding="lg">
-          <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">
+          <h3 class="text-[22px] font-medium leading-tight tracking-[-0.02em]">
             {{ isEditing ? 'Edit client' : 'Create client' }}
           </h3>
 
-          <form class="mt-6 space-y-4" @submit.prevent="save">
+          <form class="mt-6 space-y-4 border-t border-line pt-6" @submit.prevent="save">
             <FormField v-model="form.full_name" name="full_name" label="Full name" />
             <FormField v-model="form.phone" name="phone" label="Phone" type="tel" />
             <FormField v-model="form.whatsapp" name="whatsapp" label="WhatsApp" type="tel" />

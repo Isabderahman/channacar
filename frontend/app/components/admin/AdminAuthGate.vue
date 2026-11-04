@@ -1,9 +1,6 @@
 <script setup lang="ts">
-import AppPanel from '~/components/data/AppPanel.vue'
 import StateNotice from '~/components/feedback/StateNotice.vue'
 import FormField from '~/components/forms/FormField.vue'
-import BaseButton from '~/components/ui/BaseButton.vue'
-import BaseIcon from '~/components/ui/BaseIcon.vue'
 import { resolveApiErrorMessage } from '~/utils/api-error'
 
 const credentials = reactive({
@@ -15,6 +12,12 @@ const pending = ref(false)
 const errorMessage = ref('')
 
 const { isAuthenticated, login, ready } = useAdminAuth()
+
+const features = [
+  { title: 'Fleet overview', description: 'Track active, rented, and maintenance vehicles in one place.' },
+  { title: 'Reservation flow', description: 'Review filters, update status, and keep pickup/dropoff timing visible.' },
+  { title: 'Brand moderation', description: 'Keep testimonials and merchandising details consistent with the storefront.' },
+]
 const toast = useToast()
 
 const submit = async () => {
@@ -40,48 +43,35 @@ const submit = async () => {
 <template>
   <slot v-if="ready && isAuthenticated" />
 
-  <div v-else class="mx-auto flex min-h-screen w-full max-w-[1200px] items-center px-4 py-10">
-    <div class="grid w-full gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-      <AppPanel padding="lg">
-        <p class="text-[0.78rem] uppercase tracking-[0.22em] text-[var(--text-subtle)]">
-          Protected admin workspace
-        </p>
-        <h1 class="mt-4 font-heading text-[2.5rem] leading-tight text-[var(--text-strong)]">
+  <div v-else class="mx-auto flex min-h-screen w-full max-w-[1360px] items-center px-5 py-10 lg:px-10">
+    <div class="grid w-full gap-12 lg:grid-cols-[1.25fr_0.75fr] lg:items-end lg:gap-16">
+      <div>
+        <p class="text-[22px] font-semibold tracking-[-0.02em]">Chanaa<span class="text-accent">Car</span></p>
+        <p class="mono-label mt-10">Protected admin workspace</p>
+        <h1 class="mt-5 text-[40px] font-medium leading-[0.95] tracking-[-0.045em] md:text-[clamp(44px,5vw,72px)]">
           Operate the fleet, reservations, and customer records from one reusable interface.
         </h1>
-        <p class="mt-4 max-w-[56ch] text-[1rem] leading-7 text-[var(--text-muted)]">
+        <p class="mt-6 max-w-[56ch] text-[16px] leading-7 text-ink-2">
           Sign in with your admin API credentials to unlock the dashboard, CRUD flows, reservation
           follow-up, and moderation tools.
         </p>
 
-        <div class="mt-8 grid gap-4 md:grid-cols-3">
-          <div class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-            <BaseIcon name="dashboard" :size="18" class="text-[var(--primary)]" />
-            <p class="mt-3 font-heading text-[1rem] text-[var(--text-strong)]">Fleet overview</p>
-            <p class="mt-1 text-[0.88rem] leading-6 text-[var(--text-subtle)]">
-              Track active, rented, and maintenance vehicles in one place.
-            </p>
-          </div>
-          <div class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-            <BaseIcon name="calendar" :size="18" class="text-[var(--primary)]" />
-            <p class="mt-3 font-heading text-[1rem] text-[var(--text-strong)]">Reservation flow</p>
-            <p class="mt-1 text-[0.88rem] leading-6 text-[var(--text-subtle)]">
-              Review filters, update status, and keep pickup/dropoff timing visible.
-            </p>
-          </div>
-          <div class="rounded-[18px] border border-[var(--surface-border)] bg-[var(--surface-2)] p-4">
-            <BaseIcon name="star" :size="18" class="text-[var(--primary)]" />
-            <p class="mt-3 font-heading text-[1rem] text-[var(--text-strong)]">Brand moderation</p>
-            <p class="mt-1 text-[0.88rem] leading-6 text-[var(--text-subtle)]">
-              Keep testimonials and merchandising details consistent with the storefront.
-            </p>
-          </div>
-        </div>
-      </AppPanel>
+        <ol class="mt-10 grid border-t border-line md:grid-cols-3">
+          <li
+            v-for="(feature, index) in features"
+            :key="feature.title"
+            class="border-b border-line py-5 md:border-b-0 md:border-r md:px-6 md:pt-6 md:first:ps-0 md:last:border-r-0"
+          >
+            <p class="font-plex text-[12px] text-accent">{{ String(index + 1).padStart(2, '0') }}</p>
+            <p class="mt-3 text-[17px] font-medium md:mt-8">{{ feature.title }}</p>
+            <p class="mt-1.5 text-[14px] leading-6 text-muted">{{ feature.description }}</p>
+          </li>
+        </ol>
+      </div>
 
-      <AppPanel padding="lg">
-        <h2 class="font-heading text-[1.6rem] text-[var(--text-strong)]">Admin sign in</h2>
-        <p class="mt-2 text-[0.95rem] leading-6 text-[var(--text-muted)]">
+      <div class="border border-line-strong p-6 md:p-8">
+        <h2 class="text-[28px] font-medium tracking-[-0.03em]">Admin sign in</h2>
+        <p class="mt-2 text-[14px] leading-6 text-ink-2">
           This uses the Laravel `/api/login` endpoint through the Nuxt proxy and stores the
           returned token locally in the browser.
         </p>
@@ -111,12 +101,12 @@ const submit = async () => {
             tone="error"
           />
 
-          <BaseButton type="submit" :disabled="pending" class="w-full">
-            <BaseIcon name="check-circle" :size="18" />
-            <span>{{ pending ? 'Signing in...' : 'Unlock admin' }}</span>
-          </BaseButton>
+          <button type="submit" class="btn btn-primary min-h-14 w-full" :disabled="pending">
+            {{ pending ? 'Signing in...' : 'Unlock admin' }}
+            <svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 12h16M14 6l6 6-6 6" /></svg>
+          </button>
         </form>
-      </AppPanel>
+      </div>
     </div>
   </div>
 </template>

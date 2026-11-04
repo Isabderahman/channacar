@@ -108,14 +108,16 @@ const fillForm = (value: Reservation) => {
   form.car_id = String(value.car_id)
   form.client_id = String(value.client_id)
   form.deposit_amount = String(value.deposit_amount)
-  form.dropoff_date = value.dropoff_date
+  // The API serialises date casts as ISO timestamps (2026-11-03T00:00:00.000000Z);
+  // <input type="date"> only accepts YYYY-MM-DD and would show the field empty.
+  form.dropoff_date = value.dropoff_date.slice(0, 10)
   form.dropoff_location_id = String(value.dropoff_location_id)
   form.dropoff_time = value.dropoff_time.slice(0, 5)
   form.extra_ids = value.extras?.map((extra) => extra.id) ?? []
   form.apply_insurance = Number(value.insurance_total ?? 0) > 0
   form.notes = value.notes ?? ''
   form.payment_status = value.payment_status
-  form.pickup_date = value.pickup_date
+  form.pickup_date = value.pickup_date.slice(0, 10)
   form.pickup_location_id = String(value.pickup_location_id)
   form.pickup_time = value.pickup_time.slice(0, 5)
   form.source = value.source
@@ -254,12 +256,12 @@ watch(
       <AdminSplitLayout>
         <template #primary>
           <AppPanel padding="lg">
-            <div class="flex items-start justify-between gap-4">
+            <div class="flex items-start justify-between gap-4 border-b border-line pb-5">
               <div>
-                <h3 class="font-heading text-[1.2rem] text-[var(--text-strong)]">
-                  Reservation {{ reservation.reservation_number }}
+                <h3 class="text-[22px] font-medium tracking-[-0.02em]">
+                  Reservation <span class="font-plex text-[18px] tracking-normal">{{ reservation.reservation_number }}</span>
                 </h3>
-                <p class="mt-2 text-[0.92rem] leading-6 text-[var(--text-muted)]">
+                <p class="mt-1.5 text-[14px] leading-6 text-ink-2">
                   Keep operational fields aligned with the pricing rules enforced by the backend.
                 </p>
               </div>

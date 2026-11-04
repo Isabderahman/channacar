@@ -13,27 +13,21 @@ withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <section class="section-shell section-block">
-    <div class="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
-      <div v-reveal>
-        <p
-          v-if="eyebrow"
-          class="text-[0.78rem] uppercase tracking-[0.22em] text-[var(--text-subtle)]"
-        >
+  <section class="wrap pt-24 lg:pt-40">
+    <div class="grid gap-8 border-t border-ink pt-8 lg:grid-cols-2 lg:gap-10">
+      <div>
+        <p v-if="eyebrow" class="mono-label mb-4 lg:text-[12px]">
           {{ eyebrow }}
         </p>
-        <h2 class="ridex-title-2 mt-3 leading-tight">
+        <h2 class="display max-w-[16ch] text-[32px] lg:text-[clamp(32px,3.6vw,52px)]">
           {{ title }}
         </h2>
-        <p
-          v-if="intro"
-          class="mt-5 max-w-[34ch] text-[0.96rem] leading-7 text-[var(--text-subtle)]"
-        >
+        <p v-if="intro" class="mt-5 max-w-[42ch] text-[15px] text-muted lg:text-[16px]">
           {{ intro }}
         </p>
       </div>
 
-      <div v-reveal="{ delay: 0.1 }" class="space-y-4 text-[0.98rem] leading-8 text-[var(--text-muted)]">
+      <div class="space-y-4 text-[16px] leading-[1.65] text-ink-2 lg:text-[17px]">
         <p v-for="paragraph in paragraphs" :key="paragraph">
           {{ paragraph }}
         </p>

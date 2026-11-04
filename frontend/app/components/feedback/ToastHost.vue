@@ -8,19 +8,19 @@ import type { ToastTone } from '~/composables/useToast'
  */
 const { toasts, dismiss } = useToast()
 
+// Square, flat toasts (design handoff); the tone shows on the border + icon.
 const toneClasses: Record<ToastTone, string> = {
-  error: 'border-rose-400/40 bg-[color-mix(in_srgb,#f43f5e_16%,var(--surface-1))] text-rose-100',
-  success:
-    'border-emerald-400/40 bg-[color-mix(in_srgb,#10b981_16%,var(--surface-1))] text-emerald-100',
-  warning: 'border-amber-400/40 bg-[color-mix(in_srgb,#f59e0b_16%,var(--surface-1))] text-amber-100',
-  info: 'border-[var(--primary-border)] bg-[var(--surface-2)] text-[var(--text-muted)]',
+  error: 'border-danger',
+  success: 'border-ok',
+  warning: 'border-warn',
+  info: 'border-line-strong',
 }
 
 const iconClasses: Record<ToastTone, string> = {
-  error: 'text-rose-300',
-  success: 'text-emerald-300',
-  warning: 'text-amber-300',
-  info: 'text-[var(--primary)]',
+  error: 'text-danger',
+  success: 'text-ok',
+  warning: 'text-warn',
+  info: 'text-accent',
 }
 </script>
 
@@ -42,7 +42,7 @@ const iconClasses: Record<ToastTone, string> = {
           <div
             v-for="toast in toasts"
             :key="toast.id"
-            class="pointer-events-auto w-full max-w-[26rem] rounded-[18px] border px-4 py-3 shadow-[var(--shadow-1)] backdrop-blur"
+            class="pointer-events-auto w-full max-w-[26rem] border bg-bg px-4 py-3 font-grotesk text-ink-2"
             :class="toneClasses[toast.tone]"
             :role="toast.tone === 'error' ? 'alert' : 'status'"
             :aria-live="toast.tone === 'error' ? 'assertive' : 'polite'"
@@ -101,17 +101,17 @@ const iconClasses: Record<ToastTone, string> = {
               </span>
 
               <div class="min-w-0 flex-1">
-                <p class="font-heading text-[0.95rem] font-semibold text-[var(--text-strong)]">
+                <p class="text-[15px] font-medium text-ink">
                   {{ toast.title }}
                 </p>
-                <p class="mt-1 break-words text-[0.875rem] leading-6">
+                <p class="mt-1 break-words text-[14px] leading-6">
                   {{ toast.message }}
                 </p>
               </div>
 
               <button
                 type="button"
-                class="-me-1 -mt-1 shrink-0 rounded-full p-1.5 text-[var(--text-subtle)] transition hover:bg-black/10 hover:text-[var(--text-strong)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--primary)]"
+                class="-me-1 -mt-1 shrink-0 p-1.5 text-muted transition-colors hover:text-ink"
                 aria-label="Fermer la notification"
                 @click="dismiss(toast.id)"
               >
