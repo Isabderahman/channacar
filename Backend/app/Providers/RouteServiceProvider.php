@@ -25,7 +25,19 @@ class RouteServiceProvider extends ServiceProvider
     public function boot(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+            // This limiter runs before `auth:sanctum`, so `$request->user()` is
+            // always null here — every admin request used to fall back to the IP,
+            // and behind the Nuxt proxy all traffic shares one internal IP. A
+            // gallery upload is one request per photo, so a big batch hit 429
+            // ("Too Many Attempts.") part-way. Resolve the bearer token
+            // explicitly and give each signed-in admin their own, larger budget.
+            $user = $request->user('sanctum');
+
+            if ($user) {
+                return Limit::perMinute(600)->by('admin:'.$user->getAuthIdentifier());
+            }
+
+            return Limit::perMinute(60)->by($request->ip());
         });
 
         $this->routes(function () {

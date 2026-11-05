@@ -13,6 +13,9 @@ const toast = useToast()
 
 const pending = ref(true)
 const formPending = ref(false)
+// Image upload progress after the car is created ("Uploading 3 / 8…").
+const imageProgress = ref<{ done: number; total: number } | null>(null)
+const { uploadImages } = useCarImageUpload()
 const errorMessage = ref('')
 const cars = ref<Car[]>([])
 const categories = ref<Category[]>([])
@@ -156,18 +159,30 @@ const submit = async () => {
     const newCarId = response.data.id
 
     // The image endpoint needs an existing car, so upload the picked files now
-    // that the car exists. The first image is marked as the thumbnail.
+    // that the car exists. The first image is marked as the thumbnail. From
+    // here on the car exists: a photo that fails is reported, never as "the car
+    // could not be created" (which invited a retry and a duplicate car).
     if (pendingImages.value.length > 0) {
-      for (const [index, item] of pendingImages.value.entries()) {
-        const imageBody = new FormData()
-        imageBody.append('image', item.file)
-        imageBody.append('is_thumbnail', index === 0 ? '1' : '0')
-        imageBody.append('sort_order', String(index))
+      const total = pendingImages.value.length
+      const { uploaded, failed } = await uploadImages(
+        newCarId,
+        pendingImages.value.map((item) => item.file),
+        {
+          thumbnailFirst: true,
+          baseSortOrder: 0,
+          onProgress: (done, count) => {
+            imageProgress.value = { done, total: count }
+          },
+        },
+      )
 
-        await adminApi(`/cars/${newCarId}/images`, {
-          method: 'POST',
-          body: imageBody,
-        })
+      if (failed.length > 0) {
+        toast.warning(
+          `Car created, ${uploaded} of ${total} images uploaded. Not uploaded — ${failed
+            .map((failure) => `${failure.name}: ${failure.message}`)
+            .join(' · ')} You can add them from the car page.`,
+          'Some images failed',
+        )
       }
     }
 
@@ -179,6 +194,7 @@ const submit = async () => {
     toast.apiError(error, 'The car could not be created with the current data.')
   } finally {
     formPending.value = false
+    imageProgress.value = null
   }
 }
 
@@ -325,7 +341,7 @@ onMounted(() => {
         <div class="flex flex-wrap gap-3 pt-2">
           <BaseButton type="submit" :disabled="formPending">
             <BaseIcon name="plus" :size="18" />
-            <span>{{ formPending ? 'Creating...' : 'Create car' }}</span>
+            <span>{{ imageProgress ? `Uploading ${Math.min(imageProgress.done + 1, imageProgress.total)} / ${imageProgress.total}…` : formPending ? 'Creating...' : 'Create car' }}</span>
           </BaseButton>
           <BaseButton type="button" variant="secondary" @click="showCreateModal = false">
             <span>Cancel</span>

@@ -4,8 +4,7 @@ import FormCheckbox from '~/components/forms/FormCheckbox.vue'
 import FormField from '~/components/forms/FormField.vue'
 import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
-import type { CarImage, ResourceResponse } from '~/types/entities'
-import { resolveApiErrorMessage } from '~/utils/api-error'
+import type { CarImage } from '~/types/entities'
 import { MAX_IMAGE_UPLOAD_MB } from '~/utils/constants'
 
 const props = defineProps<{
@@ -43,11 +42,20 @@ const onFileChange = (event: Event) => {
   files.value = selected.filter((file) => !tooLarge.includes(file))
 }
 
+const fileInput = ref<HTMLInputElement | null>(null)
+
 const resetForm = () => {
   files.value = []
+  if (fileInput.value) {
+    fileInput.value.value = ''
+  }
   form.isThumbnail = false
   form.sortOrder = ''
 }
+
+// Upload progress for the button label ("Uploading 3 / 12…").
+const progress = ref<{ done: number; total: number } | null>(null)
+const { uploadImages } = useCarImageUpload()
 
 const submit = async () => {
   if (files.value.length === 0) {
@@ -57,53 +65,43 @@ const submit = async () => {
 
   pending.value = true
 
-  // The backend accepts one image per request, so upload the selection
-  // sequentially. Only the first file honours the "set as thumbnail" flag, and
+  // One request per image (see useCarImageUpload): large photos are resized in
+  // the browser first, rate-limit errors are retried, and a failing file no
+  // longer stops the rest. Only the first file honours "set as thumbnail", and
   // an explicit sort order is incremented per file so the batch keeps its order.
-  const baseSortOrder = form.sortOrder !== '' ? Number(form.sortOrder) : null
-  let uploaded = 0
+  const total = files.value.length
 
   try {
-    for (const [index, file] of files.value.entries()) {
-      const body = new FormData()
-      body.append('image', file)
-      body.append('is_thumbnail', index === 0 && form.isThumbnail ? '1' : '0')
-
-      if (baseSortOrder !== null) {
-        body.append('sort_order', String(baseSortOrder + index))
-      }
-
-      await adminApi<ResourceResponse<CarImage>>(`/cars/${props.carId}/images`, {
-        method: 'POST',
-        body,
-      })
-
-      uploaded += 1
-    }
-
-    toast.success(
-      files.value.length > 1 ? `${files.value.length} images uploaded.` : 'Image uploaded.',
-      'Upload complete',
-    )
-    resetForm()
-    emit('changed')
-  } catch (error) {
-    const detail = resolveApiErrorMessage(error, {
-      fallback: 'Check the selected files and try again.',
+    const { uploaded, failed } = await uploadImages(props.carId, files.value, {
+      thumbnailFirst: form.isThumbnail,
+      baseSortOrder: form.sortOrder !== '' ? Number(form.sortOrder) : null,
+      onProgress: (done, count) => {
+        progress.value = { done, total: count }
+      },
     })
 
-    toast.error(
-      uploaded > 0
-        ? `Uploaded ${uploaded} of ${files.value.length} images before failing. ${detail}`
-        : `The image upload failed. ${detail}`,
-      'Upload failed',
-    )
+    if (failed.length === 0) {
+      toast.success(total > 1 ? `${total} images uploaded.` : 'Image uploaded.', 'Upload complete')
+      resetForm()
+    } else {
+      const details = failed.map((failure) => `${failure.name}: ${failure.message}`).join(' · ')
+      toast.error(
+        uploaded > 0
+          ? `${uploaded} of ${total} images uploaded. Not uploaded — ${details}`
+          : `The image upload failed. ${details}`,
+        'Upload failed',
+      )
+      // Keep only the files that failed selected, so they can be retried.
+      const failedNames = new Set(failed.map((failure) => failure.name))
+      files.value = files.value.filter((file) => failedNames.has(file.name))
+    }
 
     if (uploaded > 0) {
       emit('changed')
     }
   } finally {
     pending.value = false
+    progress.value = null
   }
 }
 
@@ -168,6 +166,7 @@ const removeImage = async (imageId: number) => {
           Image files
         </span>
         <input
+          ref="fileInput"
           type="file"
           accept="image/*"
           multiple
@@ -198,7 +197,7 @@ const removeImage = async (imageId: number) => {
 
       <BaseButton type="submit" :disabled="pending">
         <BaseIcon name="plus" :size="18" />
-        <span>{{ pending ? 'Working...' : files.length > 1 ? `Upload ${files.length} images` : 'Upload image' }}</span>
+        <span>{{ progress ? `Uploading ${Math.min(progress.done + 1, progress.total)} / ${progress.total}…` : pending ? 'Working...' : files.length > 1 ? `Upload ${files.length} images` : 'Upload image' }}</span>
       </BaseButton>
     </form>
   </AppPanel>
