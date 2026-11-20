@@ -131,9 +131,6 @@ const fleetLink = computed(() => ({
 
     <ul
       v-if="visibleCars.length"
-      :key="String(selected)"
-      v-inview
-      data-anim="stagger"
       class="mt-4 grid gap-4 md:grid-cols-2 lg:mt-6 lg:gap-6 xl:grid-cols-3">
       <FleetCard
         v-for="(car, index) in visibleCars"

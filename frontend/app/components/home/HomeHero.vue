@@ -65,19 +65,15 @@ const submit = () => {
   </section>
 
   <div class="mt-8 lg:mx-auto lg:mt-14 lg:max-w-[1360px] lg:px-10">
-    <div class="photo-frame relative h-[280px] overflow-hidden md:h-[420px] lg:h-[600px]">
-      <!-- Settles in on load; the taller image drifts with the scroll (parallax). -->
-      <div class="intro-photo absolute inset-0" style="--d: 150">
-        <img
-          v-parallax="0.06"
-          :src="heroImage"
-          :alt="t('site.home.hero.photoAlt')"
-          width="1537"
-          height="1023"
-          fetchpriority="high"
-          class="absolute inset-x-0 -top-[10%] h-[120%] w-full object-cover object-[center_65%]"
-        >
-      </div>
+    <div class="photo-frame h-[280px] overflow-hidden md:h-[420px] lg:h-[600px]">
+      <img
+        :src="heroImage"
+        :alt="t('site.home.hero.photoAlt')"
+        width="1537"
+        height="1023"
+        fetchpriority="high"
+        class="size-full object-cover object-[center_65%]"
+      >
     </div>
 
     <form

@@ -84,7 +84,7 @@ const specLine = computed(() =>
           :src="photo"
           alt=""
           loading="lazy"
-          class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+          class="size-full object-cover"
         >
       </div>
 

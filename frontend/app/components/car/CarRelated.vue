@@ -24,16 +24,16 @@ const link = (car: Car) => ({ path: localePath(`/cars/${car.slug ?? car.id}`), q
       <NuxtLink :to="localePath('/cars')" class="text-link shrink-0 text-[15px]">Toute la flotte</NuxtLink>
     </div>
 
-    <ul v-inview data-anim="stagger" class="grid sm:grid-cols-2 lg:grid-cols-3">
+    <ul class="grid sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="car in cars" :key="car.id" class="border-b border-line">
         <NuxtLink :to="link(car)" class="group flex flex-col gap-4 py-6 sm:pe-6">
-          <div v-inview data-anim="photo" class="photo-frame h-[200px] overflow-hidden">
+          <div class="photo-frame h-[200px] overflow-hidden">
             <img
               v-if="photo(car)"
               :src="photo(car)!"
               alt=""
               loading="lazy"
-              class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              class="size-full object-cover"
             >
           </div>
           <div class="flex items-baseline justify-between gap-3">

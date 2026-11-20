@@ -242,13 +242,7 @@ useSeoMeta({
         </li>
       </ul>
 
-      <ul
-        v-else-if="cars.length"
-        :key="`page-${currentPage}-${JSON.stringify(applied)}`"
-        v-inview
-        data-anim="stagger"
-        class="mt-4"
-      >
+      <ul v-else-if="cars.length" class="mt-4">
         <FleetRow
           v-for="(car, index) in cars"
           :key="car.id"

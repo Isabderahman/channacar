@@ -72,13 +72,13 @@ const price = computed(() =>
 
 <template>
   <li class="group relative flex flex-col border border-line bg-bg transition-colors hover:border-line-strong">
-    <div v-inview data-anim="photo" class="photo-frame relative h-[200px] overflow-hidden md:aspect-[4/3] md:h-auto">
+    <div class="photo-frame relative h-[200px] overflow-hidden md:aspect-[4/3] md:h-auto">
       <img
         v-if="photo"
         :src="photo"
         alt=""
         loading="lazy"
-        class="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+        class="size-full object-cover"
       >
       <span class="absolute start-3 top-3 bg-bg/80 px-1.5 py-0.5 font-plex text-[10px] text-muted md:start-4 md:top-4 md:text-[11px]">
         {{ rowIndex(index) }}

@@ -5,11 +5,10 @@
  *   <div v-inview data-anim="rise">        fades up when it enters the viewport
  *   <ul v-inview data-anim="stagger">       its children rise one after another
  *   <div v-inview data-anim="rule" class="rule-b">   its hairline draws in
- *   <div v-inview data-anim="photo">        top-down wipe, photo settles inside
- *   <img v-parallax="0.06">                 drifts slower than the page
+ *   <div v-inview data-anim="photo">        top-down curtain reveal (blocks only, not car photos)
  *
- * Hero content uses the CSS-only `.intro` / `.intro-photo` classes instead, so
- * it animates on first paint without waiting for JavaScript.
+ * Hero text uses the CSS-only `.intro` class instead, so it animates on first
+ * paint without waiting for JavaScript. Car photos are never animated.
  *
  * Elements are hidden before first paint only when this plugin is going to
  * reveal them: app.vue adds `html.anim` from an inline head script, and drops
@@ -79,53 +78,6 @@ export default defineNuxtPlugin((nuxtApp) => {
 
     unmounted(el: HTMLElement) {
       observer?.unobserve(el)
-    },
-  })
-
-  type ParallaxEl = HTMLElement & { _parallax?: () => void }
-
-  nuxtApp.vueApp.directive('parallax', {
-    getSSRProps: () => ({}),
-
-    mounted(el: ParallaxEl, binding: { value?: number }) {
-      if (!import.meta.client || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        return
-      }
-
-      const speed = binding.value ?? 0.06
-      const frame = el.parentElement ?? el
-      let pending = 0
-
-      const update = () => {
-        pending = 0
-        const rect = frame.getBoundingClientRect()
-
-        if (rect.bottom < 0 || rect.top > window.innerHeight) {
-          return
-        }
-
-        // Distance between the frame's centre and the viewport's centre.
-        const offset = rect.top + rect.height / 2 - window.innerHeight / 2
-        el.style.transform = `translate3d(0, ${(-offset * speed).toFixed(1)}px, 0)`
-      }
-
-      const onScroll = () => {
-        pending ||= requestAnimationFrame(update)
-      }
-
-      window.addEventListener('scroll', onScroll, { passive: true })
-      window.addEventListener('resize', onScroll)
-      update()
-
-      el._parallax = () => {
-        cancelAnimationFrame(pending)
-        window.removeEventListener('scroll', onScroll)
-        window.removeEventListener('resize', onScroll)
-      }
-    },
-
-    unmounted(el: ParallaxEl) {
-      el._parallax?.()
     },
   })
 })

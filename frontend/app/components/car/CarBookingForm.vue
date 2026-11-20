@@ -237,8 +237,6 @@ const nextSteps = [
 
         <!-- Summary -->
         <aside
-          v-inview
-          data-anim="rise"
           aria-label="Récapitulatif"
           class="w-full min-w-0 border border-line lg:sticky lg:top-6 lg:w-auto lg:min-w-[300px] lg:flex-[0_1_340px] lg:border-line-strong xl:flex-[0_1_400px]"
         >
