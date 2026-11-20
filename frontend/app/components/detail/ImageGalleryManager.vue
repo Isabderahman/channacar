@@ -223,14 +223,18 @@ const removeImage = async (imageId: number) => {
         <input
           ref="fileInput"
           type="file"
-          accept="image/*"
+          accept="image/*,.heic,.heif"
           multiple
           class="block w-full cursor-pointer border border-line-strong px-3 py-2.5 text-[14px] text-ink-2 file:me-4 file:cursor-pointer file:border-0 file:bg-surface file:px-4 file:py-2 file:font-plex file:text-[12px] file:uppercase file:tracking-[0.06em] file:text-ink hover:file:bg-surface-3"
           @change="onFileChange"
         >
-        <p class="mt-1.5 text-[13px] text-muted">
-          {{ files.length > 0 ? `${files.length} image${files.length > 1 ? 's' : ''} selected. The thumbnail flag applies to the first one.` : `Max ${MAX_IMAGE_UPLOAD_MB} MB per image — JPEG, PNG or WebP.` }}
-        </p>
+<p class="mt-1.5 text-[13px] text-muted">
+  {{
+    files.length > 0
+      ? `${files.length} image${files.length > 1 ? 's' : ''} selected. The thumbnail flag applies to the first one.`
+      : `Max ${MAX_IMAGE_UPLOAD_MB} MB per image. JPEG, PNG, WebP and HEIC supported. HEIC files are converted automatically.`
+  }}
+</p>
       </div>
 
       <div class="grid gap-4 md:grid-cols-2">
