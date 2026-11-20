@@ -6,6 +6,7 @@ import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { CarImage } from '~/types/entities'
 import { MAX_IMAGE_UPLOAD_MB } from '~/utils/constants'
+import heic2any from 'heic2any'
 
 const props = defineProps<{
   carId: number
@@ -26,20 +27,74 @@ const form = reactive({
 })
 const pending = ref(false)
 
-const onFileChange = (event: Event) => {
-  const selected = Array.from((event.target as HTMLInputElement).files ?? [])
-  // Catch oversized files here: past the server limit PHP discards the upload
-  // before Laravel runs, and the only clue is a bare 422.
-  const tooLarge = selected.filter((file) => file.size > MAX_IMAGE_UPLOAD_MB * 1024 * 1024)
+const onFileChange = async (event: Event) => {
+  const input = event.target as HTMLInputElement
+  const selected = Array.from(input.files ?? [])
 
-  if (tooLarge.length > 0) {
-    toast.warning(
-      `${tooLarge.map((file) => file.name).join(', ')} exceed${tooLarge.length > 1 ? '' : 's'} the ${MAX_IMAGE_UPLOAD_MB} MB limit. Resize before uploading.`,
-      'File too large',
+  if (selected.length === 0) return
+
+  pending.value = true
+
+  try {
+    const processedFiles: File[] = []
+
+    for (const file of selected) {
+      const isHeic =
+        file.type.toLowerCase() === 'image/heic' ||
+        file.type.toLowerCase() === 'image/heif' ||
+        /\.(heic|heif)$/i.test(file.name)
+
+      let processedFile = file
+
+      if (isHeic) {
+        try {
+          const converted = await heic2any({
+            blob: file,
+            toType: 'image/jpeg',
+            quality: 0.85,
+          })
+
+          const blob = Array.isArray(converted) ? converted[0] : converted
+
+          if (!blob) {
+            throw new Error('HEIC conversion returned no image.')
+          }
+
+          processedFile = new File(
+            [blob],
+            file.name.replace(/\.(heic|heif)$/i, '.jpg'),
+            {
+              type: 'image/jpeg',
+              lastModified: Date.now(),
+            },
+          )
+        } catch {
+          toast.error(
+            `Could not convert ${file.name} to JPEG.`,
+            'Image conversion failed',
+          )
+          continue
+        }
+      }
+
+      processedFiles.push(processedFile)
+    }
+
+    const tooLarge = processedFiles.filter(
+      (file) => file.size > MAX_IMAGE_UPLOAD_MB * 1024 * 1024,
     )
-  }
 
-  files.value = selected.filter((file) => !tooLarge.includes(file))
+    if (tooLarge.length > 0) {
+      toast.warning(
+        `${tooLarge.map((file) => file.name).join(', ')} exceed the ${MAX_IMAGE_UPLOAD_MB} MB limit.`,
+        'File too large',
+      )
+    }
+
+    files.value = processedFiles.filter((file) => !tooLarge.includes(file))
+  } finally {
+    pending.value = false
+  }
 }
 
 const fileInput = ref<HTMLInputElement | null>(null)
