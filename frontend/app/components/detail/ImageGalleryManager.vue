@@ -6,7 +6,6 @@ import BaseButton from '~/components/ui/BaseButton.vue'
 import BaseIcon from '~/components/ui/BaseIcon.vue'
 import type { CarImage } from '~/types/entities'
 import { MAX_IMAGE_UPLOAD_MB } from '~/utils/constants'
-import heic2any from 'heic2any'
 
 const props = defineProps<{
   carId: number
@@ -48,6 +47,10 @@ const onFileChange = async (event: Event) => {
 
       if (isHeic) {
         try {
+          // Loaded on demand: heic2any touches `window` as soon as it is
+          // imported, which crashed this page's server render (500 on any
+          // direct load/refresh of /admin/cars/:id). It is also ~1 MB.
+          const { default: heic2any } = await import('heic2any')
           const converted = await heic2any({
             blob: file,
             toType: 'image/jpeg',

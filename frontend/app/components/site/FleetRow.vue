@@ -2,7 +2,7 @@
 import type { RouteLocationRaw } from 'vue-router'
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import type { Car } from '~/types/entities'
-import { carFullName, carPhotoPath, formatAmount, rowIndex } from '~/utils/car-display'
+import { carFullName, carMetaLine, carPhotoPath, formatAmount, rowIndex } from '~/utils/car-display'
 
 // One numbered row of the fleet "spec sheet" (homepage + /cars). The whole row
 // is clickable through a stretched link on the car name.
@@ -23,7 +23,7 @@ const photo = computed(() => {
 const name = computed(() => carFullName(props.car))
 const number = computed(() => rowIndex(props.index))
 const meta = computed(() =>
-  [props.car.category?.name?.toUpperCase(), props.car.year].filter(Boolean).join(' · '),
+  carMetaLine(props.car),
 )
 const gearbox = computed(() => t(`site.fleet.transmission.${props.car.transmission}`))
 const fuel = computed(() => t(`site.fleet.fuels.${props.car.fuel}`))

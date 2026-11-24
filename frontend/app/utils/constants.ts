@@ -2,15 +2,6 @@
 // upload_max_filesize in Backend/docker/php.ini — the smallest of the three wins.
 export const MAX_IMAGE_UPLOAD_MB = 50
 
-export const CATEGORY_OPTIONS = [
-  'Citadines',
-  'Économique',
-  'Familiale',
-  'Mini urbaine',
-  'SUV',
-  'Utilitaire',
-] as const
-
 export const TRANSMISSION_OPTIONS = [
   { label: 'Manual', value: 'manual' },
   { label: 'Automatic', value: 'auto' },

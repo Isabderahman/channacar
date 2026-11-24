@@ -47,14 +47,17 @@ class PlanningController extends Controller
         }
 
         $cars = Car::query()
-            ->with('category:id,name')
+            ->with(['category:id,name', 'categories:id,name'])
             ->when(
                 ! $request->boolean('include_inactive'),
                 fn ($query) => $query->where('is_active', true)
             )
             ->when(
                 $request->filled('category_id'),
-                fn ($query) => $query->where('category_id', $request->integer('category_id'))
+                fn ($query) => $query->whereHas(
+                    'categories',
+                    fn ($categories) => $categories->whereKey($request->integer('category_id')),
+                )
             )
             ->orderBy('brand')
             ->orderBy('name')
@@ -100,6 +103,11 @@ class PlanningController extends Controller
                 'registration_number' => $car->registration_number,
                 'status' => $car->status->value,
                 'category' => $car->category?->name,
+                // Every category the car is listed under, main one first.
+                'categories' => $car->categories
+                    ->sortBy(fn ($category) => $category->id === $car->category_id ? 0 : 1)
+                    ->pluck('name')
+                    ->values(),
             ])->values(),
             'reservations' => $reservations->map(fn (Reservation $reservation) => [
                 'id' => $reservation->id,

@@ -224,7 +224,7 @@ export const faqContent = {
     {
       question: 'Quel âge minimum et quelle ancienneté de permis faut-il ?',
       answer:
-        "Le conducteur doit être âgé d'au moins 21 ans et titulaire d'un permis de conduire valide depuis au moins 1 an.",
+        "Le conducteur doit être âgé d'au moins 21 ans et titulaire d'un permis de conduire valide depuis au moins 2 ans.",
     },
     {
       question: 'Quels documents sont nécessaires pour louer une voiture ?',

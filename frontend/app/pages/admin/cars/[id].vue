@@ -2,6 +2,7 @@
 import type { Car, Category, ResourceResponse } from '~/types/entities'
 import { resolveApiErrorMessage } from '~/utils/api-error'
 import { CAR_STATUS_OPTIONS, FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
+import { carCategories } from '~/utils/car-display'
 import { formatCurrency } from '~/utils/formatters'
 
 definePageMeta({
@@ -23,7 +24,8 @@ const form = reactive({
   insurance_price_per_day: '',
   caution: '',
   brand: '',
-  category_id: '',
+  /** Main category first. */
+  category_ids: [] as number[],
   climatisation: false,
   doors: 0,
   fuel: 'petrol',
@@ -38,13 +40,6 @@ const form = reactive({
   year: new Date().getFullYear(),
 })
 
-const categoryOptions = computed(() =>
-  categories.value.map((category) => ({
-    label: category.name,
-    value: category.id,
-  })),
-)
-
 const summaryItems = computed(() => {
   if (!car.value) {
     return []
@@ -54,7 +49,10 @@ const summaryItems = computed(() => {
     { label: 'Current status', value: car.value.status },
     { label: 'Daily rate', value: formatCurrency(car.value.base_price_per_day) },
     { label: 'Registration', value: car.value.registration_number },
-    { label: 'Category', value: car.value.category?.name ?? 'Unknown' },
+    {
+      label: 'Categories',
+      value: carCategories(car.value).map((category) => category.name).join(' / ') || 'Unknown',
+    },
   ]
 })
 
@@ -64,7 +62,7 @@ const fillForm = (value: Car) => {
     value.insurance_price_per_day == null ? '' : String(value.insurance_price_per_day)
   form.caution = value.caution == null ? '' : String(value.caution)
   form.brand = value.brand
-  form.category_id = String(value.category_id)
+  form.category_ids = carCategories(value).map((category) => category.id)
   form.climatisation = value.climatisation
   form.doors = value.doors
   form.fuel = value.fuel
@@ -108,6 +106,11 @@ const save = async () => {
     return
   }
 
+  if (form.category_ids.length === 0) {
+    toast.warning('Pick at least one category for this car.', 'Category required')
+    return
+  }
+
   saving.value = true
   errorMessage.value = ''
 
@@ -120,7 +123,6 @@ const save = async () => {
         insurance_price_per_day:
           form.insurance_price_per_day === '' ? null : Number(form.insurance_price_per_day),
         caution: form.caution === '' ? null : Number(form.caution),
-        category_id: Number(form.category_id),
         doors: Number(form.doors),
         luggage: Number(form.luggage),
         seats: Number(form.seats),
@@ -223,7 +225,7 @@ watch(
                 <FormField v-model="form.name" name="name" label="Model name" />
                 <FormField v-model="form.year" name="year" label="Year" type="number" min="1900" />
                 <FormField v-model="form.registration_number" name="registration_number" label="Registration" />
-                <FormSelect v-model="form.category_id" name="category_id" label="Category" :options="categoryOptions" />
+                <AdminCategoryPicker v-model="form.category_ids" :categories="categories" class="md:col-span-2" />
                 <FormField v-model="form.base_price_per_day" name="base_price_per_day" label="Base price / day" type="number" min="0" />
                 <FormField v-model="form.insurance_price_per_day" name="insurance_price_per_day" label="Insurance / day (optional)" type="number" min="0" />
                 <FormField v-model="form.caution" name="caution" label="Caution / deposit (optional)" type="number" min="0" />

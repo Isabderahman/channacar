@@ -13,7 +13,7 @@ class CarController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Car::query()
-            ->with(['category', 'images'])
+            ->with(['category', 'categories', 'images'])
             ->where('is_active', true)
             ->where('status', '!=', CarStatus::Maintenance->value)
             ->when($request->filled('search'), function ($builder) use ($request) {
@@ -25,7 +25,11 @@ class CarController extends Controller
                         ->orWhere('brand', 'like', "%{$search}%");
                 });
             })
-            ->when($request->filled('category_id'), fn ($builder) => $builder->where('category_id', $request->integer('category_id')))
+            // A car matches any of its categories, not only the main one.
+            ->when($request->filled('category_id'), fn ($builder) => $builder->whereHas(
+                'categories',
+                fn ($categories) => $categories->whereKey($request->integer('category_id')),
+            ))
             ->when($request->filled('transmission'), fn ($builder) => $builder->where('transmission', $request->string('transmission')->value()))
             ->when($request->filled('fuel'), fn ($builder) => $builder->where('fuel', $request->string('fuel')->value()))
             ->when($request->filled('seats'), fn ($builder) => $builder->where('seats', '>=', $request->integer('seats')))
@@ -39,7 +43,7 @@ class CarController extends Controller
     public function show(string $car): JsonResponse
     {
         $model = Car::query()
-            ->with(['category', 'images'])
+            ->with(['category', 'categories', 'images'])
             ->where('slug', $car)
             ->where('is_active', true)
             ->where('status', '!=', CarStatus::Maintenance->value)

@@ -27,8 +27,11 @@ export interface Car {
   name: string
   brand: string
   year: number
+  /** Main category (shown where only one fits). */
   category_id: number
   category?: Category | null
+  /** Every category the car is listed under, main one included. */
+  categories?: Category[]
   doors: number
   seats: number
   luggage: number
@@ -247,6 +250,8 @@ export interface PlanningCar {
   registration_number: string
   status: CarStatus
   category?: string | null
+  /** Every category name, main one first. */
+  categories?: string[]
 }
 
 export interface PlanningReservation {

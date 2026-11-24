@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Car } from '~/types/entities'
-import { carFullName, carPhotoPath, formatAmount } from '~/utils/car-display'
+import { carFullName, carMetaLine, carPhotoPath, formatAmount } from '~/utils/car-display'
 
 // "Vous aimerez aussi": up to 3 cars, same category first.
 defineProps<{ cars: Car[] }>()
@@ -13,7 +13,7 @@ const photo = (car: Car) => {
   const path = carPhotoPath(car)
   return path ? mediaUrl(path) : null
 }
-const meta = (car: Car) => [car.category?.name?.toUpperCase(), car.year].filter(Boolean).join(' · ')
+const meta = (car: Car) => carMetaLine(car)
 const link = (car: Car) => ({ path: localePath(`/cars/${car.slug ?? car.id}`), query: toQuery() })
 </script>
 

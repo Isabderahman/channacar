@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import type { Car, Category, PaginatedResponse, ResourceResponse } from '~/types/entities'
 import { resolveApiErrorMessage } from '~/utils/api-error'
-import { CAR_STATUS_OPTIONS, CATEGORY_OPTIONS, FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
+import { carCategories } from '~/utils/car-display'
+import { CAR_STATUS_OPTIONS, FUEL_OPTIONS, TRANSMISSION_OPTIONS } from '~/utils/constants'
 import { formatCurrency } from '~/utils/formatters'
 
 definePageMeta({
@@ -25,7 +26,8 @@ const createFormState = () => ({
   insurance_price_per_day: '',
   caution: '',
   brand: '',
-  category_id: '',
+  /** Main category first. */
+  category_ids: [] as number[],
   climatisation: true,
   doors: 5,
   fuel: 'petrol',
@@ -80,21 +82,10 @@ const openCreateModal = () => {
   showCreateModal.value = true
 }
 
-const categoryOptions = computed(() => {
-  const dynamicOptions = categories.value.map((category) => ({
-    label: category.name,
-    value: category.id,
-  }))
-
-  return dynamicOptions.length
-    ? dynamicOptions
-    : CATEGORY_OPTIONS.map((category) => ({ label: category, value: category }))
-})
-
 const tableRows = computed(() =>
   cars.value.map((car) => ({
     active: car.is_active,
-    category_name: car.category?.name ?? 'Unknown',
+    category_name: carCategories(car).map((category) => category.name).join(' / ') || 'Unknown',
     id: car.id,
     price: formatCurrency(car.base_price_per_day),
     status: car.status,
@@ -134,6 +125,11 @@ const resetForm = () => {
 }
 
 const submit = async () => {
+  if (form.category_ids.length === 0) {
+    toast.warning('Pick at least one category for this car.', 'Category required')
+    return
+  }
+
   formPending.value = true
   errorMessage.value = ''
 
@@ -144,7 +140,6 @@ const submit = async () => {
       insurance_price_per_day:
         form.insurance_price_per_day === '' ? null : Number(form.insurance_price_per_day),
       caution: form.caution === '' ? null : Number(form.caution),
-      category_id: typeof form.category_id === 'number' ? form.category_id : Number(form.category_id),
       doors: Number(form.doors),
       luggage: Number(form.luggage),
       seats: Number(form.seats),
@@ -234,7 +229,7 @@ onMounted(() => {
       description="Select a vehicle to open its full detail page and image manager."
       :columns="[
         { key: 'vehicle', label: 'Vehicle' },
-        { key: 'category_name', label: 'Category' },
+        { key: 'category_name', label: 'Categories' },
         { key: 'year', label: 'Year' },
         { key: 'price', label: 'Daily rate' },
         { key: 'status', label: 'Status' },
@@ -280,7 +275,7 @@ onMounted(() => {
           <FormField v-model="form.name" name="name" label="Model name" />
           <FormField v-model="form.year" name="year" label="Year" type="number" min="1900" />
           <FormField v-model="form.registration_number" name="registration_number" label="Registration" />
-          <FormSelect v-model="form.category_id" name="category_id" label="Category" :options="categoryOptions" />
+          <AdminCategoryPicker v-model="form.category_ids" :categories="categories" class="md:col-span-2" />
           <FormField v-model="form.base_price_per_day" name="base_price_per_day" label="Base price / day" type="number" min="0" />
           <FormField v-model="form.insurance_price_per_day" name="insurance_price_per_day" label="Insurance / day (optional)" type="number" min="0" />
           <FormField v-model="form.caution" name="caution" label="Caution / deposit (optional)" type="number" min="0" />

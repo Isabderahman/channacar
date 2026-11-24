@@ -175,13 +175,14 @@ const rangeLabel = computed(() => {
   return `${startLabel} – ${endLabel}, ${year}`
 })
 
+// A car can be in several categories; older API responses only send `category`.
+const carCategoryNames = (car: PlanningCar) => car.categories ?? (car.category ? [car.category] : [])
+
 const categoryOptions = computed(() => {
   const names = new Set<string>()
 
   cars.value.forEach((car) => {
-    if (car.category) {
-      names.add(car.category)
-    }
+    carCategoryNames(car).forEach((name) => names.add(name))
   })
 
   return [...names].sort().map((name) => ({ label: name, value: name }))
@@ -191,7 +192,7 @@ const filteredCars = computed(() => {
   const term = search.value.trim().toLowerCase()
 
   return cars.value.filter((car) => {
-    if (categoryFilter.value && car.category !== categoryFilter.value) {
+    if (categoryFilter.value && !carCategoryNames(car).includes(categoryFilter.value)) {
       return false
     }
 

@@ -62,6 +62,13 @@ class CarSeeder extends Seeder
             'Premium' => 15000,
         ];
 
+        // Cars listed under more than one category (main category first).
+        $extraCategories = [
+            'Sandero' => ['Citadines'],
+            'Range Rover Evoque' => ['SUV'],
+            'Macan' => ['SUV'],
+        ];
+
         $categoryIds = [];
 
         foreach ($cars as $car) {
@@ -71,7 +78,7 @@ class CarSeeder extends Seeder
                 ->firstOrCreate(['name' => $categoryName])
                 ->id;
 
-            Car::query()->updateOrCreate(
+            $model = Car::query()->updateOrCreate(
                 ['registration_number' => $car['plate']],
                 [
                     'category_id' => $categoryIds[$categoryName],
@@ -92,6 +99,15 @@ class CarSeeder extends Seeder
                     'is_active' => true,
                 ],
             );
+
+            $ids = [$categoryIds[$categoryName]];
+
+            foreach ($extraCategories[$car['name']] ?? [] as $extraName) {
+                $categoryIds[$extraName] ??= Category::query()->firstOrCreate(['name' => $extraName])->id;
+                $ids[] = $categoryIds[$extraName];
+            }
+
+            $model->assignCategories($ids);
         }
     }
 }

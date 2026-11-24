@@ -11,6 +11,24 @@ export const formatAmount = (value: NumericValue | null | undefined) =>
 
 export const carFullName = (car: Pick<Car, 'brand' | 'name'>) => `${car.brand} ${car.name}`
 
+/** Every category of the car, main category first. */
+export const carCategories = (car: Pick<Car, 'category' | 'categories' | 'category_id'>) => {
+  const all = car.categories?.length ? car.categories : car.category ? [car.category] : []
+
+  return [...all].sort((a, b) => Number(b.id === car.category_id) - Number(a.id === car.category_id))
+}
+
+/** "SUV / PREMIUM · 2026" — the small meta line above a car's name. */
+export const carMetaLine = (car: Pick<Car, 'category' | 'categories' | 'category_id' | 'year'>) =>
+  [
+    carCategories(car)
+      .map((category) => category.name.toUpperCase())
+      .join(' / '),
+    car.year,
+  ]
+    .filter(Boolean)
+    .join(' · ')
+
 /** Stored image path for the car's main photo, or null when none was uploaded. */
 export const carPhotoPath = (car?: Pick<Car, 'images'> | null) => pickCarImagePath(car)
 

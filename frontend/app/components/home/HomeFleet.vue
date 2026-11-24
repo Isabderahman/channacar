@@ -2,6 +2,7 @@
 import FleetCard from '~/components/home/FleetCard.vue'
 import { draftDays } from '~/composables/useBookingDraft'
 import type { Car } from '~/types/entities'
+import { carCategories } from '~/utils/car-display'
 
 // "La flotte": card grid with category filters built from the live fleet
 // (label + count per category present in the data). Once both hero dates are
@@ -23,16 +24,15 @@ const selected = ref<number | 'all'>('all')
 const filters = computed(() => {
   const counts = new Map<number, { name: string; count: number }>()
 
+  // A car counts under each of its categories (e.g. SUV and Premium).
   for (const car of props.cars) {
-    if (!car.category) {
-      continue
-    }
-
-    const entry = counts.get(car.category.id)
-    if (entry) {
-      entry.count += 1
-    } else {
-      counts.set(car.category.id, { name: car.category.name, count: 1 })
+    for (const category of carCategories(car)) {
+      const entry = counts.get(category.id)
+      if (entry) {
+        entry.count += 1
+      } else {
+        counts.set(category.id, { name: category.name, count: 1 })
+      }
     }
   }
 
@@ -47,7 +47,7 @@ const filters = computed(() => {
 const visibleCars = computed(() =>
   (selected.value === 'all'
     ? props.cars
-    : props.cars.filter((car) => car.category_id === selected.value)
+    : props.cars.filter((car) => carCategories(car).some((category) => category.id === selected.value))
   ).slice(0, props.limit),
 )
 

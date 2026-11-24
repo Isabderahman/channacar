@@ -21,7 +21,7 @@ const reviewDate = (value?: string) =>
 const faq = computed(() => [
   {
     q: 'Quelles sont les conditions pour louer ?',
-    a: 'Le conducteur doit avoir au moins 21 ans et un permis de conduire valide depuis au moins 1 an.',
+    a: 'Le conducteur doit avoir au moins 21 ans et un permis de conduire valide depuis au moins 2 ans.',
   },
   {
     q: 'Quels documents dois-je présenter ?',

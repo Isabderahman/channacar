@@ -2,7 +2,7 @@
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import type { CarBooking } from '~/composables/useCarBooking'
 import type { Car } from '~/types/entities'
-import { formatAmount } from '~/utils/car-display'
+import { carMetaLine, formatAmount } from '~/utils/car-display'
 
 // Info column: category · year, name, price/day, deposit, spec table, CTAs,
 // live estimate, reassurance points and rental conditions.
@@ -20,7 +20,7 @@ const fuelLabels: Record<string, string> = {
 }
 
 const meta = computed(() =>
-  [props.car.category?.name?.toUpperCase(), props.car.year].filter(Boolean).join(' · '),
+  carMetaLine(props.car),
 )
 const gearbox = computed(() => (props.car.transmission === 'auto' ? 'Automatique' : 'Manuelle'))
 const fuel = computed(() => fuelLabels[props.car.fuel] ?? props.car.fuel)
@@ -60,7 +60,7 @@ const reassurance = [
 
 const conditions = [
   { k: 'Âge minimum', v: '21 ans' },
-  { k: 'Permis', v: '1 an minimum' },
+  { k: 'Permis', v: '2 ans minimum' },
   { k: 'Documents', v: 'CIN ou passeport + permis' },
   { k: 'Assurance', v: 'Incluse selon contrat' },
 ]
@@ -126,7 +126,7 @@ const conditions = [
 
     <!-- Mobile: one-line conditions -->
     <p style="--d: 420" class="intro mt-4 bg-surface-2 px-3.5 py-3 text-[13px] text-ink-2 md:hidden">
-      21 ans minimum · permis de plus d’1 an · CIN ou passeport · assurance incluse selon contrat
+      21 ans minimum · permis de plus de 2 ans · CIN ou passeport · assurance incluse selon contrat
     </p>
 
     <dl style="--d: 420" class="intro mt-5 hidden grid-cols-2 gap-x-5 gap-y-3 bg-surface-2 p-4 text-[14px] md:grid">

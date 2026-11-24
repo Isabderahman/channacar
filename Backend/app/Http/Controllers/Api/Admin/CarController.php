@@ -11,6 +11,7 @@ use App\Models\Category;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +20,7 @@ class CarController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Car::query()
-            ->with(['category', 'images'])
+            ->with(['category', 'categories', 'images'])
             ->when($request->filled('search'), function ($builder) use ($request) {
                 $search = $request->string('search')->trim()->value();
 
@@ -32,7 +33,11 @@ class CarController extends Controller
             })
             ->when($request->filled('status'), fn ($builder) => $builder->where('status', $request->string('status')->value()))
             ->when($request->filled('is_active'), fn ($builder) => $builder->where('is_active', $request->boolean('is_active')))
-            ->when($request->filled('category_id'), fn ($builder) => $builder->where('category_id', $request->integer('category_id')))
+            // A car matches any of its categories, not only the main one.
+            ->when($request->filled('category_id'), fn ($builder) => $builder->whereHas(
+                'categories',
+                fn ($categories) => $categories->whereKey($request->integer('category_id')),
+            ))
             ->latest();
 
         return response()->json($query->paginate($this->perPage($request)));
@@ -41,36 +46,50 @@ class CarController extends Controller
     public function show(Car $car): JsonResponse
     {
         return response()->json([
-            'data' => $car->load(['category', 'images']),
+            'data' => $car->load(['category', 'categories', 'images']),
         ]);
     }
 
     public function store(Request $request): JsonResponse
     {
         $validated = $request->validate($this->rules());
-        $validated['category_id'] = $this->resolveCategoryId($validated);
-        unset($validated['category']);
+        $categoryIds = $this->resolveCategoryIds($validated);
+        $validated['category_id'] = $categoryIds[0];
+        unset($validated['category'], $validated['category_ids']);
 
-        $car = Car::query()->create($validated)->load(['category', 'images']);
+        $car = DB::transaction(function () use ($validated, $categoryIds) {
+            $car = Car::query()->create($validated);
+            $car->assignCategories($categoryIds);
+
+            return $car;
+        });
 
         return response()->json([
-            'data' => $car,
+            'data' => $car->load(['category', 'categories', 'images']),
         ], 201);
     }
 
     public function update(Request $request, Car $car): JsonResponse
     {
         $validated = $request->validate($this->rules($car, true));
+        $categoryIds = null;
 
-        if (array_key_exists('category', $validated) || array_key_exists('category_id', $validated)) {
-            $validated['category_id'] = $this->resolveCategoryId($validated);
-            unset($validated['category']);
+        if (array_intersect_key($validated, array_flip(['category', 'category_id', 'category_ids'])) !== []) {
+            $categoryIds = $this->resolveCategoryIds($validated);
+            $validated['category_id'] = $categoryIds[0];
+            unset($validated['category'], $validated['category_ids']);
         }
 
-        $car->update($validated);
+        DB::transaction(function () use ($car, $validated, $categoryIds) {
+            $car->update($validated);
+
+            if ($categoryIds !== null) {
+                $car->assignCategories($categoryIds);
+            }
+        });
 
         return response()->json([
-            'data' => $car->fresh()->load(['category', 'images']),
+            'data' => $car->fresh()->load(['category', 'categories', 'images']),
         ]);
     }
 
@@ -107,8 +126,12 @@ class CarController extends Controller
             'name' => [$required, 'string', 'max:255'],
             'brand' => [$required, 'string', 'max:255'],
             'year' => [$required, 'integer', 'min:1900', 'max:'.$currentYear],
-            'category_id' => [$updating ? 'sometimes' : 'nullable', 'nullable', 'integer', 'exists:categories,id', 'required_without:category'],
-            'category' => [$updating ? 'sometimes' : 'nullable', 'nullable', 'string', Rule::exists('categories', 'name'), 'required_without:category_id'],
+            // Several categories per car: `category_ids` (first = main). The
+            // single `category_id` / `category` name are still accepted.
+            'category_ids' => [$updating ? 'sometimes' : 'nullable', 'array', 'min:1', 'required_without_all:category_id,category'],
+            'category_ids.*' => ['integer', 'distinct', 'exists:categories,id'],
+            'category_id' => [$updating ? 'sometimes' : 'nullable', 'nullable', 'integer', 'exists:categories,id', 'required_without_all:category,category_ids'],
+            'category' => [$updating ? 'sometimes' : 'nullable', 'nullable', 'string', Rule::exists('categories', 'name'), 'required_without_all:category_id,category_ids'],
             'doors' => [$required, 'integer', 'min:1', 'max:10'],
             'seats' => [$required, 'integer', 'min:1', 'max:20'],
             'luggage' => [$required, 'integer', 'min:0', 'max:20'],
@@ -131,18 +154,27 @@ class CarController extends Controller
     }
 
     /**
+     * The car's category ids, main category first.
+     *
      * @param  array<string, mixed>  $validated
+     * @return array<int, int>
      */
-    private function resolveCategoryId(array $validated): int
+    private function resolveCategoryIds(array $validated): array
     {
-        if (! empty($validated['category_id'])) {
-            return (int) $validated['category_id'];
+        if (! empty($validated['category_ids'])) {
+            return array_values(array_unique(array_map('intval', $validated['category_ids'])));
         }
 
-        return Category::query()
-            ->where('name', $validated['category'])
-            ->firstOrFail()
-            ->id;
+        if (! empty($validated['category_id'])) {
+            return [(int) $validated['category_id']];
+        }
+
+        return [
+            Category::query()
+                ->where('name', $validated['category'])
+                ->firstOrFail()
+                ->id,
+        ];
     }
 
     /**

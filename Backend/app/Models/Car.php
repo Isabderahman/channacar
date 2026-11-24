@@ -85,9 +85,36 @@ class Car extends Model
         return $slug;
     }
 
+    /** Main category: shown where only one fits (contract, breadcrumb). */
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    /** Every category the car is listed under (main one included). */
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class)->orderBy('name');
+    }
+
+    /**
+     * Set the car's categories; the first id becomes the main category.
+     *
+     * @param  array<int, int>  $categoryIds
+     */
+    public function assignCategories(array $categoryIds): void
+    {
+        $categoryIds = array_values(array_unique(array_map('intval', $categoryIds)));
+
+        if ($categoryIds === []) {
+            return;
+        }
+
+        if ((int) $this->category_id !== $categoryIds[0]) {
+            $this->forceFill(['category_id' => $categoryIds[0]])->save();
+        }
+
+        $this->categories()->sync($categoryIds);
     }
 
     public function images(): HasMany
