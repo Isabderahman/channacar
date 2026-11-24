@@ -16,7 +16,7 @@
   },
   "seo": {
     "home": {
-      "title": "ChanaaCar — Car Rental in Marrakech | Luxury & Comfort",
+      "title": "ChanaaCar — Car Rental in Marrakech {'|'} Luxury & Comfort",
       "description": "Rent a car in Marrakech with ChanaaCar: recent vehicles, free delivery to Marrakech Menara Airport, 24/7 assistance, and rates from 300 MAD/day. Fast booking with no hidden fees."
     }
   },
@@ -332,5 +332,235 @@
       "social": "Social media",
       "rights": "All rights reserved."
     }
+  },
+  "car": {
+    "seo": {
+      "fallbackTitle": "Car details",
+      "fallbackDescription": "Car details, photo gallery, specifications and booking form.",
+      "description": "Rent the {name} ({year}) in Marrakech: {seats} seats, {doors} doors, {features}. From {amount} MAD per day. Easy booking with ChannaCar.",
+      "transmission": {
+        "auto": "automatic gearbox",
+        "manual": "manual gearbox"
+      },
+      "airCon": "air conditioning"
+    },
+    "breadcrumb": {
+      "aria": "Breadcrumb",
+      "home": "Home"
+    },
+    "errors": {
+      "title": "Error",
+      "loadTitle": "Loading failed",
+      "load": "The requested car could not be loaded.",
+      "unavailable": "Details unavailable"
+    },
+    "currency": "MAD",
+    "amount": "{amount} MAD",
+    "info": {
+      "deposit": "Deposit",
+      "doors": "Doors",
+      "airCon": "Air conditioning",
+      "gps": "GPS",
+      "year": "Year",
+      "yes": "Yes",
+      "no": "No",
+      "gearbox": {
+        "auto": "Automatic",
+        "manual": "Manual"
+      },
+      "seatsCount": "{n} seats",
+      "doorsCount": "{n} doors",
+      "bagsCount": "{n} bags",
+      "airConShort": "A/C",
+      "reassurance": {
+        "delivery": "Delivery to Menara airport or your hotel",
+        "support": "24/7 assistance",
+        "pricing": "Transparent pricing",
+        "deposit": "Refundable deposit"
+      },
+      "conditions": {
+        "ageLabel": "Minimum age",
+        "age": "21 years",
+        "licenceLabel": "Licence",
+        "licence": "Held for 2+ years",
+        "documentsLabel": "Documents",
+        "documents": "National ID or passport + licence",
+        "insuranceLabel": "Insurance",
+        "insurance": "Included as per contract",
+        "summary": "Aged 21+ · licence held for 2+ years · national ID or passport · insurance included as per contract"
+      },
+      "book": "Book this car",
+      "estimate": "Your estimate: {amount} MAD for {days}.",
+      "reviews": "What our customers say"
+    },
+    "gallery": {
+      "photoAlt": "{name} — photo {n} of {total}",
+      "choose": "Choose a photo",
+      "photo": "Photo {n} of {total}"
+    },
+    "booking": {
+      "titleMobile": "Book in 2 minutes.",
+      "title": "Book this car.",
+      "lead": "Three steps, about two minutes. This is a request: our team confirms availability and the price.",
+      "formAria": "Booking request",
+      "whenWhere": "When and where?",
+      "pickup": "Pick-up location",
+      "dropoff": "Return location",
+      "sameLocation": "Same as pick-up location",
+      "from": "Pick-up",
+      "to": "Return",
+      "duration": "Duration",
+      "removeDay": "Remove a day",
+      "addDay": "Add a day",
+      "options": "Options",
+      "optional": "optional",
+      "optionsNoteSame": "{amount} MAD per day, per option.",
+      "optionsNote": "Price shown for each option, per day unless stated otherwise.",
+      "extraPerDay": "{amount} MAD / day",
+      "extraOnce": "{amount} MAD · one-time",
+      "addExtra": "Add: {name}",
+      "removeExtra": "Remove: {name}",
+      "add": "Add",
+      "added": "✓ Added",
+      "insuranceAdded": "✓ Added",
+      "showLess": "Show fewer options",
+      "showMore": "See {n} more options | See {n} more option | See {n} more options",
+      "insurance": "Additional insurance",
+      "insuranceNote": "Optional cover, {amount} MAD per day.",
+      "contact": "Your details",
+      "contactNote": "So we can send you the confirmation.",
+      "fullName": "Full name",
+      "phone": "Phone",
+      "whatsappReachable": "This number can be reached on WhatsApp",
+      "email": "Email",
+      "optionalParen": "(optional)",
+      "licence": "Driving licence number",
+      "notes": "Note",
+      "notesHint": "(optional) — flight number, special request",
+      "summary": "Summary",
+      "rental": "Rental · {days}",
+      "total": "Estimated total",
+      "deposit": "Refundable deposit, not included",
+      "disclaimer": "Indicative price, adjusted for the season and confirmed by our team.",
+      "sending": "Sending…",
+      "submit": "Send my request",
+      "whatsappShort": "Book on WhatsApp",
+      "whatsapp": "Or book directly on WhatsApp",
+      "nextTitle": "What happens next?",
+      "next": {
+        "check": "Our team checks availability.",
+        "confirm": "You receive the confirmed price by phone or WhatsApp.",
+        "ready": "The car is waiting for you at the place you chose."
+      },
+      "barEstimate": "{days} · estimate",
+      "lineOnce": "{name} (one-time)",
+      "delivery": "Delivery and collection fees",
+      "toast": {
+        "errorTitle": "Booking failed",
+        "successTitle": "Booking confirmed",
+        "success": "Booking {number} created successfully.",
+        "error": "Your booking could not be sent. Please check the dates and the selected options."
+      }
+    },
+    "faq": {
+      "reviewsTitle": "They rented with us",
+      "rating": "Customer rating: {stars} out of 5",
+      "titleShort": "Good to know",
+      "title": "Good to know before you book",
+      "items": {
+        "conditions": {
+          "q": "What are the rental requirements?",
+          "a": "The driver must be at least 21 years old and have held a valid driving licence for at least 2 years."
+        },
+        "documents": {
+          "q": "Which documents do I need?",
+          "a": "A valid ID (national ID card or passport), your driving licence and a means of payment."
+        },
+        "insurance": {
+          "q": "Is insurance included?",
+          "a": "Yes, our cars are covered under the terms of the rental contract. Additional insurance is extra, optional protection."
+        },
+        "mileage": {
+          "q": "Is mileage limited?",
+          "a": "Most of our rentals include mileage suited to your itinerary. Unlimited mileage is available on request, depending on the category and rental length."
+        },
+        "deposit": {
+          "q": "How does the deposit work?",
+          "aAmount": "For this car, the deposit is {amount} MAD. It is a refundable guarantee and is not included in the rental total.",
+          "a": "The deposit is a refundable guarantee and is not included in the rental total. Our team will tell you the amount when confirming."
+        },
+        "cancel": {
+          "q": "Can I cancel my booking?",
+          "a": "Yes, under the cancellation terms given when you book."
+        },
+        "breakdown": {
+          "q": "What should I do after a breakdown or an accident?",
+          "a": "Contact our assistance team immediately — they are available 24/7."
+        }
+      },
+      "more": "Another question? {whatsapp} or {form} — we reply 24/7.",
+      "moreWhatsapp": "Message us on WhatsApp",
+      "moreForm": "use the contact form"
+    },
+    "related": {
+      "title": "You may also like",
+      "all": "The whole fleet"
+    }
+  },
+  "fleetPage": {
+    "seo": {
+      "title": "Rent a car",
+      "description": "Browse the ChanaaCar fleet with filters, pagination and quick booking."
+    },
+    "eyebrow": "Available fleet — Marrakech & Morocco",
+    "title": "Find the right car for your stay.",
+    "lead": "Browse the available cars, filter by budget and book in a few minutes.",
+    "count": "{n} cars | {n} car | {n} cars",
+    "filtersAria": "Filters",
+    "search": "Search",
+    "searchPlaceholder": "Make or model",
+    "allFeminine": "All",
+    "minPrice": "Min price / day",
+    "maxPrice": "Max price / day",
+    "minSeats": "Min seats",
+    "reset": "Reset",
+    "apply": "Apply",
+    "errorTitle": "List unavailable",
+    "error": "The car list is unavailable right now.",
+    "toastTitle": "Error",
+    "loadTitle": "Loading failed",
+    "emptyTitle": "No cars found",
+    "emptyText": "Adjust the filters or reset your search to see the whole fleet again.",
+    "paginationAria": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} / {last}"
+  },
+  "success": {
+    "seo": {
+      "title": "Booking confirmed",
+      "description": "Confirmation page after a booking request."
+    },
+    "pendingReference": "Reference pending",
+    "defaultCar": "your selected car",
+    "eyebrow": "Confirmation",
+    "title": "Your request for {car} has been received.",
+    "lead": "We have recorded your booking request. The ChanaaCar team will get back to you to confirm availability and arrange the car handover.",
+    "status": "Status",
+    "statusValue": "Request recorded",
+    "reference": "Reference",
+    "next": "Next step",
+    "nextValue": "A quick reply from our team",
+    "bookAnother": "Book another car",
+    "contact": "Contact the team"
+  },
+  "whatsapp": {
+    "general": "Hello ChanaaCar, I would like some information about renting a car.",
+    "car": "Hello ChanaaCar, I am interested in the {name} ({year}) at {amount} MAD per day. Is it available for my dates?",
+    "booking": "Hello ChanaaCar, I would like to book {car} for {days}.",
+    "bookingDates": "Hello ChanaaCar, I would like to book {car} for {days} (from {from} to {to}).",
+    "carName": "the {name}",
+    "carNameElided": "the {name}",
+    "dateTime": "{date} at {time}"
   }
 }

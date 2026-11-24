@@ -10,7 +10,7 @@ import {
   toDateTimeLocal,
 } from '~/utils/car-display'
 import { extraLineTotal, toNumber } from '~/utils/formatters'
-import { whatsappHref } from '~/utils/whatsapp'
+import { whatsappHref, type WhatsappTranslate } from '~/utils/whatsapp'
 
 /**
  * State + pricing for the car page booking flow. One instance is shared by the
@@ -28,11 +28,15 @@ export const useCarBooking = (
 ) => {
   const route = useRoute()
   const router = useRouter()
+  const localePath = useLocalePath()
   const { publicApi } = useApi()
+  const { t, locale } = useI18n()
+  // resolveApiErrorMessage only has French and English wording of its own.
+  const apiLocale = computed(() => (locale.value === 'fr' ? 'fr' : 'en'))
   const toast = useToast({
-    locale: 'fr',
-    errorTitle: 'Réservation échouée',
-    successTitle: 'Réservation confirmée',
+    locale: apiLocale.value,
+    errorTitle: t('car.booking.toast.errorTitle'),
+    successTitle: t('car.booking.toast.successTitle'),
   })
 
   // Start from the place/dates picked on the homepage (or in the URL).
@@ -66,7 +70,7 @@ export const useCarBooking = (
 
   // ── Duration ───────────────────────────────────────────────────────────
   const days = computed(() => daysBetween(form.pickupAt, form.dropoffAt))
-  const daysLabel = computed(() => `${days.value} jour${days.value > 1 ? 's' : ''}`)
+  const daysLabel = computed(() => t('site.fleet.days', days.value))
 
   // Moving the pickup keeps the rental length.
   watch(
@@ -134,14 +138,14 @@ export const useCarBooking = (
   const lines = computed(() => [
     ...selectedExtras.value.map((extra) => ({
       key: `extra-${extra.id}`,
-      label: extra.billing_type === 'one_time' ? `${extra.name} (une fois)` : extra.name,
+      label: extra.billing_type === 'one_time' ? t('car.booking.lineOnce', { name: extra.name }) : extra.name,
       amount: extraLineTotal(extra, days.value),
     })),
     ...(insuranceTotal.value > 0
-      ? [{ key: 'insurance', label: 'Assurance complémentaire', amount: insuranceTotal.value }]
+      ? [{ key: 'insurance', label: t('car.booking.insurance'), amount: insuranceTotal.value }]
       : []),
     ...(deliveryTotal.value > 0
-      ? [{ key: 'delivery', label: 'Frais de livraison et reprise', amount: deliveryTotal.value }]
+      ? [{ key: 'delivery', label: t('car.booking.delivery'), amount: deliveryTotal.value }]
       : []),
   ])
 
@@ -155,14 +159,22 @@ export const useCarBooking = (
   const carName = computed(() => carFullName(car.value))
 
   const whatsappLink = computed(() => {
-    const article = /^[aeiouyhâàéèêîôû]/i.test(car.value.brand) ? 'l’' : 'la '
-    const dates =
-      form.pickupAt && form.dropoffAt
-        ? ` (du ${formatShortDate(form.pickupAt)} au ${formatShortDate(form.dropoffAt)})`
-        : ''
+    // French elides the article before a vowel ("l’Audi", "la Porsche");
+    // the other languages use the same wording for both keys.
+    const elided = /^[aeiouyhâàéèêîôû]/i.test(car.value.brand)
+    const params = {
+      car: t(elided ? 'whatsapp.carNameElided' : 'whatsapp.carName', { name: carName.value }),
+      days: daysLabel.value,
+    }
 
     return whatsappHref(
-      `Bonjour ChanaaCar, je souhaite réserver ${article}${carName.value} pour ${daysLabel.value}${dates}.`,
+      form.pickupAt && form.dropoffAt
+        ? t('whatsapp.bookingDates', {
+            ...params,
+            from: formatShortDate(form.pickupAt, t),
+            to: formatShortDate(form.dropoffAt, t),
+          })
+        : t('whatsapp.booking', params),
     )
   })
 
@@ -207,11 +219,10 @@ export const useCarBooking = (
       // Kept inline next to the summary as well: the visitor has a long form
       // to correct, and the toast fades.
       errorMessage.value = resolveApiErrorMessage(error, {
-        locale: 'fr',
-        fallback:
-          'La réservation n’a pas pu être envoyée. Vérifiez les dates et les options sélectionnées.',
+        locale: apiLocale.value,
+        fallback: t('car.booking.toast.error'),
       })
-      toast.error(errorMessage.value)
+      toast.error(errorMessage.value, t('car.booking.toast.errorTitle'))
       pending.value = false
       return
     }
@@ -219,10 +230,14 @@ export const useCarBooking = (
     // The reservation exists at this point. Anything failing below is only
     // about reaching the confirmation page — never report it as a booking
     // failure, or the visitor may retry and create a duplicate.
-    toast.success(`Réservation ${reservation.reservation_number} créée avec succès.`)
+    toast.success(
+      t('car.booking.toast.success', { number: reservation.reservation_number }),
+      t('car.booking.toast.successTitle'),
+    )
 
+    // Stay in the visitor's language (`/en/reservation/success`, …).
     const target = {
-      path: '/reservation/success',
+      path: localePath('/reservation/success'),
       query: {
         car: carName.value,
         reservation: reservation.reservation_number,
@@ -269,9 +284,9 @@ export const useCarBooking = (
 
 export type CarBooking = ReturnType<typeof useCarBooking>
 
-/** "05/11 à 10:00" */
-const formatShortDate = (value: string) => {
+/** "05/11 à 10:00" (the connecting word follows the language). */
+const formatShortDate = (value: string, t: WhatsappTranslate) => {
   const [date = '', time = ''] = value.split('T')
   const [, month = '', day = ''] = date.split('-')
-  return `${day}/${month} à ${time.slice(0, 5)}`
+  return t('whatsapp.dateTime', { date: `${day}/${month}`, time: time.slice(0, 5) })
 }

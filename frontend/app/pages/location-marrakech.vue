@@ -3,39 +3,46 @@ import MarketingBulletList from '~/components/public/MarketingBulletList.vue'
 import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
 import MarketingNarrativeSection from '~/components/public/MarketingNarrativeSection.vue'
 import MarketingPageCta from '~/components/public/MarketingPageCta.vue'
-import { commonPageCta, marrakechContent } from '~/utils/marketing-content'
+
+const content = useMarketingContent()
+const page = computed(() => content.value.marrakech)
+const cta = computed(() => content.value.pageCta)
 
 useSeoMeta({
-  title: 'Location de voiture à Marrakech | ChanaaCar',
-  description:
-    'Pourquoi louer une voiture à Marrakech et comment ChanaaCar facilite vos déplacements au Maroc.',
+  title: () => page.value.seo.title,
+  description: () => page.value.seo.description,
 })
 </script>
 
 <template>
   <div>
     <MarketingHeroSection
-      eyebrow="Location Marrakech"
-      :title="marrakechContent.title"
-      :subtitle="marrakechContent.paragraphs[0]"
-      :primary-action="{ label: 'Voir les voitures', to: '/cars' }"
-      :secondary-action="{ label: 'Nous contacter', to: '/contact' }"
+      :eyebrow="page.hero.eyebrow"
+      :title="page.title"
+      :subtitle="page.paragraphs[0]"
+      :primary-action="{ label: page.hero.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: page.hero.secondaryLabel, to: '/contact' }"
     />
 
     <MarketingNarrativeSection
-      eyebrow="Déplacements à Marrakech"
-      title="Circuler librement dans la ville et autour."
-      intro="Une voiture vous permet d’enchaîner vos visites, rendez-vous et excursions avec plus de souplesse."
-      :paragraphs="marrakechContent.paragraphs"
+      :eyebrow="page.narrative.eyebrow"
+      :title="page.narrative.title"
+      :intro="page.narrative.intro"
+      :paragraphs="page.paragraphs"
     />
 
     <section class="wrap pt-24 lg:pt-40">
       <MarketingBulletList
-        title="Pourquoi louer une voiture à Marrakech ?"
-        :items="marrakechContent.reasons"
+        :title="page.reasons.title"
+        :items="page.reasons.items"
       />
     </section>
 
-    <MarketingPageCta v-bind="commonPageCta" />
+    <MarketingPageCta
+      :title="cta.title"
+      :description="cta.description"
+      :primary-action="{ label: cta.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: cta.secondaryLabel, to: '/contact' }"
+    />
   </div>
 </template>

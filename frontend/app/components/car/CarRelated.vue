@@ -5,6 +5,7 @@ import { carFullName, carMetaLine, carPhotoPath, formatAmount } from '~/utils/ca
 // "Vous aimerez aussi": up to 3 cars, same category first.
 defineProps<{ cars: Car[] }>()
 
+const { t } = useI18n()
 const localePath = useLocalePath()
 const { mediaUrl } = useApi()
 const { toQuery } = useBookingDraft()
@@ -20,8 +21,8 @@ const link = (car: Car) => ({ path: localePath(`/cars/${car.slug ?? car.id}`), q
 <template>
   <section v-if="cars.length" class="wrap mt-24 lg:mt-40">
     <div v-inview data-anim="rule stagger" class="rule-b flex items-end justify-between gap-6 pb-5 lg:pb-6">
-      <h2 class="text-[28px] font-medium tracking-[-0.035em] lg:text-[40px]">Vous aimerez aussi</h2>
-      <NuxtLink :to="localePath('/cars')" class="text-link shrink-0 text-[15px]">Toute la flotte</NuxtLink>
+      <h2 class="text-[28px] font-medium tracking-[-0.035em] lg:text-[40px]">{{ t('car.related.title') }}</h2>
+      <NuxtLink :to="localePath('/cars')" class="text-link shrink-0 text-[15px]">{{ t('car.related.all') }}</NuxtLink>
     </div>
 
     <ul class="grid sm:grid-cols-2 lg:grid-cols-3">
@@ -45,7 +46,7 @@ const link = (car: Car) => ({ path: localePath(`/cars/${car.slug ?? car.id}`), q
             </div>
             <p class="whitespace-nowrap">
               <span class="text-[21px] font-medium">{{ formatAmount(car.base_price_per_day) }}</span>
-              <span class="font-plex text-[11px] text-muted"> MAD/j</span>
+              <span class="font-plex text-[11px] text-muted">{{ ` ${t('site.fleet.perDayShort')}` }}</span>
             </p>
           </div>
         </NuxtLink>

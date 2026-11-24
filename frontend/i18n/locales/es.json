@@ -6,7 +6,7 @@
   },
   "seo": {
     "home": {
-      "title": "ChanaaCar — Alquiler de coches en Marrakech | Lujo y confort",
+      "title": "ChanaaCar — Alquiler de coches en Marrakech {'|'} Lujo y confort",
       "description": "Alquila un coche en Marrakech con ChanaaCar: vehículos recientes, entrega gratuita en el Aeropuerto de Marrakech Menara, asistencia 24/7 y tarifas desde 300 MAD/día. Reserva rápida y sin costes ocultos."
     }
   },
@@ -197,5 +197,235 @@
       "social": "Redes sociales",
       "rights": "Todos los derechos reservados."
     }
+  },
+  "car": {
+    "seo": {
+      "fallbackTitle": "Detalle del vehículo",
+      "fallbackDescription": "Detalle del vehículo, galería de fotos, características y formulario de reserva.",
+      "description": "Alquila el {name} ({year}) en Marrakech: {seats} plazas, {doors} puertas, {features}. Desde {amount} MAD al día. Reserva sencilla con ChannaCar.",
+      "transmission": {
+        "auto": "cambio automático",
+        "manual": "cambio manual"
+      },
+      "airCon": "aire acondicionado"
+    },
+    "breadcrumb": {
+      "aria": "Ruta de navegación",
+      "home": "Inicio"
+    },
+    "errors": {
+      "title": "Error",
+      "loadTitle": "Error de carga",
+      "load": "No se ha podido cargar el vehículo solicitado.",
+      "unavailable": "Detalle no disponible"
+    },
+    "currency": "MAD",
+    "amount": "{amount} MAD",
+    "info": {
+      "deposit": "Fianza",
+      "doors": "Puertas",
+      "airCon": "Aire acondicionado",
+      "gps": "GPS",
+      "year": "Año",
+      "yes": "Sí",
+      "no": "No",
+      "gearbox": {
+        "auto": "Automático",
+        "manual": "Manual"
+      },
+      "seatsCount": "{n} plazas",
+      "doorsCount": "{n} puertas",
+      "bagsCount": "{n} maletas",
+      "airConShort": "A/A",
+      "reassurance": {
+        "delivery": "Entrega en el aeropuerto Menara o en tu hotel",
+        "support": "Asistencia 24 h, 7 días",
+        "pricing": "Precios transparentes",
+        "deposit": "Fianza reembolsable"
+      },
+      "conditions": {
+        "ageLabel": "Edad mínima",
+        "age": "21 años",
+        "licenceLabel": "Permiso",
+        "licence": "Mínimo 2 años",
+        "documentsLabel": "Documentos",
+        "documents": "DNI o pasaporte + permiso",
+        "insuranceLabel": "Seguro",
+        "insurance": "Incluido según contrato",
+        "summary": "21 años como mínimo · permiso de más de 2 años · DNI o pasaporte · seguro incluido según contrato"
+      },
+      "book": "Reservar este coche",
+      "estimate": "Tu estimación: {amount} MAD por {days}.",
+      "reviews": "Lo que dicen nuestros clientes"
+    },
+    "gallery": {
+      "photoAlt": "{name} — foto {n} de {total}",
+      "choose": "Elegir una foto",
+      "photo": "Foto {n} de {total}"
+    },
+    "booking": {
+      "titleMobile": "Reserva en 2 minutos.",
+      "title": "Reserva este coche.",
+      "lead": "Tres pasos, unos dos minutos. Se trata de una solicitud: nuestro equipo confirma la disponibilidad y el precio.",
+      "formAria": "Solicitud de reserva",
+      "whenWhere": "¿Cuándo y dónde?",
+      "pickup": "Lugar de recogida",
+      "dropoff": "Lugar de devolución",
+      "sameLocation": "Mismo lugar que la recogida",
+      "from": "Recogida",
+      "to": "Devolución",
+      "duration": "Duración",
+      "removeDay": "Quitar un día",
+      "addDay": "Añadir un día",
+      "options": "Opciones",
+      "optional": "opcional",
+      "optionsNoteSame": "{amount} MAD por día y por opción.",
+      "optionsNote": "Precio indicado para cada opción, por día salvo que se indique lo contrario.",
+      "extraPerDay": "{amount} MAD / día",
+      "extraOnce": "{amount} MAD · pago único",
+      "addExtra": "Añadir: {name}",
+      "removeExtra": "Quitar: {name}",
+      "add": "Añadir",
+      "added": "✓ Añadido",
+      "insuranceAdded": "✓ Añadido",
+      "showLess": "Mostrar menos opciones",
+      "showMore": "Ver {n} opciones más | Ver {n} opción más | Ver {n} opciones más",
+      "insurance": "Seguro complementario",
+      "insuranceNote": "Protección opcional, {amount} MAD por día.",
+      "contact": "Tus datos",
+      "contactNote": "Para enviarte la confirmación.",
+      "fullName": "Nombre completo",
+      "phone": "Teléfono",
+      "whatsappReachable": "Este número está disponible en WhatsApp",
+      "email": "Correo electrónico",
+      "optionalParen": "(opcional)",
+      "licence": "N.º de permiso de conducir",
+      "notes": "Nota",
+      "notesHint": "(opcional) — número de vuelo, petición especial",
+      "summary": "Resumen",
+      "rental": "Alquiler · {days}",
+      "total": "Total estimado",
+      "deposit": "Fianza reembolsable, no incluida",
+      "disclaimer": "Precio orientativo, ajustado según la temporada y confirmado por nuestro equipo.",
+      "sending": "Enviando…",
+      "submit": "Enviar mi solicitud",
+      "whatsappShort": "Reservar por WhatsApp",
+      "whatsapp": "O reserva directamente por WhatsApp",
+      "nextTitle": "¿Y después?",
+      "next": {
+        "check": "Nuestro equipo comprueba la disponibilidad.",
+        "confirm": "Recibes el precio confirmado por teléfono o WhatsApp.",
+        "ready": "El coche te espera en el lugar elegido."
+      },
+      "barEstimate": "{days} · estimado",
+      "lineOnce": "{name} (pago único)",
+      "delivery": "Gastos de entrega y recogida",
+      "toast": {
+        "errorTitle": "Reserva fallida",
+        "successTitle": "Reserva confirmada",
+        "success": "Reserva {number} creada correctamente.",
+        "error": "No se ha podido enviar la reserva. Comprueba las fechas y las opciones seleccionadas."
+      }
+    },
+    "faq": {
+      "reviewsTitle": "Alquilaron con nosotros",
+      "rating": "Valoración del cliente: {stars} de 5",
+      "titleShort": "Conviene saber",
+      "title": "Lo que conviene saber antes de reservar",
+      "items": {
+        "conditions": {
+          "q": "¿Cuáles son los requisitos para alquilar?",
+          "a": "El conductor debe tener al menos 21 años y un permiso de conducir válido con una antigüedad mínima de 2 años."
+        },
+        "documents": {
+          "q": "¿Qué documentos debo presentar?",
+          "a": "Un documento de identidad válido (DNI o pasaporte), tu permiso de conducir y un medio de pago."
+        },
+        "insurance": {
+          "q": "¿Está incluido el seguro?",
+          "a": "Sí, nuestros vehículos están cubiertos según las condiciones del contrato de alquiler. El seguro complementario es una protección adicional y opcional."
+        },
+        "mileage": {
+          "q": "¿El kilometraje es limitado?",
+          "a": "La mayoría de nuestros alquileres incluyen un kilometraje adaptado a tu itinerario. El kilometraje ilimitado está disponible bajo petición según la categoría y la duración."
+        },
+        "deposit": {
+          "q": "¿Cómo funciona la fianza?",
+          "aAmount": "Para este vehículo, la fianza es de {amount} MAD. Es una garantía reembolsable, no incluida en el total del alquiler.",
+          "a": "La fianza es una garantía reembolsable, no incluida en el total del alquiler. Nuestro equipo te indicará el importe al confirmar la reserva."
+        },
+        "cancel": {
+          "q": "¿Puedo cancelar mi reserva?",
+          "a": "Sí, según las condiciones de cancelación indicadas al hacer la reserva."
+        },
+        "breakdown": {
+          "q": "¿Qué hago en caso de avería o accidente?",
+          "a": "Contacta de inmediato con nuestro equipo de asistencia, disponible las 24 horas, los 7 días de la semana."
+        }
+      },
+      "more": "¿Otra pregunta? {whatsapp} o {form}; respondemos las 24 horas.",
+      "moreWhatsapp": "Escríbenos por WhatsApp",
+      "moreForm": "usa el formulario de contacto"
+    },
+    "related": {
+      "title": "También te puede gustar",
+      "all": "Toda la flota"
+    }
+  },
+  "fleetPage": {
+    "seo": {
+      "title": "Reservar un coche",
+      "description": "Explora la flota de ChanaaCar con filtros, paginación y reserva rápida."
+    },
+    "eyebrow": "Flota disponible — Marrakech y Marruecos",
+    "title": "Encuentra el coche ideal para tu estancia.",
+    "lead": "Explora los coches disponibles, filtra según tu presupuesto y reserva en pocos minutos.",
+    "count": "{n} coches | {n} coche | {n} coches",
+    "filtersAria": "Filtros",
+    "search": "Búsqueda",
+    "searchPlaceholder": "Marca o modelo",
+    "allFeminine": "Todas",
+    "minPrice": "Precio mín. / día",
+    "maxPrice": "Precio máx. / día",
+    "minSeats": "Plazas mín.",
+    "reset": "Restablecer",
+    "apply": "Aplicar",
+    "errorTitle": "Lista no disponible",
+    "error": "La lista de coches no está disponible en este momento.",
+    "toastTitle": "Error",
+    "loadTitle": "Error de carga",
+    "emptyTitle": "No se ha encontrado ningún coche",
+    "emptyText": "Ajusta los filtros o restablece la búsqueda para volver a ver toda la flota.",
+    "paginationAria": "Paginación",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "page": "Página {current} / {last}"
+  },
+  "success": {
+    "seo": {
+      "title": "Reserva confirmada",
+      "description": "Página de confirmación tras una solicitud de reserva."
+    },
+    "pendingReference": "Referencia pendiente",
+    "defaultCar": "el vehículo seleccionado",
+    "eyebrow": "Confirmación",
+    "title": "Hemos recibido tu solicitud para {car}.",
+    "lead": "Hemos registrado tu solicitud de reserva. El equipo de ChanaaCar se pondrá en contacto contigo para confirmar la disponibilidad y organizar la entrega del vehículo.",
+    "status": "Estado",
+    "statusValue": "Solicitud registrada",
+    "reference": "Referencia",
+    "next": "Siguiente paso",
+    "nextValue": "Respuesta rápida del equipo",
+    "bookAnother": "Reservar otro coche",
+    "contact": "Contactar con el equipo"
+  },
+  "whatsapp": {
+    "general": "Hola ChanaaCar, me gustaría recibir información sobre el alquiler de un coche.",
+    "car": "Hola ChanaaCar, estoy interesado/a en el {name} ({year}) a {amount} MAD al día. ¿Está disponible para mis fechas?",
+    "booking": "Hola ChanaaCar, me gustaría reservar {car} durante {days}.",
+    "bookingDates": "Hola ChanaaCar, me gustaría reservar {car} durante {days} (del {from} al {to}).",
+    "carName": "el {name}",
+    "carNameElided": "el {name}",
+    "dateTime": "{date} a las {time}"
   }
 }

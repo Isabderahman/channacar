@@ -3,36 +3,43 @@ import MarketingBulletList from '~/components/public/MarketingBulletList.vue'
 import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
 import MarketingNarrativeSection from '~/components/public/MarketingNarrativeSection.vue'
 import MarketingPageCta from '~/components/public/MarketingPageCta.vue'
-import { airportContent, commonPageCta } from '~/utils/marketing-content'
+
+const content = useMarketingContent()
+const page = computed(() => content.value.airport)
+const cta = computed(() => content.value.pageCta)
 
 useSeoMeta({
-  title: 'Location voiture aéroport Marrakech Menara | ChanaaCar',
-  description:
-    "Service de location et de remise rapide de véhicule à l'aéroport Marrakech Menara.",
+  title: () => page.value.seo.title,
+  description: () => page.value.seo.description,
 })
 </script>
 
 <template>
   <div>
     <MarketingHeroSection
-      eyebrow="Aéroport Marrakech Menara"
-      :title="airportContent.title"
-      :subtitle="airportContent.paragraphs[0]"
-      :primary-action="{ label: 'Réserver un véhicule', to: '/cars' }"
-      :secondary-action="{ label: 'Appeler maintenant', to: '/contact' }"
+      :eyebrow="page.hero.eyebrow"
+      :title="page.title"
+      :subtitle="page.paragraphs[0]"
+      :primary-action="{ label: page.hero.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: page.hero.secondaryLabel, to: '/contact' }"
     />
 
     <MarketingNarrativeSection
-      eyebrow="Arrivée à Marrakech"
-      title="Un retrait plus simple dès la sortie de l’aéroport."
-      intro="Dès l’atterrissage, vous évitez l’attente et démarrez votre séjour avec un véhicule prêt à partir."
-      :paragraphs="airportContent.paragraphs"
+      :eyebrow="page.narrative.eyebrow"
+      :title="page.narrative.title"
+      :intro="page.narrative.intro"
+      :paragraphs="page.paragraphs"
     />
 
     <section class="wrap pt-24 lg:pt-40">
-      <MarketingBulletList title="Avantages" :items="airportContent.advantages" />
+      <MarketingBulletList :title="page.advantages.title" :items="page.advantages.items" />
     </section>
 
-    <MarketingPageCta v-bind="commonPageCta" />
+    <MarketingPageCta
+      :title="cta.title"
+      :description="cta.description"
+      :primary-action="{ label: cta.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: cta.secondaryLabel, to: '/contact' }"
+    />
   </div>
 </template>

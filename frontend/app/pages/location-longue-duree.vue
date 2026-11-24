@@ -3,36 +3,43 @@ import MarketingBulletList from '~/components/public/MarketingBulletList.vue'
 import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
 import MarketingNarrativeSection from '~/components/public/MarketingNarrativeSection.vue'
 import MarketingPageCta from '~/components/public/MarketingPageCta.vue'
-import { commonPageCta, longTermContent } from '~/utils/marketing-content'
+
+const content = useMarketingContent()
+const page = computed(() => content.value.longTerm)
+const cta = computed(() => content.value.pageCta)
 
 useSeoMeta({
-  title: 'Location longue durée au Maroc | ChanaaCar',
-  description:
-    'Solutions de location longue durée pour particuliers, professionnels, expatriés et entreprises.',
+  title: () => page.value.seo.title,
+  description: () => page.value.seo.description,
 })
 </script>
 
 <template>
   <div>
     <MarketingHeroSection
-      eyebrow="Longue durée"
-      :title="longTermContent.title"
-      :subtitle="longTermContent.paragraphs[0]"
-      :primary-action="{ label: 'Demander une offre', to: '/contact' }"
-      :secondary-action="{ label: 'Découvrir la flotte', to: '/cars' }"
+      :eyebrow="page.hero.eyebrow"
+      :title="page.title"
+      :subtitle="page.paragraphs[0]"
+      :primary-action="{ label: page.hero.primaryLabel, to: '/contact' }"
+      :secondary-action="{ label: page.hero.secondaryLabel, to: '/cars' }"
     />
 
     <MarketingNarrativeSection
-      eyebrow="Offres longue durée"
-      title="Une solution plus stable pour les séjours longs et les besoins pro."
-      intro="Pour plusieurs semaines ou plusieurs mois, l’objectif est de garder une solution fiable avec un cadre clair."
-      :paragraphs="longTermContent.paragraphs"
+      :eyebrow="page.narrative.eyebrow"
+      :title="page.narrative.title"
+      :intro="page.narrative.intro"
+      :paragraphs="page.paragraphs"
     />
 
     <section class="wrap pt-24 lg:pt-40">
-      <MarketingBulletList title="Avantages" :items="longTermContent.advantages" />
+      <MarketingBulletList :title="page.advantages.title" :items="page.advantages.items" />
     </section>
 
-    <MarketingPageCta v-bind="commonPageCta" />
+    <MarketingPageCta
+      :title="cta.title"
+      :description="cta.description"
+      :primary-action="{ label: cta.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: cta.secondaryLabel, to: '/contact' }"
+    />
   </div>
 </template>

@@ -15,13 +15,16 @@ import type {
   Testimonial,
 } from '~/types/entities'
 import { resolveApiErrorMessage } from '~/utils/api-error'
-import { carFullName } from '~/utils/car-display'
+import { carFullName, formatAmount } from '~/utils/car-display'
 import { formatCurrency, pickCarImagePath, toNumber } from '~/utils/formatters'
 
 const route = useRoute()
 const localePath = useLocalePath()
 const { mediaUrl, publicApi } = useApi()
-const toast = useToast({ locale: 'fr', errorTitle: 'Erreur' })
+const { t, te, locale } = useI18n()
+// resolveApiErrorMessage only has French and English wording of its own.
+const apiLocale = computed(() => (locale.value === 'fr' ? 'fr' : 'en'))
+const toast = useToast({ locale: apiLocale.value, errorTitle: t('car.errors.title') })
 
 const slug = String(route.params.slug)
 
@@ -58,8 +61,8 @@ const { data, error } = await useAsyncData(`car-${slug}`, async () => {
 const errorMessage = computed(() =>
   error.value
     ? resolveApiErrorMessage(error.value, {
-        locale: 'fr',
-        fallback: 'Le véhicule demandé n’a pas pu être chargé.',
+        locale: apiLocale.value,
+        fallback: t('car.errors.load'),
       })
     : '',
 )
@@ -73,7 +76,7 @@ if (error.value && import.meta.server && error.value.statusCode === 404) {
 
 onMounted(() => {
   if (errorMessage.value) {
-    toast.error(errorMessage.value, 'Chargement impossible')
+    toast.error(errorMessage.value, t('car.errors.loadTitle'))
   }
 })
 
@@ -95,26 +98,38 @@ const contactLink = computed(() => ({
   query: car.value ? { vehicule: `${carFullName(car.value)} (${car.value.year})` } : undefined,
 }))
 
-const fuelLabels: Record<string, string> = {
-  diesel: 'Diesel',
-  electric: 'Électrique',
-  hybrid: 'Hybride',
-  petrol: 'Essence',
-}
+const fuelLabel = (fuel: string) => (te(`site.fleet.fuels.${fuel}`) ? t(`site.fleet.fuels.${fuel}`) : fuel)
 
 const carDescription = computed(() => {
   const c = car.value
   if (!c) {
-    return 'Détail du véhicule, galerie, caractéristiques et formulaire de réservation.'
+    return t('car.seo.fallbackDescription')
   }
-  const transmission = c.transmission === 'auto' ? 'boîte automatique' : 'boîte manuelle'
-  const fuel = (fuelLabels[c.fuel] ?? c.fuel).toLowerCase()
-  return `Louez la ${c.brand} ${c.name} (${c.year}) à Marrakech : ${c.seats} places, ${c.doors} portes, ${transmission}, ${fuel}${c.climatisation ? ', climatisation' : ''}${c.gps ? ', GPS' : ''}. À partir de ${formatCurrency(c.base_price_per_day, 'MAD', 'fr-MA')} / jour. Réservation simple chez ChannaCar.`
+  const features = [
+    t(`car.seo.transmission.${c.transmission === 'auto' ? 'auto' : 'manual'}`),
+    fuelLabel(c.fuel).toLowerCase(),
+    c.climatisation ? t('car.seo.airCon') : null,
+    c.gps ? 'GPS' : null,
+  ]
+    .filter(Boolean)
+    .join(locale.value === 'ar' ? '، ' : ', ')
+  // `price` keeps the French currency format ("1.800 MAD"); the other
+  // languages use the bare `amount` and place the currency themselves.
+  return t('car.seo.description', {
+    name: carFullName(c),
+    year: c.year,
+    seats: c.seats,
+    doors: c.doors,
+    features,
+    price: formatCurrency(c.base_price_per_day, 'MAD', 'fr-MA'),
+    amount: formatAmount(c.base_price_per_day),
+  })
 })
 
 // Per-field getters: Unhead ignores a getter passed as the whole input.
 useSeoMeta({
-  title: () => (car.value ? `${car.value.brand} ${car.value.name} | ChanaaCar` : 'Détail véhicule | ChanaaCar'),
+  title: () =>
+    car.value ? `${car.value.brand} ${car.value.name} | ChanaaCar` : `${t('car.seo.fallbackTitle')} | ChanaaCar`,
   description: () => carDescription.value,
   ogImage: () => heroImage.value,
 })
@@ -135,7 +150,7 @@ useSchemaOrg(() =>
           vehicleModelDate: String(car.value.year),
           vehicleTransmission:
             car.value.transmission === 'auto' ? 'AutomaticTransmission' : 'ManualTransmission',
-          fuelType: fuelLabels[car.value.fuel] ?? car.value.fuel,
+          fuelType: fuelLabel(car.value.fuel),
           vehicleSeatingCapacity: car.value.seats,
           numberOfDoors: car.value.doors,
           offers: {
@@ -161,11 +176,11 @@ useSchemaOrg(() =>
         }),
         defineBreadcrumb({
           itemListElement: [
-            { name: 'Accueil', item: '/' },
-            { name: 'Nos véhicules', item: '/cars' },
+            { name: t('car.breadcrumb.home'), item: localePath('/') },
+            { name: t('site.nav.cars'), item: localePath('/cars') },
             {
               name: `${car.value.brand} ${car.value.name}`,
-              item: `/cars/${car.value.slug ?? route.params.slug}`,
+              item: localePath(`/cars/${car.value.slug ?? route.params.slug}`),
             },
           ],
         }),
@@ -179,23 +194,23 @@ useSchemaOrg(() =>
     <div v-if="!car || !booking" class="wrap pb-16 pt-10">
       <NuxtLink :to="localePath('/cars')" class="btn btn-outline">
         <SiteIcon name="arrow-left" />
-        Retour à la flotte
+        {{ t('site.actions.back') }}
       </NuxtLink>
 
       <StateNotice
         class="mt-6"
-        title="Détail indisponible"
-        :message="errorMessage || 'Le véhicule demandé n’a pas pu être chargé.'"
+        :title="t('car.errors.unavailable')"
+        :message="errorMessage || t('car.errors.load')"
         tone="error"
       />
     </div>
 
     <template v-else>
       <nav
-        aria-label="Fil d’Ariane"
+        :aria-label="t('car.breadcrumb.aria')"
         class="intro wrap mb-8 hidden pt-6 font-plex text-[12px] text-muted lg:block"
       >
-        <NuxtLink :to="localePath('/cars')" class="transition-colors hover:text-ink">Nos véhicules</NuxtLink>
+        <NuxtLink :to="localePath('/cars')" class="transition-colors hover:text-ink">{{ t('site.nav.cars') }}</NuxtLink>
         <template v-if="car.category">
           <span aria-hidden="true"> / </span>
           <NuxtLink

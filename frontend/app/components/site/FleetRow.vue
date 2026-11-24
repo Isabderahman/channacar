@@ -67,9 +67,9 @@ const specLine = computed(() =>
       </div>
       <div class="flex items-center justify-between gap-3">
         <p class="font-plex text-[12px] text-muted">{{ specLine }}</p>
-        <p class="whitespace-nowrap">
+        <p class="flex items-baseline gap-1.5 whitespace-nowrap">
           <span class="text-[20px] font-medium">{{ price }}</span>
-          <span class="font-plex text-[11px] text-muted"> {{ t('site.fleet.perDayShort') }}</span>
+          <span class="font-plex text-[11px] text-muted">{{ t('site.fleet.perDayShort') }}</span>
         </p>
       </div>
     </div>

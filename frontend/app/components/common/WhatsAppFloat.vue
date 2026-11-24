@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import { useWhatsappFloatMessage } from '~/composables/useWhatsappFloat'
-import { whatsappGeneralMessage, whatsappHref } from '~/utils/whatsapp'
+import { whatsappGeneralMessageFor, whatsappHref } from '~/utils/whatsapp'
 
 // Floating WhatsApp call-to-action, shown on every public page (default
 // layout). Pages can override the prefilled message (car detail sets a
@@ -18,7 +18,7 @@ onMounted(() => {
   isMounted.value = true
 })
 const href = computed(() =>
-  whatsappHref((isMounted.value && floatMessage.value) || whatsappGeneralMessage),
+  whatsappHref((isMounted.value && floatMessage.value) || whatsappGeneralMessageFor(t)),
 )
 const isCarDetail = computed(() => String(route.name ?? '').startsWith('cars-slug'))
 </script>

@@ -16,6 +16,8 @@ const props = defineProps<{
   photo: string | null
 }>()
 
+const { t } = useI18n()
+
 const VISIBLE_OPTIONS = 3
 const showAllOptions = ref(false)
 
@@ -30,7 +32,9 @@ const visibleExtras = computed(() =>
 const hiddenCount = computed(() => props.extras.length - visibleExtras.value.length)
 
 const extraPrice = (extra: Extra) =>
-  `${formatAmount(extra.price_per_day)} MAD${extra.billing_type === 'one_time' ? ' · une fois' : ' / jour'}`
+  t(extra.billing_type === 'one_time' ? 'car.booking.extraOnce' : 'car.booking.extraPerDay', {
+    amount: formatAmount(extra.price_per_day),
+  })
 
 // "50 MAD par jour et par option." when every option shares one per-day price.
 const optionsNote = computed(() => {
@@ -38,17 +42,17 @@ const optionsNote = computed(() => {
   const first = props.extras[0]
 
   if (prices.size === 1 && first && first.billing_type !== 'one_time') {
-    return `${formatAmount(first.price_per_day)} MAD par jour et par option.`
+    return t('car.booking.optionsNoteSame', { amount: formatAmount(first.price_per_day) })
   }
 
-  return 'Prix indiqué pour chaque option, par jour sauf mention contraire.'
+  return t('car.booking.optionsNote')
 })
 
-const nextSteps = [
-  'Notre équipe vérifie la disponibilité.',
-  'Vous recevez le tarif confirmé par téléphone ou WhatsApp.',
-  'Le véhicule vous attend au lieu choisi.',
-]
+const nextSteps = computed(() => [
+  t('car.booking.next.check'),
+  t('car.booking.next.confirm'),
+  t('car.booking.next.ready'),
+])
 </script>
 
 <template>
@@ -56,11 +60,11 @@ const nextSteps = [
     <div v-inview data-anim="rule" class="lg:pt-8 lg:rule-t">
       <div v-inview data-anim="stagger" class="mb-11 flex flex-wrap items-end justify-between gap-6 lg:mb-14">
         <h2 class="display text-[30px] leading-none tracking-[-0.035em] lg:text-[clamp(40px,5vw,64px)] lg:leading-[0.95] lg:tracking-[-0.04em]">
-          <span class="lg:hidden">Réservez en 2 minutes.</span>
-          <span class="hidden lg:inline">Réservez ce véhicule.</span>
+          <span class="lg:hidden">{{ t('car.booking.titleMobile') }}</span>
+          <span class="hidden lg:inline">{{ t('car.booking.title') }}</span>
         </h2>
         <p class="hidden max-w-[380px] text-ink-2 lg:block">
-          Trois étapes, environ deux minutes. Il s’agit d’une demande : notre équipe confirme la disponibilité et le tarif.
+          {{ t('car.booking.lead') }}
         </p>
       </div>
 
@@ -69,19 +73,19 @@ const nextSteps = [
           id="booking-form"
           v-inview
           data-anim="stagger"
-          aria-label="Demande de réservation"
+          :aria-label="t('car.booking.formAria')"
           class="flex min-w-0 flex-[1_1_520px] flex-col gap-11 lg:gap-16 xl:flex-[1_1_640px]"
           @submit.prevent="booking.submit"
         >
           <!-- 01 -->
           <fieldset>
             <legend class="mb-4 flex items-baseline gap-3 text-[19px] font-medium lg:mb-6 lg:gap-5 lg:text-[22px]">
-              <span class="font-plex text-[11px] text-accent lg:text-[12px]">01</span>Quand et où ?
+              <span class="font-plex text-[11px] text-accent lg:text-[12px]">01</span>{{ t('car.booking.whenWhere') }}
             </legend>
 
             <div class="grid gap-3 sm:grid-cols-2 lg:gap-4">
               <label class="field-label">
-                Prise en charge
+                {{ t('car.booking.pickup') }}
                 <select v-model="form.pickupLocationId" class="field" required>
                   <option v-for="location in locations" :key="location.id" :value="String(location.id)">
                     {{ location.name }}
@@ -89,31 +93,31 @@ const nextSteps = [
                 </select>
               </label>
               <label class="field-label">
-                Restitution
+                {{ t('car.booking.dropoff') }}
                 <select v-model="form.dropoffLocationId" class="field">
-                  <option value="">Même lieu que la prise en charge</option>
+                  <option value="">{{ t('car.booking.sameLocation') }}</option>
                   <option v-for="location in locations" :key="location.id" :value="String(location.id)">
                     {{ location.name }}
                   </option>
                 </select>
               </label>
               <label class="field-label">
-                Départ
+                {{ t('car.booking.from') }}
                 <input v-model="form.pickupAt" class="field" type="datetime-local" required>
               </label>
               <label class="field-label">
-                Retour
+                {{ t('car.booking.to') }}
                 <input v-model="form.dropoffAt" class="field" type="datetime-local" :min="form.pickupAt" required>
               </label>
             </div>
 
             <div class="mt-3 flex items-center justify-between gap-4 border border-line-strong py-1 ps-3 lg:mt-4 lg:py-3 lg:ps-4">
-              <span class="mono-label text-[10px] lg:text-[12px]">Durée</span>
+              <span class="mono-label text-[10px] lg:text-[12px]">{{ t('car.booking.duration') }}</span>
               <div class="flex items-center">
                 <button
                   type="button"
                   class="flex size-11 items-center justify-center text-[20px] transition-colors hover:text-accent disabled:opacity-40"
-                  aria-label="Retirer un jour"
+                  :aria-label="t('car.booking.removeDay')"
                   :disabled="booking.days.value <= 1"
                   @click="booking.decrementDays"
                 >
@@ -125,7 +129,7 @@ const nextSteps = [
                 <button
                   type="button"
                   class="flex size-11 items-center justify-center text-[20px] transition-colors hover:text-accent"
-                  aria-label="Ajouter un jour"
+                  :aria-label="t('car.booking.addDay')"
                   @click="booking.incrementDays"
                 >
                   +
@@ -137,8 +141,8 @@ const nextSteps = [
           <!-- 02 -->
           <fieldset v-if="extras.length || booking.hasInsurance.value">
             <legend class="mb-1 flex flex-wrap items-baseline gap-x-3 text-[19px] font-medium lg:mb-2 lg:gap-x-5 lg:text-[22px]">
-              <span class="font-plex text-[11px] text-accent lg:text-[12px]">02</span>Options
-              <span class="text-[13px] font-normal text-muted lg:text-[14px]">facultatif</span>
+              <span class="font-plex text-[11px] text-accent lg:text-[12px]">02</span>{{ t('car.booking.options') }}
+              <span class="text-[13px] font-normal text-muted lg:text-[14px]">{{ t('car.booking.optional') }}</span>
             </legend>
 
             <template v-if="extras.length">
@@ -158,10 +162,10 @@ const nextSteps = [
                     type="button"
                     class="chip min-w-[92px] shrink-0 px-3 text-[11px] lg:min-w-[104px] lg:px-3.5 lg:text-[12px]"
                     :aria-pressed="booking.isExtraSelected(extra.id) ? 'true' : 'false'"
-                    :aria-label="`${booking.isExtraSelected(extra.id) ? 'Retirer' : 'Ajouter'} : ${extra.name}`"
+                    :aria-label="t(booking.isExtraSelected(extra.id) ? 'car.booking.removeExtra' : 'car.booking.addExtra', { name: extra.name })"
                     @click="booking.toggleExtra(extra.id)"
                   >
-                    {{ booking.isExtraSelected(extra.id) ? '✓ Ajouté' : 'Ajouter' }}
+                    {{ booking.isExtraSelected(extra.id) ? t('car.booking.added') : t('car.booking.add') }}
                   </button>
                 </li>
               </ul>
@@ -173,7 +177,7 @@ const nextSteps = [
                 :aria-expanded="showAllOptions ? 'true' : 'false'"
                 @click="showAllOptions = !showAllOptions"
               >
-                {{ showAllOptions ? 'Afficher moins d’options' : `Voir ${hiddenCount} autre${hiddenCount > 1 ? 's' : ''} option${hiddenCount > 1 ? 's' : ''}` }}
+                {{ showAllOptions ? t('car.booking.showLess') : t('car.booking.showMore', hiddenCount) }}
               </button>
             </template>
 
@@ -182,19 +186,19 @@ const nextSteps = [
               class="mt-3 flex flex-wrap items-center justify-between gap-3 border border-line-strong p-3.5 lg:mt-6 lg:gap-5 lg:px-6 lg:py-5"
             >
               <div>
-                <p class="font-medium lg:mb-1 lg:text-[17px]">Assurance complémentaire</p>
+                <p class="font-medium lg:mb-1 lg:text-[17px]">{{ t('car.booking.insurance') }}</p>
                 <p class="text-[13px] text-muted lg:text-[14px]">
-                  Protection optionnelle, {{ booking.fmt(booking.insurancePerDay.value) }} MAD par jour.
+                  {{ t('car.booking.insuranceNote', { amount: booking.fmt(booking.insurancePerDay.value) }) }}
                 </p>
               </div>
               <button
                 type="button"
                 class="chip min-w-[92px] px-3 text-[11px] lg:min-w-[104px] lg:px-3.5 lg:text-[12px]"
                 :aria-pressed="form.insurance ? 'true' : 'false'"
-                aria-label="Assurance complémentaire"
+                :aria-label="t('car.booking.insurance')"
                 @click="form.insurance = !form.insurance"
               >
-                {{ form.insurance ? '✓ Ajoutée' : 'Ajouter' }}
+                {{ form.insurance ? t('car.booking.insuranceAdded') : t('car.booking.add') }}
               </button>
             </div>
           </fieldset>
@@ -202,33 +206,33 @@ const nextSteps = [
           <!-- 03 -->
           <fieldset>
             <legend class="mb-1 flex items-baseline gap-3 text-[19px] font-medium lg:mb-2 lg:gap-5 lg:text-[22px]">
-              <span class="font-plex text-[11px] text-accent lg:text-[12px]">{{ extras.length || booking.hasInsurance.value ? '03' : '02' }}</span>Vos coordonnées
+              <span class="font-plex text-[11px] text-accent lg:text-[12px]">{{ extras.length || booking.hasInsurance.value ? '03' : '02' }}</span>{{ t('car.booking.contact') }}
             </legend>
-            <p class="mb-4 text-[13px] text-muted lg:mb-5 lg:text-[14px]">Pour vous envoyer la confirmation.</p>
+            <p class="mb-4 text-[13px] text-muted lg:mb-5 lg:text-[14px]">{{ t('car.booking.contactNote') }}</p>
 
             <div class="grid gap-3 sm:grid-cols-2 lg:gap-4">
               <label class="field-label">
-                Nom complet
+                {{ t('car.booking.fullName') }}
                 <input v-model="form.fullName" class="field" type="text" autocomplete="name" required>
               </label>
               <label class="field-label">
-                Téléphone
+                {{ t('car.booking.phone') }}
                 <input v-model="form.phone" class="field" type="tel" autocomplete="tel" placeholder="+212 …" required>
               </label>
               <label class="flex min-h-11 cursor-pointer items-center gap-3 text-[14px] sm:col-span-2 lg:text-[15px]">
                 <input v-model="form.whatsappReachable" type="checkbox" class="m-0 size-5 shrink-0 accent-accent">
-                Ce numéro est joignable sur WhatsApp
+                {{ t('car.booking.whatsappReachable') }}
               </label>
               <label class="field-label">
-                <span>E-mail <span class="normal-case tracking-normal">(facultatif)</span></span>
+                <span>{{ t('car.booking.email') }} <span class="normal-case tracking-normal">{{ t('car.booking.optionalParen') }}</span></span>
                 <input v-model="form.email" class="field" type="email" autocomplete="email">
               </label>
               <label class="field-label">
-                N° de permis de conduire
+                {{ t('car.booking.licence') }}
                 <input v-model="form.driverLicense" class="field" type="text" required>
               </label>
               <label class="field-label sm:col-span-2">
-                <span>Note <span class="normal-case tracking-normal">(facultatif) — numéro de vol, demande particulière</span></span>
+                <span>{{ t('car.booking.notes') }} <span class="normal-case tracking-normal">{{ t('car.booking.notesHint') }}</span></span>
                 <textarea v-model="form.notes" class="field" rows="3" />
               </label>
             </div>
@@ -237,7 +241,7 @@ const nextSteps = [
 
         <!-- Summary -->
         <aside
-          aria-label="Récapitulatif"
+          :aria-label="t('car.booking.summary')"
           class="w-full min-w-0 border border-line lg:sticky lg:top-6 lg:w-auto lg:min-w-[300px] lg:flex-[0_1_340px] lg:border-line-strong xl:flex-[0_1_400px]"
         >
           <div class="flex items-center gap-4 border-b border-line p-4 lg:p-6">
@@ -245,36 +249,36 @@ const nextSteps = [
               <img v-if="photo" :src="photo" alt="" class="size-full object-cover">
             </div>
             <div class="min-w-0">
-              <p class="mono-label mb-0.5 text-[10px] lg:text-[11px]">Récapitulatif</p>
+              <p class="mono-label mb-0.5 text-[10px] lg:text-[11px]">{{ t('car.booking.summary') }}</p>
               <p class="text-[16px] font-medium lg:text-[18px]">{{ booking.carName.value }}</p>
             </div>
           </div>
 
           <div class="flex flex-col gap-2 px-4 py-4 text-[14px] lg:gap-3 lg:px-6 lg:py-5 lg:text-[15px]">
             <div class="flex justify-between gap-3">
-              <span class="text-ink-2">Location · {{ booking.daysLabel.value }}</span>
-              <span class="whitespace-nowrap">{{ booking.fmt(booking.rentalTotal.value) }} MAD</span>
+              <span class="text-ink-2">{{ t('car.booking.rental', { days: booking.daysLabel.value }) }}</span>
+              <span class="whitespace-nowrap">{{ t('car.amount', { amount: booking.fmt(booking.rentalTotal.value) }) }}</span>
             </div>
             <div v-for="line in booking.lines.value" :key="line.key" class="flex justify-between gap-3">
               <span class="text-ink-2">{{ line.label }}</span>
-              <span class="whitespace-nowrap">{{ booking.fmt(line.amount) }} MAD</span>
+              <span class="whitespace-nowrap">{{ t('car.amount', { amount: booking.fmt(line.amount) }) }}</span>
             </div>
           </div>
 
           <div class="flex items-baseline justify-between border-t border-ink px-4 py-4 lg:px-6 lg:py-5">
-            <span class="text-[15px]">Total estimé</span>
+            <span class="text-[15px]">{{ t('car.booking.total') }}</span>
             <span>
               <span class="text-[28px] font-medium tracking-[-0.03em] lg:text-[36px]">{{ booking.fmt(booking.total.value) }}</span>
-              <span class="font-plex text-[12px] text-muted"> MAD</span>
+              <span class="font-plex text-[12px] text-muted">{{ ` ${t('car.currency')}` }}</span>
             </span>
           </div>
 
           <div class="flex flex-col gap-1.5 px-4 pb-4 font-plex text-[11px] text-muted lg:px-6 lg:pb-5 lg:text-[12px]">
             <div v-if="booking.hasCaution.value" class="flex justify-between gap-3">
-              <span>Caution remboursable, non incluse</span>
-              <span class="whitespace-nowrap">{{ booking.fmt(booking.caution.value) }} MAD</span>
+              <span>{{ t('car.booking.deposit') }}</span>
+              <span class="whitespace-nowrap">{{ t('car.amount', { amount: booking.fmt(booking.caution.value) }) }}</span>
             </div>
-            <p>Tarif indicatif, ajusté selon la saison et confirmé par notre équipe.</p>
+            <p>{{ t('car.booking.disclaimer') }}</p>
           </div>
 
           <p
@@ -291,7 +295,7 @@ const nextSteps = [
             class="btn btn-primary hidden min-h-16 w-full px-6 text-[17px] lg:flex"
             :disabled="booking.pending.value"
           >
-            {{ booking.pending.value ? 'Envoi…' : 'Envoyer ma demande' }}
+            {{ booking.pending.value ? t('car.booking.sending') : t('car.booking.submit') }}
             <SiteIcon name="arrow-right" :size="20" />
           </button>
 
@@ -302,12 +306,12 @@ const nextSteps = [
             class="flex min-h-[52px] items-center justify-center gap-2.5 border-t border-line text-[15px] font-medium transition-colors hover:text-accent lg:min-h-14"
           >
             <SiteIcon name="whatsapp" />
-            <span class="lg:hidden">Réserver sur WhatsApp</span>
-            <span class="hidden lg:inline">Ou réserver directement sur WhatsApp</span>
+            <span class="lg:hidden">{{ t('car.booking.whatsappShort') }}</span>
+            <span class="hidden lg:inline">{{ t('car.booking.whatsapp') }}</span>
           </a>
 
           <div class="border-t border-line px-4 py-4 lg:px-6 lg:py-5">
-            <p class="mono-label mb-3">Et ensuite ?</p>
+            <p class="mono-label mb-3">{{ t('car.booking.nextTitle') }}</p>
             <ol class="flex flex-col gap-2 text-[14px] text-ink-2">
               <li v-for="(step, index) in nextSteps" :key="step" class="flex gap-2.5">
                 <span class="font-plex text-[12px] leading-[1.75] text-accent">{{ index + 1 }}</span>{{ step }}
@@ -323,10 +327,10 @@ const nextSteps = [
       class="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-line-strong bg-bg px-5 pb-[calc(16px+env(safe-area-inset-bottom))] pt-3 lg:hidden"
     >
       <div>
-        <p class="mono-label text-[10px]">{{ booking.daysLabel.value }} · estimé</p>
+        <p class="mono-label text-[10px]">{{ t('car.booking.barEstimate', { days: booking.daysLabel.value }) }}</p>
         <p aria-live="polite">
           <span class="text-[24px] font-medium tracking-[-0.02em]">{{ booking.fmt(booking.total.value) }}</span>
-          <span class="font-plex text-[11px] text-muted"> MAD</span>
+          <span class="font-plex text-[11px] text-muted">{{ ` ${t('car.currency')}` }}</span>
         </p>
       </div>
       <button
@@ -335,7 +339,7 @@ const nextSteps = [
         class="btn btn-primary min-h-[52px] shrink-0 justify-center px-5 text-[16px]"
         :disabled="booking.pending.value"
       >
-        {{ booking.pending.value ? 'Envoi…' : 'Envoyer ma demande' }}
+        {{ booking.pending.value ? t('car.booking.sending') : t('car.booking.submit') }}
       </button>
     </div>
   </section>

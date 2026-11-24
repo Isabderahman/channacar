@@ -3,36 +3,43 @@ import MarketingCardGrid from '~/components/public/MarketingCardGrid.vue'
 import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
 import MarketingNarrativeSection from '~/components/public/MarketingNarrativeSection.vue'
 import MarketingPageCta from '~/components/public/MarketingPageCta.vue'
-import { aboutContent, commonPageCta } from '~/utils/marketing-content'
+
+const content = useMarketingContent()
+const page = computed(() => content.value.about)
+const cta = computed(() => content.value.pageCta)
 
 useSeoMeta({
-  title: 'À propos de ChanaaCar',
-  description:
-    "Découvrez la mission, l'expérience et les valeurs de l'agence ChanaaCar.",
+  title: () => page.value.seo.title,
+  description: () => page.value.seo.description,
 })
 </script>
 
 <template>
   <div>
     <MarketingHeroSection
-      eyebrow="À propos"
-      :title="aboutContent.title"
-      :subtitle="aboutContent.paragraphs[0]"
-      :primary-action="{ label: 'Voir la flotte', to: '/cars' }"
-      :secondary-action="{ label: 'Parler à l’équipe', to: '/contact' }"
+      :eyebrow="page.hero.eyebrow"
+      :title="page.title"
+      :subtitle="page.paragraphs[0]"
+      :primary-action="{ label: page.hero.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: page.hero.secondaryLabel, to: '/contact' }"
     />
 
     <MarketingNarrativeSection
-      eyebrow="L’agence"
-      title="Une équipe locale qui mise sur la clarté et la disponibilité."
-      intro="Nous accompagnons les voyageurs, familles et professionnels avec un service simple, rapide et lisible."
-      :paragraphs="aboutContent.paragraphs"
+      :eyebrow="page.narrative.eyebrow"
+      :title="page.narrative.title"
+      :intro="page.narrative.intro"
+      :paragraphs="page.paragraphs"
     />
 
     <section class="wrap pt-24 lg:pt-40">
-      <MarketingCardGrid title="Nos valeurs" :cards="aboutContent.values" />
+      <MarketingCardGrid :title="page.values.title" :cards="page.values.cards" />
     </section>
 
-    <MarketingPageCta v-bind="commonPageCta" />
+    <MarketingPageCta
+      :title="cta.title"
+      :description="cta.description"
+      :primary-action="{ label: cta.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: cta.secondaryLabel, to: '/contact' }"
+    />
   </div>
 </template>

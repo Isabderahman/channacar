@@ -1,6 +1,7 @@
 // Single source of truth for ChannaCar's real-world business identity.
 // Used by the Schema.org / JSON-LD structured data (see layouts/default.vue).
-// Keep this in sync with the contact details shown in marketing-content.ts.
+// Keep this in sync with the contact details shown on the contact page
+// (app/content/marketing/shared.ts + the per-locale modules next to it).
 //
 // TODO(business): fill in the fields marked PLACEHOLDER below with the real
 // values, then remove this note. Search engines and AI answer engines (GEO)
@@ -42,7 +43,7 @@ export const businessInfo = {
 
   currenciesAccepted: 'MAD',
   priceRange: 'MAD',
-  // 7 days a week, 24h assistance (per contactContent in marketing-content.ts).
+  // 7 days a week, 24h assistance (per the contact page hours in app/content/marketing).
   opens: '00:00',
   closes: '23:59',
 

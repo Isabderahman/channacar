@@ -12,58 +12,57 @@ const props = defineProps<{
   hasReviews: boolean
 }>()
 
-const fuelLabels: Record<string, string> = {
-  diesel: 'Diesel',
-  electric: 'Électrique',
-  hybrid: 'Hybride',
-  petrol: 'Essence',
-}
+const { t, te } = useI18n()
 
 const meta = computed(() =>
   carMetaLine(props.car),
 )
-const gearbox = computed(() => (props.car.transmission === 'auto' ? 'Automatique' : 'Manuelle'))
-const fuel = computed(() => fuelLabels[props.car.fuel] ?? props.car.fuel)
+const transmission = computed(() => (props.car.transmission === 'auto' ? 'auto' : 'manual'))
+const gearbox = computed(() => t(`car.info.gearbox.${transmission.value}`))
+const fuel = computed(() =>
+  te(`site.fleet.fuels.${props.car.fuel}`) ? t(`site.fleet.fuels.${props.car.fuel}`) : props.car.fuel,
+)
+const yesNo = (value: boolean) => (value ? t('car.info.yes') : t('car.info.no'))
 
 const specs = computed(() => [
-  { k: 'Places', v: props.car.seats },
-  { k: 'Portes', v: props.car.doors },
-  { k: 'Bagages', v: props.car.luggage },
-  { k: 'Boîte', v: gearbox.value },
-  { k: 'Carburant', v: fuel.value },
-  { k: 'Climatisation', v: props.car.climatisation ? 'Oui' : 'Non' },
-  { k: 'GPS', v: props.car.gps ? 'Oui' : 'Non' },
-  { k: 'Année', v: props.car.year },
+  { k: t('site.fleet.seats'), v: props.car.seats },
+  { k: t('car.info.doors'), v: props.car.doors },
+  { k: t('site.fleet.bags'), v: props.car.luggage },
+  { k: t('site.fleet.gearbox'), v: gearbox.value },
+  { k: t('site.fleet.fuel'), v: fuel.value },
+  { k: t('car.info.airCon'), v: yesNo(props.car.climatisation) },
+  { k: t('car.info.gps'), v: yesNo(props.car.gps) },
+  { k: t('car.info.year'), v: props.car.year },
 ])
 
 // Compact one-line spec summary used on mobile.
 const specLine = computed(() =>
   [
-    `${props.car.seats} places`,
-    `${props.car.doors} portes`,
-    `${props.car.luggage} bagages`,
-    props.car.transmission === 'auto' ? 'Auto' : 'Manuelle',
+    t('car.info.seatsCount', { n: props.car.seats }),
+    t('car.info.doorsCount', { n: props.car.doors }),
+    t('car.info.bagsCount', { n: props.car.luggage }),
+    t(`site.fleet.transmission.${transmission.value}`),
     fuel.value,
-    props.car.climatisation ? 'Clim' : null,
-    props.car.gps ? 'GPS' : null,
+    props.car.climatisation ? t('car.info.airConShort') : null,
+    props.car.gps ? t('car.info.gps') : null,
   ]
     .filter(Boolean)
     .join(' · '),
 )
 
-const reassurance = [
-  'Livraison aéroport Menara ou hôtel',
-  'Assistance 24h/24, 7j/7',
-  'Tarifs transparents',
-  'Caution remboursable',
-]
+const reassurance = computed(() => [
+  t('car.info.reassurance.delivery'),
+  t('car.info.reassurance.support'),
+  t('car.info.reassurance.pricing'),
+  t('car.info.reassurance.deposit'),
+])
 
-const conditions = [
-  { k: 'Âge minimum', v: '21 ans' },
-  { k: 'Permis', v: '2 ans minimum' },
-  { k: 'Documents', v: 'CIN ou passeport + permis' },
-  { k: 'Assurance', v: 'Incluse selon contrat' },
-]
+const conditions = computed(() => [
+  { k: t('car.info.conditions.ageLabel'), v: t('car.info.conditions.age') },
+  { k: t('car.info.conditions.licenceLabel'), v: t('car.info.conditions.licence') },
+  { k: t('car.info.conditions.documentsLabel'), v: t('car.info.conditions.documents') },
+  { k: t('car.info.conditions.insuranceLabel'), v: t('car.info.conditions.insurance') },
+])
 </script>
 
 <template>
@@ -76,11 +75,11 @@ const conditions = [
     <div style="--d: 160" class="intro flex items-baseline justify-between gap-4 border-b border-t border-b-line border-t-ink py-4 lg:py-5">
       <p>
         <span class="text-[34px] font-medium tracking-[-0.03em] lg:text-[44px]">{{ formatAmount(car.base_price_per_day) }}</span>
-        <span class="font-plex text-[12px] text-muted lg:text-[13px]"> MAD / jour</span>
+        <span class="font-plex text-[12px] text-muted lg:text-[13px]">{{ ` ${t('site.fleet.perDay')}` }}</span>
       </p>
       <p v-if="booking.hasCaution.value" class="text-end font-plex text-[11px] text-muted lg:text-[12px]">
-        Caution<br>
-        <span class="text-[13px] text-ink lg:text-[14px]">{{ booking.fmt(booking.caution.value) }} MAD</span>
+        {{ t('car.info.deposit') }}<br>
+        <span class="text-[13px] text-ink lg:text-[14px]">{{ t('car.amount', { amount: booking.fmt(booking.caution.value) }) }}</span>
       </p>
     </div>
 
@@ -101,7 +100,7 @@ const conditions = [
 
     <div style="--d: 300" class="intro mt-8 hidden gap-2 lg:flex">
       <a href="#reserver" class="btn btn-primary min-h-14 flex-auto">
-        Réserver ce véhicule
+        {{ t('car.info.book') }}
         <SiteIcon name="arrow-down" />
       </a>
       <a
@@ -115,7 +114,7 @@ const conditions = [
     </div>
 
     <p style="--d: 340" class="intro mt-3.5 hidden text-[15px] text-ink-2 lg:block" aria-live="polite">
-      Votre estimation : {{ booking.fmt(booking.total.value) }} MAD pour {{ booking.daysLabel.value }}.
+      {{ t('car.info.estimate', { amount: booking.fmt(booking.total.value), days: booking.daysLabel.value }) }}
     </p>
 
     <ul style="--d: 380" class="intro mt-0 grid grid-cols-2 gap-x-3.5 gap-y-2.5 pt-4 text-[13px] text-ink-2 lg:mt-6 lg:gap-x-5 lg:gap-y-3 lg:border-t lg:border-line lg:pt-5 lg:text-[14px]">
@@ -126,7 +125,7 @@ const conditions = [
 
     <!-- Mobile: one-line conditions -->
     <p style="--d: 420" class="intro mt-4 bg-surface-2 px-3.5 py-3 text-[13px] text-ink-2 md:hidden">
-      21 ans minimum · permis de plus de 2 ans · CIN ou passeport · assurance incluse selon contrat
+      {{ t('car.info.conditions.summary') }}
     </p>
 
     <dl style="--d: 420" class="intro mt-5 hidden grid-cols-2 gap-x-5 gap-y-3 bg-surface-2 p-4 text-[14px] md:grid">
@@ -141,7 +140,7 @@ const conditions = [
       href="#avis"
       class="mt-3 flex min-h-12 items-center justify-between border border-line-strong px-3.5 text-[14px] transition-colors hover:border-ink lg:hidden"
     >
-      <span><span class="text-accent">★</span> Ce qu’en disent nos clients</span>
+      <span><span class="text-accent">★</span> {{ t('car.info.reviews') }}</span>
       <SiteIcon name="arrow-right" :size="16" />
     </a>
   </div>

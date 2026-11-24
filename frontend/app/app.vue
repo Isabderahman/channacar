@@ -62,6 +62,7 @@ const localeHead = useLocaleHead({
 })
 
 const { theme } = useTheme()
+const { t } = useI18n()
 const route = useRoute()
 
 // The light/dark toggle belongs to the admin back-office; the public site is
@@ -89,7 +90,8 @@ useHead(() => ({
   // Append the brand to page titles, but skip it when the page title already
   // contains the brand (several pages hardcode "… | ChanaaCar").
   titleTemplate: (title?: string) => {
-    if (!title) return 'ChannaCar — Location de voiture à Marrakech'
+    // Pages without their own title fall back to the homepage title, per locale.
+    if (!title) return t('seo.home.title')
     return /chann?aacar/i.test(title) ? title : `${title} · ChannaCar`
   },
 }))

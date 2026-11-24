@@ -5,6 +5,7 @@ import { carFullName } from '~/utils/car-display'
 // Main photo + thumbnails (a grid on desktop, a scrolling strip on mobile).
 const props = defineProps<{ car: Car }>()
 
+const { t } = useI18n()
 const { mediaUrl } = useApi()
 
 const images = computed(() => props.car.images ?? [])
@@ -22,7 +23,7 @@ const counter = computed(
       <img
         v-if="current"
         :src="mediaUrl(current.path)"
-        :alt="`${name} — photo ${active + 1} sur ${images.length}`"
+        :alt="t('car.gallery.photoAlt', { name, n: active + 1, total: images.length })"
         fetchpriority="high"
         class="size-full object-cover"
       >
@@ -41,7 +42,7 @@ const counter = computed(
     <div
       v-if="images.length > 1"
       role="group"
-      aria-label="Choisir une photo"
+      :aria-label="t('car.gallery.choose')"
       class="mt-1.5 flex gap-1.5 overflow-x-auto px-5 [scrollbar-width:none] lg:mt-2 lg:grid lg:grid-cols-4 lg:gap-2 lg:overflow-visible lg:px-0"
     >
       <button
@@ -51,7 +52,7 @@ const counter = computed(
         class="photo-frame h-14 w-[82px] shrink-0 overflow-hidden border transition-colors lg:h-[88px] lg:w-auto"
         :class="index === active ? 'border-ink' : 'border-transparent opacity-70 hover:opacity-100'"
         :aria-pressed="index === active ? 'true' : 'false'"
-        :aria-label="`Photo ${index + 1} sur ${images.length}`"
+        :aria-label="t('car.gallery.photo', { n: index + 1, total: images.length })"
         @click="active = index"
       >
         <img :src="mediaUrl(image.path)" alt="" loading="lazy" class="size-full object-cover">

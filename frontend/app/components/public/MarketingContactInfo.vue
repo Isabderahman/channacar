@@ -22,7 +22,7 @@ defineProps<{
     <dl v-inview data-anim="stagger">
       <div
         v-for="group in groups"
-        :key="group.label"
+        :key="group.kind"
         class="grid gap-2 border-b border-line py-5 sm:grid-cols-[140px_1fr] sm:gap-6"
       >
         <dt class="mono-label pt-1">
@@ -31,14 +31,14 @@ defineProps<{
         <dd class="flex flex-col gap-1 text-[17px] lg:text-[19px]">
           <template v-for="value in group.values" :key="value">
             <a
-              v-if="group.label === 'Email'"
+              v-if="group.kind === 'email'"
               :href="`mailto:${value}`"
               class="w-fit transition-colors hover:text-accent"
             >
               {{ value }}
             </a>
             <a
-              v-else-if="group.label === 'WhatsApp'"
+              v-else-if="group.kind === 'whatsapp'"
               :href="`https://wa.me/${value.replace(/\D/g, '')}`"
               target="_blank"
               rel="noopener"
@@ -48,7 +48,7 @@ defineProps<{
               {{ value }}
             </a>
             <a
-              v-else-if="group.label === 'Téléphone'"
+              v-else-if="group.kind === 'phone'"
               :href="`tel:${value.replace(/\s+/g, '')}`"
               class="w-fit transition-colors hover:text-accent"
               dir="ltr"

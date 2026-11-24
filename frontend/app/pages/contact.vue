@@ -3,36 +3,43 @@ import MarketingContactForm from '~/components/public/MarketingContactForm.vue'
 import MarketingContactInfo from '~/components/public/MarketingContactInfo.vue'
 import MarketingHeroSection from '~/components/public/MarketingHeroSection.vue'
 import MarketingPageCta from '~/components/public/MarketingPageCta.vue'
-import { commonPageCta, contactContent } from '~/utils/marketing-content'
+
+const content = useMarketingContent()
+const page = computed(() => content.value.contact)
+const cta = computed(() => content.value.pageCta)
 
 useSeoMeta({
-  title: 'Contact | ChanaaCar',
-  description:
-    "Coordonnées, disponibilité et formulaire de demande pour contacter l'équipe ChanaaCar.",
+  title: () => page.value.seo.title,
+  description: () => page.value.seo.description,
 })
 </script>
 
 <template>
   <div>
     <MarketingHeroSection
-      eyebrow="Contact"
-      :title="contactContent.title"
-      :subtitle="contactContent.subtitle"
-      :primary-action="{ label: 'Réserver maintenant', to: '/cars' }"
-      :secondary-action="{ label: 'Questions fréquentes', to: '/faq' }"
+      :eyebrow="page.hero.eyebrow"
+      :title="page.title"
+      :subtitle="page.subtitle"
+      :primary-action="{ label: page.hero.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: page.hero.secondaryLabel, to: '/faq' }"
     />
 
     <section class="wrap pt-24 lg:pt-40">
       <div class="grid gap-16 xl:grid-cols-2 xl:gap-16">
         <MarketingContactInfo
-          :title="contactContent.title"
-          :subtitle="contactContent.subtitle"
-          :groups="contactContent.contacts"
+          :title="page.title"
+          :subtitle="page.subtitle"
+          :groups="page.groups"
         />
         <MarketingContactForm />
       </div>
     </section>
 
-    <MarketingPageCta v-bind="commonPageCta" />
+    <MarketingPageCta
+      :title="cta.title"
+      :description="cta.description"
+      :primary-action="{ label: cta.primaryLabel, to: '/cars' }"
+      :secondary-action="{ label: cta.secondaryLabel, to: '/contact' }"
+    />
   </div>
 </template>

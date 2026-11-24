@@ -42,18 +42,8 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   eyebrow: 'ChanaaCar',
-  features: () => [
-    {
-      icon: 'check-circle',
-      title: 'Tarifs transparents',
-      description: 'Une offre claire, des conditions visibles, et une réservation plus directe.',
-    },
-    {
-      icon: 'map-pin',
-      title: 'Marrakech et aéroport',
-      description: 'Des parcours conçus pour les clients qui arrivent, repartent, ou circulent au Maroc.',
-    },
-  ],
+  // Falls back to the localized rows from useMarketingContent().heroFeatures.
+  features: undefined,
   id: undefined,
   image: '/images/hero-banner.jpg',
   imageAlt: 'ChanaaCar',
@@ -67,6 +57,9 @@ const props = withDefaults(defineProps<Props>(), {
 
 const slots = useSlots()
 const localePath = useLocalePath()
+const marketing = useMarketingContent()
+
+const featureList = computed(() => props.features ?? marketing.value.heroFeatures)
 
 const hasActionRow = computed(() => Boolean(props.primaryAction || props.secondaryAction))
 const hasMetaSlot = computed(() => Boolean(slots.meta))
@@ -129,11 +122,11 @@ const hasMetaSlot = computed(() => Boolean(slots.meta))
     </div>
   </div>
 
-  <div v-if="hasMetaSlot || features.length" class="wrap">
+  <div v-if="hasMetaSlot || featureList.length" class="wrap">
     <slot name="meta">
       <ol v-inview data-anim="stagger" class="grid md:grid-cols-2 md:gap-x-10">
         <li
-          v-for="(feature, index) in features"
+          v-for="(feature, index) in featureList"
           :key="feature.title"
           class="flex gap-5 border-b border-line py-6"
         >

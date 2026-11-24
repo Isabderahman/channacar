@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import { contactDetails } from '~/utils/home-content'
-import { whatsappGeneralMessage, whatsappHref } from '~/utils/whatsapp'
+import { whatsappGeneralMessageFor, whatsappHref } from '~/utils/whatsapp'
 
 // Orange contact block: the one large accent surface on the page.
 const { t } = useI18n()
-const whatsappLink = whatsappHref(whatsappGeneralMessage)
+const whatsappLink = computed(() => whatsappHref(whatsappGeneralMessageFor(t)))
 </script>
 
 <template>
