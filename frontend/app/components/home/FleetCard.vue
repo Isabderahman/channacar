@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
+import CarTags from '~/components/site/CarTags.vue'
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import type { Car } from '~/types/entities'
 import { carFullName, carMetaLine, carPhotoPath, formatAmount, rowIndex } from '~/utils/car-display'
 import { toNumber } from '~/utils/formatters'
 
-// Homepage fleet card (handoff): 4:3 photo with index + category · year
+// Homepage fleet card (handoff): 3:2 photo with index + category · year
 // overlaid, 4-column specs, refundable deposit, and the price — per day, or
 // the total for the period once the visitor has picked both dates.
 const props = defineProps<{
@@ -72,7 +73,7 @@ const price = computed(() =>
 
 <template>
   <li class="group relative flex flex-col border border-line bg-bg transition-colors hover:border-line-strong">
-    <div class="photo-frame relative h-[200px] overflow-hidden md:aspect-[4/3] md:h-auto">
+    <div class="photo-frame relative aspect-[3/2] overflow-hidden">
       <img
         v-if="photo"
         :src="photo"
@@ -89,7 +90,10 @@ const price = computed(() =>
     </div>
 
     <div class="flex flex-1 flex-col gap-3 p-4 md:gap-5 md:p-6">
-      <h3 class="text-[22px] font-medium leading-[1.15] tracking-[-0.02em] md:text-[26px] md:leading-[1.1]">{{ name }}</h3>
+      <div>
+        <h3 class="text-[22px] font-medium leading-[1.15] tracking-[-0.02em] md:text-[26px] md:leading-[1.1]">{{ name }}</h3>
+        <CarTags :tags="car.tags" class="mt-2" />
+      </div>
 
       <!-- Mobile: one-line specs -->
       <p class="font-plex text-[12px] text-muted md:hidden">{{ specLine }}</p>

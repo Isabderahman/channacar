@@ -19,7 +19,7 @@ const counter = computed(
 
 <template>
   <div>
-    <div class="photo-frame relative h-[260px] overflow-hidden sm:h-[400px] lg:h-[460px] xl:h-[560px]">
+    <div class="photo-frame relative aspect-[3/2] overflow-hidden">
       <img
         v-if="current"
         :src="mediaUrl(current.path)"
@@ -49,7 +49,7 @@ const counter = computed(
         v-for="(image, index) in images"
         :key="image.id"
         type="button"
-        class="photo-frame h-14 w-[82px] shrink-0 overflow-hidden border transition-colors lg:h-[88px] lg:w-auto"
+        class="photo-frame aspect-[3/2] w-[84px] shrink-0 overflow-hidden border transition-colors lg:w-auto"
         :class="index === active ? 'border-ink' : 'border-transparent opacity-70 hover:opacity-100'"
         :aria-pressed="index === active ? 'true' : 'false'"
         :aria-label="t('car.gallery.photo', { n: index + 1, total: images.length })"

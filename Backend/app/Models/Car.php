@@ -32,6 +32,7 @@ class Car extends Model
         'base_price_per_day',
         'insurance_price_per_day',
         'caution',
+        'tags',
         'status',
         'registration_number',
         'is_active',
@@ -47,6 +48,7 @@ class Car extends Model
         'base_price_per_day' => 'decimal:2',
         'insurance_price_per_day' => 'decimal:2',
         'caution' => 'decimal:2',
+        'tags' => 'array',
         'is_active' => 'boolean',
         'transmission' => TransmissionType::class,
         'fuel' => FuelType::class,
@@ -83,6 +85,37 @@ class Car extends Model
         }
 
         return $slug;
+    }
+
+    /** Most tags a car can carry; keeps the public chips row to one line or two. */
+    public const MAX_TAGS = 8;
+
+    /** Longest accepted tag, in characters. */
+    public const MAX_TAG_LENGTH = 30;
+
+    /**
+     * Clean admin-entered tags: trim, collapse inner whitespace, drop empties
+     * and case-insensitive duplicates (first spelling wins), keep the order.
+     *
+     * @param  array<int, mixed>|null  $tags
+     * @return array<int, string>
+     */
+    public static function normalizeTags(?array $tags): array
+    {
+        $clean = [];
+
+        foreach ($tags ?? [] as $tag) {
+            $tag = trim((string) preg_replace('/\s+/u', ' ', (string) $tag));
+
+            if ($tag === '') {
+                continue;
+            }
+
+            $key = mb_strtolower($tag);
+            $clean[$key] ??= $tag;
+        }
+
+        return array_values($clean);
     }
 
     /** Main category: shown where only one fits (contract, breadcrumb). */

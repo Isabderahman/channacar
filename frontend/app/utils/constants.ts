@@ -51,6 +51,7 @@ export const ADMIN_NAV_ITEMS = [
   { label: 'Reservations', to: '/admin/reservations', icon: 'calendar' },
   { label: 'Planning', to: '/admin/planning', icon: 'clock' },
   { label: 'Clients', to: '/admin/clients', icon: 'people' },
+  { label: 'Devis & factures', to: '/admin/documents', icon: 'payment' },
   { label: 'Seasons', to: '/admin/seasons', icon: 'clock' },
   { label: 'Locations', to: '/admin/locations', icon: 'map-pin' },
   { label: 'Extras', to: '/admin/extras', icon: 'plus' },
@@ -98,4 +99,9 @@ export const PUBLIC_TESTIMONIAL_FALLBACK = [
       'Good pricing, clean car, and a much more polished experience than the usual rental WhatsApp back-and-forth.',
     stars: 4,
   },
+] as const
+
+export const BILLING_TYPE_OPTIONS = [
+  { label: 'Devis', value: 'quote' },
+  { label: 'Facture', value: 'invoice' },
 ] as const

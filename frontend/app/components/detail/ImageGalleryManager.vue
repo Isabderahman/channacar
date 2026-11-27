@@ -203,7 +203,7 @@ const removeImage = async (imageId: number) => {
         <img
           :src="mediaUrl(image.path)"
           alt="Car gallery asset"
-          class="h-40 w-full bg-surface object-cover"
+          class="aspect-[3/2] w-full bg-surface object-cover"
         >
         <div class="flex flex-wrap items-center justify-between gap-2 border-t border-line px-3 py-2.5">
           <div class="font-plex text-[11px] uppercase tracking-[0.06em] text-muted">

@@ -52,7 +52,7 @@ class CarController extends Controller
 
     public function store(Request $request): JsonResponse
     {
-        $validated = $request->validate($this->rules());
+        $validated = $this->normalizeTags($request->validate($this->rules()));
         $categoryIds = $this->resolveCategoryIds($validated);
         $validated['category_id'] = $categoryIds[0];
         unset($validated['category'], $validated['category_ids']);
@@ -71,7 +71,7 @@ class CarController extends Controller
 
     public function update(Request $request, Car $car): JsonResponse
     {
-        $validated = $request->validate($this->rules($car, true));
+        $validated = $this->normalizeTags($request->validate($this->rules($car, true)));
         $categoryIds = null;
 
         if (array_intersect_key($validated, array_flip(['category', 'category_id', 'category_ids'])) !== []) {
@@ -91,6 +91,23 @@ class CarController extends Controller
         return response()->json([
             'data' => $car->fresh()->load(['category', 'categories', 'images']),
         ]);
+    }
+
+    /**
+     * Every tag already used on the fleet, for the admin tag picker suggestions.
+     */
+    public function tags(): JsonResponse
+    {
+        $tags = Car::query()
+            ->whereNotNull('tags')
+            ->pluck('tags')
+            ->flatten()
+            ->all();
+
+        $tags = Car::normalizeTags($tags);
+        natcasesort($tags);
+
+        return response()->json(['data' => array_values($tags)]);
     }
 
     public function destroy(Car $car): JsonResponse
@@ -142,6 +159,8 @@ class CarController extends Controller
             'base_price_per_day' => [$required, 'numeric', 'min:0'],
             'insurance_price_per_day' => ['sometimes', 'nullable', 'numeric', 'min:0'],
             'caution' => ['sometimes', 'nullable', 'numeric', 'min:0'],
+            'tags' => ['sometimes', 'nullable', 'array', 'max:'.Car::MAX_TAGS],
+            'tags.*' => ['nullable', 'string', 'max:'.Car::MAX_TAG_LENGTH],
             'status' => [$required, Rule::in($this->enumValues(CarStatus::class))],
             'registration_number' => [
                 $required,
@@ -151,6 +170,22 @@ class CarController extends Controller
             ],
             'is_active' => [$required, 'boolean'],
         ];
+    }
+
+    /**
+     * Store tags cleaned (and an empty list as null) so the public chips never
+     * show blanks or "Promo" twice.
+     *
+     * @param  array<string, mixed>  $validated
+     * @return array<string, mixed>
+     */
+    private function normalizeTags(array $validated): array
+    {
+        if (array_key_exists('tags', $validated)) {
+            $validated['tags'] = Car::normalizeTags($validated['tags']) ?: null;
+        }
+
+        return $validated;
     }
 
     /**

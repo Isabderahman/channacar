@@ -20,6 +20,7 @@ const { uploadImages } = useCarImageUpload()
 const errorMessage = ref('')
 const cars = ref<Car[]>([])
 const categories = ref<Category[]>([])
+const tagSuggestions = ref<string[]>([])
 
 const createFormState = () => ({
   base_price_per_day: '',
@@ -28,6 +29,7 @@ const createFormState = () => ({
   brand: '',
   /** Main category first. */
   category_ids: [] as number[],
+  tags: [] as string[],
   climatisation: true,
   doors: 5,
   fuel: 'petrol',
@@ -89,6 +91,7 @@ const tableRows = computed(() =>
     id: car.id,
     price: formatCurrency(car.base_price_per_day),
     status: car.status,
+    tags: car.tags ?? [],
     vehicle: `${car.brand} ${car.name}`,
     year: car.year,
   })),
@@ -99,17 +102,20 @@ const loadCars = async () => {
   errorMessage.value = ''
 
   try {
-    const [carsResponse, categoryResponse] = await Promise.all([
+    const [carsResponse, categoryResponse, tagResponse] = await Promise.all([
       adminApi<PaginatedResponse<Car>>('/cars', {
         query: {
           per_page: 20,
         },
       }),
       publicApi<ResourceResponse<Category[]>>('/public/categories'),
+      // Suggestions only: the list still works if this one fails.
+      adminApi<ResourceResponse<string[]>>('/car-tags').catch(() => ({ data: [] as string[] })),
     ])
 
     cars.value = carsResponse.data
     categories.value = categoryResponse.data
+    tagSuggestions.value = tagResponse.data
   } catch (error) {
     errorMessage.value = resolveApiErrorMessage(error, {
       fallback: 'The car list could not be loaded.',
@@ -122,6 +128,48 @@ const loadCars = async () => {
 
 const resetForm = () => {
   Object.assign(form, createFormState())
+}
+
+// Quick tag editing straight from the fleet list.
+const tagEditor = reactive({
+  car: null as Car | null,
+  saving: false,
+  tags: [] as string[],
+})
+
+const openTagEditor = (carId: number) => {
+  const car = cars.value.find((item) => item.id === carId)
+
+  if (!car) {
+    return
+  }
+
+  tagEditor.car = car
+  tagEditor.tags = [...(car.tags ?? [])]
+}
+
+const saveTags = async () => {
+  if (!tagEditor.car) {
+    return
+  }
+
+  tagEditor.saving = true
+
+  try {
+    const response = await adminApi<ResourceResponse<Car>>(`/cars/${tagEditor.car.id}`, {
+      method: 'PUT',
+      body: { tags: tagEditor.tags },
+    })
+
+    cars.value = cars.value.map((car) => (car.id === response.data.id ? response.data : car))
+    tagSuggestions.value = [...new Set([...tagSuggestions.value, ...(response.data.tags ?? [])])]
+    toast.success(`Tags saved for ${response.data.brand} ${response.data.name}.`, 'Saved')
+    tagEditor.car = null
+  } catch (error) {
+    toast.apiError(error, 'The tags could not be saved.')
+  } finally {
+    tagEditor.saving = false
+  }
 }
 
 const submit = async () => {
@@ -230,6 +278,7 @@ onMounted(() => {
       :columns="[
         { key: 'vehicle', label: 'Vehicle' },
         { key: 'category_name', label: 'Categories' },
+        { key: 'tags', label: 'Tags' },
         { key: 'year', label: 'Year' },
         { key: 'price', label: 'Daily rate' },
         { key: 'status', label: 'Status' },
@@ -240,6 +289,26 @@ onMounted(() => {
     >
       <template #cell-vehicle="{ row }">
         <span class="cursor-pointer whitespace-nowrap text-[15px] font-medium text-ink">{{ row.vehicle }}</span>
+      </template>
+      <template #cell-tags="{ row }">
+        <div class="flex min-w-[10rem] flex-wrap items-center gap-1">
+          <span
+            v-for="tag in row.tags"
+            :key="tag"
+            class="whitespace-nowrap bg-surface-2 px-1.5 py-0.5 font-plex text-[11px] text-ink"
+          >
+            {{ tag }}
+          </span>
+          <button
+            type="button"
+            class="inline-flex min-h-7 items-center gap-1 border border-dashed border-line-strong px-1.5 font-plex text-[11px] text-ink-2 transition-colors hover:border-ink hover:text-ink"
+            :aria-label="`Edit tags of ${row.vehicle}`"
+            @click.stop="openTagEditor(row.id)"
+          >
+            <BaseIcon :name="row.tags.length ? 'edit' : 'plus'" :size="12" />
+            <span>{{ row.tags.length ? 'Edit' : 'Add' }}</span>
+          </button>
+        </div>
       </template>
       <template #cell-year="{ row }">
         <span class="cursor-pointer font-plex text-[13px]">{{ row.year }}</span>
@@ -276,6 +345,7 @@ onMounted(() => {
           <FormField v-model="form.year" name="year" label="Year" type="number" min="1900" />
           <FormField v-model="form.registration_number" name="registration_number" label="Registration" />
           <AdminCategoryPicker v-model="form.category_ids" :categories="categories" class="md:col-span-2" />
+          <AdminTagInput v-model="form.tags" :suggestions="tagSuggestions" name="create-tags" class="md:col-span-2" />
           <FormField v-model="form.base_price_per_day" name="base_price_per_day" label="Base price / day" type="number" min="0" />
           <FormField v-model="form.insurance_price_per_day" name="insurance_price_per_day" label="Insurance / day (optional)" type="number" min="0" />
           <FormField v-model="form.caution" name="caution" label="Caution / deposit (optional)" type="number" min="0" />
@@ -314,7 +384,7 @@ onMounted(() => {
               :key="item.preview"
               class="relative overflow-hidden border border-line bg-surface"
             >
-              <img :src="item.preview" alt="Selected car image" class="h-24 w-full object-cover">
+              <img :src="item.preview" alt="Selected car image" class="aspect-[3/2] w-full object-cover">
               <span
                 v-if="index === 0"
                 class="absolute left-2 top-2 bg-accent px-1.5 py-0.5 font-plex text-[10px] uppercase tracking-[0.06em] text-on-accent"
@@ -339,6 +409,28 @@ onMounted(() => {
             <span>{{ imageProgress ? `Uploading ${Math.min(imageProgress.done + 1, imageProgress.total)} / ${imageProgress.total}…` : formPending ? 'Creating...' : 'Create car' }}</span>
           </BaseButton>
           <BaseButton type="button" variant="secondary" @click="showCreateModal = false">
+            <span>Cancel</span>
+          </BaseButton>
+        </div>
+      </form>
+    </AppModal>
+
+    <AppModal
+      :open="tagEditor.car !== null"
+      :title="tagEditor.car ? `Tags — ${tagEditor.car.brand} ${tagEditor.car.name}` : 'Tags'"
+      description="Labels shown on this car in the public fleet list and on its page."
+      size="md"
+      @close="tagEditor.car = null"
+    >
+      <form class="space-y-5" @submit.prevent="saveTags">
+        <AdminTagInput v-model="tagEditor.tags" :suggestions="tagSuggestions" name="quick-tags" />
+
+        <div class="flex flex-wrap gap-3">
+          <BaseButton type="submit" :disabled="tagEditor.saving">
+            <BaseIcon name="edit" :size="18" />
+            <span>{{ tagEditor.saving ? 'Saving...' : 'Save tags' }}</span>
+          </BaseButton>
+          <BaseButton type="button" variant="secondary" @click="tagEditor.car = null">
             <span>Cancel</span>
           </BaseButton>
         </div>

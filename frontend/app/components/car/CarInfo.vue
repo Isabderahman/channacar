@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CarTags from '~/components/site/CarTags.vue'
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import type { CarBooking } from '~/composables/useCarBooking'
 import type { Car } from '~/types/entities'
@@ -71,6 +72,7 @@ const conditions = computed(() => [
     <h1 style="--d: 80" class="intro mb-5 text-[42px] font-medium leading-[0.95] tracking-[-0.045em] lg:mb-8 lg:text-[clamp(44px,5vw,72px)]">
       {{ car.brand }} {{ car.name }}
     </h1>
+    <CarTags v-if="car.tags?.length" :tags="car.tags" style="--d: 120" class="intro -mt-2 mb-5 lg:-mt-4 lg:mb-7" />
 
     <div style="--d: 160" class="intro flex items-baseline justify-between gap-4 border-b border-t border-b-line border-t-ink py-4 lg:py-5">
       <p>

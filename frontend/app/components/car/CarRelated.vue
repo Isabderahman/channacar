@@ -28,7 +28,7 @@ const link = (car: Car) => ({ path: localePath(`/cars/${car.slug ?? car.id}`), q
     <ul class="grid sm:grid-cols-2 lg:grid-cols-3">
       <li v-for="car in cars" :key="car.id" class="border-b border-line">
         <NuxtLink :to="link(car)" class="group flex flex-col gap-4 py-6 sm:pe-6">
-          <div class="photo-frame h-[200px] overflow-hidden">
+          <div class="photo-frame aspect-[3/2] overflow-hidden">
             <img
               v-if="photo(car)"
               :src="photo(car)!"

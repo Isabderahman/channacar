@@ -18,6 +18,7 @@ const saving = ref(false)
 const errorMessage = ref('')
 const car = ref<Car | null>(null)
 const categories = ref<Category[]>([])
+const tagSuggestions = ref<string[]>([])
 
 const form = reactive({
   base_price_per_day: '',
@@ -26,6 +27,7 @@ const form = reactive({
   brand: '',
   /** Main category first. */
   category_ids: [] as number[],
+  tags: [] as string[],
   climatisation: false,
   doors: 0,
   fuel: 'petrol',
@@ -53,6 +55,7 @@ const summaryItems = computed(() => {
       label: 'Categories',
       value: carCategories(car.value).map((category) => category.name).join(' / ') || 'Unknown',
     },
+    { label: 'Tags', value: car.value.tags?.length ? car.value.tags.join(', ') : 'None' },
   ]
 })
 
@@ -63,6 +66,7 @@ const fillForm = (value: Car) => {
   form.caution = value.caution == null ? '' : String(value.caution)
   form.brand = value.brand
   form.category_ids = carCategories(value).map((category) => category.id)
+  form.tags = [...(value.tags ?? [])]
   form.climatisation = value.climatisation
   form.doors = value.doors
   form.fuel = value.fuel
@@ -83,13 +87,16 @@ const loadCar = async () => {
 
   try {
     const carId = Number(route.params.id)
-    const [carResponse, categoryResponse] = await Promise.all([
+    const [carResponse, categoryResponse, tagResponse] = await Promise.all([
       adminApi<ResourceResponse<Car>>(`/cars/${carId}`),
       publicApi<ResourceResponse<Category[]>>('/public/categories'),
+      // Suggestions only: the page still works if this one fails.
+      adminApi<ResourceResponse<string[]>>('/car-tags').catch(() => ({ data: [] as string[] })),
     ])
 
     car.value = carResponse.data
     categories.value = categoryResponse.data
+    tagSuggestions.value = tagResponse.data
     fillForm(carResponse.data)
   } catch (error) {
     errorMessage.value = resolveApiErrorMessage(error, {
@@ -226,6 +233,7 @@ watch(
                 <FormField v-model="form.year" name="year" label="Year" type="number" min="1900" />
                 <FormField v-model="form.registration_number" name="registration_number" label="Registration" />
                 <AdminCategoryPicker v-model="form.category_ids" :categories="categories" class="md:col-span-2" />
+                <AdminTagInput v-model="form.tags" :suggestions="tagSuggestions" class="md:col-span-2" />
                 <FormField v-model="form.base_price_per_day" name="base_price_per_day" label="Base price / day" type="number" min="0" />
                 <FormField v-model="form.insurance_price_per_day" name="insurance_price_per_day" label="Insurance / day (optional)" type="number" min="0" />
                 <FormField v-model="form.caution" name="caution" label="Caution / deposit (optional)" type="number" min="0" />

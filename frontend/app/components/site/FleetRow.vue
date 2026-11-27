@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { RouteLocationRaw } from 'vue-router'
+import CarTags from '~/components/site/CarTags.vue'
 import SiteIcon from '~/components/site/SiteIcon.vue'
 import type { Car } from '~/types/entities'
 import { carFullName, carMetaLine, carPhotoPath, formatAmount, rowIndex } from '~/utils/car-display'
@@ -53,7 +54,7 @@ const specLine = computed(() =>
     <!-- Mobile -->
     <div class="flex flex-col gap-3.5 py-5 md:hidden">
       <div class="flex items-center gap-3.5">
-        <div class="photo-frame h-[72px] w-28 shrink-0 overflow-hidden">
+        <div class="photo-frame aspect-[3/2] w-28 shrink-0 overflow-hidden">
           <img v-if="photo" :src="photo" alt="" loading="lazy" class="size-full object-cover">
         </div>
         <div class="min-w-0">
@@ -63,6 +64,7 @@ const specLine = computed(() =>
               {{ name }}
             </NuxtLink>
           </h3>
+          <CarTags :tags="car.tags" class="mt-2" />
         </div>
       </div>
       <div class="flex items-center justify-between gap-3">
@@ -78,7 +80,7 @@ const specLine = computed(() =>
     <div class="hidden flex-wrap items-center gap-x-6 gap-y-6 py-7 md:flex xl:gap-x-10">
       <span class="w-10 shrink-0 font-plex text-[13px] text-muted">{{ number }}</span>
 
-      <div class="photo-frame h-24 w-40 shrink-0 overflow-hidden xl:h-[120px] xl:w-[200px]">
+      <div class="photo-frame aspect-[3/2] w-40 shrink-0 overflow-hidden xl:w-[200px]">
         <img
           v-if="photo"
           :src="photo"
@@ -95,6 +97,7 @@ const specLine = computed(() =>
             {{ name }}
           </NuxtLink>
         </h3>
+        <CarTags :tags="car.tags" class="mt-2.5" />
       </div>
 
       <dl class="grid min-w-0 flex-[1_1_240px] grid-cols-4 gap-2 text-[15px] xl:flex-[1_1_300px]">

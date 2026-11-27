@@ -42,6 +42,8 @@ export interface Car {
   base_price_per_day: NumericValue
   insurance_price_per_day?: NumericValue | null
   caution?: NumericValue | null
+  /** Free-form labels shown as chips on the public site ("Nouveau", "Promo"). */
+  tags?: string[] | null
   status: CarStatus
   registration_number: string
   is_active: boolean
@@ -189,6 +191,56 @@ export interface AdminUser {
 export interface LoginResponse {
   token: string
   user: AdminUser
+}
+
+/** `quote` = devis, `invoice` = facture. */
+export type BillingDocumentType = 'quote' | 'invoice'
+
+/** `per_day` = N jours × prix/jour; `flat` = forfait (amount in `total`). */
+export type BillingLineType = 'per_day' | 'flat'
+
+export interface BillingDocumentLine {
+  type: BillingLineType
+  designation: string
+  description?: string | null
+  /** `YYYY-MM-DD`, printed as "Du … au …". */
+  period_start?: string | null
+  period_end?: string | null
+  /** Days (per_day only). */
+  quantity?: NumericValue | null
+  /** Price per day HT (per_day only). */
+  unit_price?: NumericValue | null
+  /** Line total HT; the input amount for flat lines, computed by the backend otherwise. */
+  total?: NumericValue | null
+}
+
+export interface BillingDocumentRef {
+  id: number
+  number: string
+  type: BillingDocumentType
+}
+
+export interface BillingDocument {
+  id: number
+  type: BillingDocumentType
+  number: string
+  issue_date: string
+  validity_days?: number | null
+  client_name: string
+  client_details?: string | null
+  lines: BillingDocumentLine[]
+  tva_rate: NumericValue
+  total_ht: NumericValue
+  total_tva: NumericValue
+  total_ttc: NumericValue
+  notes?: string | null
+  source_document_id?: number | null
+  /** For a facture: the devis it came from. */
+  source?: BillingDocumentRef | null
+  /** For a devis: the facture it was converted into. */
+  invoice?: BillingDocumentRef | null
+  created_at?: string
+  updated_at?: string
 }
 
 export interface ResourceResponse<T> {

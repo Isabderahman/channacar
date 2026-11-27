@@ -68,6 +68,10 @@ Core entities (`app/Models/`): `Car` (listed under one or more `Category`s via t
 
 When changing pricing, availability, or status transitions, update `ReservationService` rather than individual controllers.
 
+**Car tags**: `cars.tags` is a JSON list of free-form labels ("Promo", "Nouveau") set in the admin (`AdminTagInput.vue`, also editable straight from the fleet list) and shown as chips on the public fleet list and car page (`site/CarTags.vue`). `Car::normalizeTags()` trims/dedupes; `GET /api/car-tags` feeds the picker suggestions.
+
+**Devis & factures** (`BillingDocument`, admin `/admin/documents`): standalone quotes/invoices, not tied to reservations. All create/update/convert logic is in `app/Services/BillingDocumentService.php` — prices are entered **HT**, totals (HT → TVA → TTC) are always recomputed server-side, numbers are `DEV-<year>-0001` / `FAC-<year>-0001` per type and issue-date year, and a devis converts once into a facture (`source_document_id`). The PDF is `resources/views/billing-document.blade.php` (dompdf, Helvetica core font); coloured bands are single cells with an inner `.cols` table to avoid viewer seams and keep each item on one page. Agency legal details (RC, ICE, address) live in `config/company.php`; the amount in words comes from `App\Support\FrenchAmountInWords`.
+
 ### Error handling & toasts
 Failed requests are reported with toasts, never with raw status codes.
 

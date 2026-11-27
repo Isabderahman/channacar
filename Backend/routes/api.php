@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Admin\AuthController;
+use App\Http\Controllers\Api\Admin\BillingDocumentController;
 use App\Http\Controllers\Api\Admin\CarController as AdminCarController;
 use App\Http\Controllers\Api\Admin\CarImageController;
 use App\Http\Controllers\Api\Admin\ClientController;
@@ -45,6 +46,7 @@ Route::prefix('public')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    Route::get('/car-tags', [AdminCarController::class, 'tags']);
     Route::apiResource('cars', AdminCarController::class);
     Route::post('/cars/{car}/images', [CarImageController::class, 'store']);
     Route::delete('/images/{image}', [CarImageController::class, 'destroy']);
@@ -62,4 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/testimonials/{testimonial}/visibility', [AdminTestimonialController::class, 'updateVisibility']);
     Route::get('/dashboard/stats', [DashboardController::class, 'stats']);
     Route::get('/planning', [PlanningController::class, 'index']);
+
+    // Devis & factures.
+    Route::apiResource('billing-documents', BillingDocumentController::class);
+    Route::get('/billing-documents/{billing_document}/pdf', [BillingDocumentController::class, 'pdf']);
+    Route::post('/billing-documents/{billing_document}/invoice', [BillingDocumentController::class, 'convertToInvoice']);
 });
