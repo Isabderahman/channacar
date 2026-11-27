@@ -29,6 +29,11 @@ export default defineNuxtConfig({
     public: {
       apiBase: process.env.NUXT_PUBLIC_API_BASE ?? '/_backend/api',
       storageBase: process.env.NUXT_PUBLIC_STORAGE_BASE ?? '/_backend/storage',
+      // Meta (Facebook) Pixel ID; empty = pixel off. See plugins/meta-pixel.client.ts.
+      // Set at runtime via NUXT_PUBLIC_META_PIXEL_ID, with double quotes inside
+      // the value ('"1234…"') so Nuxt keeps it a string — long numeric IDs
+      // otherwise get rounded.
+      metaPixelId: '',
     },
   },
   app: {

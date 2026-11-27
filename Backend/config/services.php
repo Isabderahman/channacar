@@ -31,4 +31,16 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // Meta (Facebook) Pixel — server-side events through the Conversions API
+    // (App\Services\MetaConversionsService). Nothing is sent unless both the
+    // pixel ID and the access token are set.
+    'meta' => [
+        'pixel_id' => env('META_PIXEL_ID'),
+        'access_token' => env('META_CAPI_ACCESS_TOKEN'),
+        // Events Manager → Test events code (e.g. TEST12345). While set, server
+        // events show up in the Test events tab; clear it once verified.
+        'test_event_code' => env('META_TEST_EVENT_CODE'),
+        'graph_version' => env('META_GRAPH_VERSION', 'v25.0'),
+    ],
+
 ];

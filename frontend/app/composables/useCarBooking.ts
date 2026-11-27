@@ -30,6 +30,7 @@ export const useCarBooking = (
   const router = useRouter()
   const localePath = useLocalePath()
   const { publicApi } = useApi()
+  const metaPixel = useMetaPixel()
   const { t, locale } = useI18n()
   // resolveApiErrorMessage only has French and English wording of its own.
   const apiLocale = computed(() => (locale.value === 'fr' ? 'fr' : 'en'))
@@ -190,6 +191,10 @@ export const useCarBooking = (
     pending.value = true
     errorMessage.value = ''
 
+    // Shared with the server-side Conversions API event (same event_id) so
+    // Meta counts this booking once.
+    const tracking = metaPixel.trackingContext()
+
     let reservation: Reservation
     try {
       const response = await publicApi<ResourceResponse<Reservation>>('/public/reservations', {
@@ -212,6 +217,7 @@ export const useCarBooking = (
             email: form.email || null,
             driver_license: form.driverLicense,
           },
+          tracking,
         },
       })
       reservation = response.data
@@ -233,6 +239,20 @@ export const useCarBooking = (
     toast.success(
       t('car.booking.toast.success', { number: reservation.reservation_number }),
       t('car.booking.toast.successTitle'),
+    )
+
+    // The stored (server-priced) total, matching the Conversions API event.
+    metaPixel.track(
+      'Purchase',
+      {
+        value: toNumber(reservation.total_price),
+        currency: 'MAD',
+        content_ids: [String(car.value.id)],
+        content_type: 'product',
+        content_name: carName.value,
+        order_id: reservation.reservation_number,
+      },
+      tracking.event_id,
     )
 
     // Stay in the visitor's language (`/en/reservation/success`, …).

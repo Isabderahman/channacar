@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Public;
 
 use App\Http\Controllers\Controller;
 use App\Mail\NewReservationNotification;
+use App\Services\MetaConversionsService;
 use App\Services\ReservationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -12,7 +13,10 @@ use Illuminate\Support\Facades\Mail;
 
 class ReservationController extends Controller
 {
-    public function __construct(private readonly ReservationService $reservationService) {}
+    public function __construct(
+        private readonly ReservationService $reservationService,
+        private readonly MetaConversionsService $metaConversions,
+    ) {}
 
     public function store(Request $request): JsonResponse
     {
@@ -36,6 +40,12 @@ class ReservationController extends Controller
             'client.whatsapp' => ['sometimes', 'nullable', 'string', 'max:255'],
             'client.email' => ['sometimes', 'nullable', 'email', 'max:255'],
             'client.driver_license' => ['required', 'string', 'max:255'],
+            // Browser context for the Meta Conversions API (see MetaConversionsService).
+            'tracking' => ['sometimes', 'nullable', 'array'],
+            'tracking.event_id' => ['sometimes', 'nullable', 'string', 'max:100'],
+            'tracking.source_url' => ['sometimes', 'nullable', 'string', 'max:2048'],
+            'tracking.fbp' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'tracking.fbc' => ['sometimes', 'nullable', 'string', 'max:500'],
         ]);
 
         $reservation = $this->reservationService->createPublic($validated);
@@ -47,6 +57,18 @@ class ReservationController extends Controller
                 'reservation_id' => $reservation->id,
                 'error' => $e->getMessage(),
             ]);
+        }
+
+        if ($this->metaConversions->enabled()) {
+            $metaEvent = $this->metaConversions->reservationPurchaseEvent(
+                $reservation,
+                $request,
+                $validated['tracking'] ?? [],
+            );
+
+            // Runs once the response has been flushed to the visitor, so
+            // Meta's latency never slows the booking down.
+            app()->terminating(fn () => $this->metaConversions->send($metaEvent));
         }
 
         return response()->json([

@@ -74,9 +74,22 @@ if (error.value && import.meta.server && error.value.statusCode === 404) {
   }
 }
 
+const metaPixel = useMetaPixel()
+
 onMounted(() => {
   if (errorMessage.value) {
     toast.error(errorMessage.value, t('car.errors.loadTitle'))
+  }
+
+  if (car.value) {
+    // Same content id (car id) as the Purchase event, for retargeting.
+    metaPixel.track('ViewContent', {
+      content_ids: [String(car.value.id)],
+      content_type: 'product',
+      content_name: carFullName(car.value),
+      value: toNumber(car.value.base_price_per_day),
+      currency: 'MAD',
+    })
   }
 })
 

@@ -53,6 +53,9 @@ services:
       MAIL_ENCRYPTION: ${MAIL_ENCRYPTION:-tls}
       MAIL_FROM_ADDRESS: ${MAIL_FROM_ADDRESS}
       MAIL_FROM_NAME: ${MAIL_FROM_NAME:-ChannaCar}
+      META_PIXEL_ID: ${META_PIXEL_ID:-}
+      META_CAPI_ACCESS_TOKEN: ${META_CAPI_ACCESS_TOKEN:-}
+      META_TEST_EVENT_CODE: ${META_TEST_EVENT_CODE:-}
     volumes:
       # Bind-mount the code so `git pull` + ./deploy.sh updates it; storage/uploads persist on the host.
       - ./Backend:/var/www
@@ -71,6 +74,10 @@ services:
       NUXT_BACKEND_ORIGIN: http://nginx:8080
       NUXT_PUBLIC_API_BASE: /_backend/api
       NUXT_PUBLIC_STORAGE_BASE: /_backend/storage
+      # Browser pixel; read at runtime, so changing it only needs a container restart.
+      # Wrapped in double quotes on purpose: Nuxt parses a bare numeric env value as a
+      # JS number, and 16-digit pixel IDs lose their last digits that way.
+      NUXT_PUBLIC_META_PIXEL_ID: '"${META_PIXEL_ID:-}"'
     networks: [app]
 
   nginx:
